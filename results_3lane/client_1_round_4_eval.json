@@ -1,0 +1,451 @@
+[
+  {
+    "round": 0,
+    "metrics": {
+      "total_reward": 139.37859171077798,
+      "average_reward": 0.34844647927694494,
+      "total_steps": 400,
+      "waiting_time": 3406.0,
+      "queue_length": 5.5575,
+      "max_queue_length": 8,
+      "avg_waiting_time_per_vehicle": 5.089041095890411,
+      "green_signal_time": {
+        "per_edge": {
+          "B2A1": 12.0,
+          "B1A1": 8.0,
+          "B4A1": 0.0,
+          "B3A1": 4.0
+        },
+        "avg_gst": 6.0,
+        "num_lanes": 4,
+        "min_green_time": 5.0,
+        "max_green_time": 30.0
+      },
+      "per_lane_metrics": {
+        "B2A1_0": {
+          "edge_id": "B2A1",
+          "lane_id": "B2A1_0",
+          "vehicle_count": 3,
+          "queue_length": 0,
+          "waiting_time": 7.0,
+          "average_speed": 4.364359084451073,
+          "occupancy_percent": 0.18502528678919453,
+          "green_signal_time": 12.0,
+          "vehicle_types": {
+            "car": 3
+          },
+          "lane_length": 81.07
+        },
+        "B1A1_0": {
+          "edge_id": "B1A1",
+          "lane_id": "B1A1_0",
+          "vehicle_count": 2,
+          "queue_length": 1,
+          "waiting_time": 7.0,
+          "average_speed": 6.514998244056478,
+          "occupancy_percent": 0.12335019119279636,
+          "green_signal_time": 8.0,
+          "vehicle_types": {
+            "car": 2
+          },
+          "lane_length": 81.07
+        },
+        "B4A1_0": {
+          "edge_id": "B4A1",
+          "lane_id": "B4A1_0",
+          "vehicle_count": 0,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 13.89,
+          "occupancy_percent": 0.0,
+          "green_signal_time": 0.0,
+          "vehicle_types": {},
+          "lane_length": 81.07
+        },
+        "B3A1_0": {
+          "edge_id": "B3A1",
+          "lane_id": "B3A1_0",
+          "vehicle_count": 1,
+          "queue_length": 1,
+          "waiting_time": 2.0,
+          "average_speed": 0.02134779952463425,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        }
+      },
+      "lane_summary": {
+        "total_lanes": 4,
+        "total_vehicles": 6,
+        "total_queue_length": 2,
+        "total_waiting_time": 16.0,
+        "average_speed": 6.197676282008047,
+        "average_occupancy": 0.09251264339459726,
+        "num_congested_lanes": 0
+      }
+    }
+  },
+  {
+    "round": 1,
+    "metrics": {
+      "total_reward": 176.6418573671017,
+      "average_reward": 0.44160464341775424,
+      "total_steps": 400,
+      "waiting_time": 2074.0,
+      "queue_length": 4.455,
+      "max_queue_length": 7,
+      "avg_waiting_time_per_vehicle": 3.4178082191780823,
+      "green_signal_time": {
+        "per_edge": {
+          "B2A1": 8.0,
+          "B1A1": 4.0,
+          "B4A1": 4.0,
+          "B3A1": 4.0
+        },
+        "avg_gst": 5.0,
+        "num_lanes": 4,
+        "min_green_time": 5.0,
+        "max_green_time": 30.0
+      },
+      "per_lane_metrics": {
+        "B2A1_0": {
+          "edge_id": "B2A1",
+          "lane_id": "B2A1_0",
+          "vehicle_count": 2,
+          "queue_length": 0,
+          "waiting_time": 4.0,
+          "average_speed": 5.9870922197615135,
+          "occupancy_percent": 0.12335019119279636,
+          "green_signal_time": 8.0,
+          "vehicle_types": {
+            "car": 2
+          },
+          "lane_length": 81.07
+        },
+        "B1A1_0": {
+          "edge_id": "B1A1",
+          "lane_id": "B1A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 13.100860228678211,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B4A1_0": {
+          "edge_id": "B4A1",
+          "lane_id": "B4A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 2.782981951389209,
+          "occupancy_percent": 0.07140246044820557,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B3A1_0": {
+          "edge_id": "B3A1",
+          "lane_id": "B3A1_0",
+          "vehicle_count": 1,
+          "queue_length": 1,
+          "waiting_time": 2.0,
+          "average_speed": 0.029112259036366828,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        }
+      },
+      "lane_summary": {
+        "total_lanes": 4,
+        "total_vehicles": 5,
+        "total_queue_length": 1,
+        "total_waiting_time": 6.0,
+        "average_speed": 5.475011664716326,
+        "average_occupancy": 0.07952571070844958,
+        "num_congested_lanes": 0
+      }
+    }
+  },
+  {
+    "round": 2,
+    "metrics": {
+      "total_reward": 210.56022763528793,
+      "average_reward": 0.5264005690882199,
+      "total_steps": 400,
+      "waiting_time": 761.0,
+      "queue_length": 3.6175,
+      "max_queue_length": 6,
+      "avg_waiting_time_per_vehicle": 1.7602739726027397,
+      "green_signal_time": {
+        "per_edge": {
+          "B2A1": 4.0,
+          "B1A1": 4.0,
+          "B4A1": 4.0,
+          "B3A1": 0.0
+        },
+        "avg_gst": 3.0,
+        "num_lanes": 4,
+        "min_green_time": 5.0,
+        "max_green_time": 30.0
+      },
+      "per_lane_metrics": {
+        "B2A1_0": {
+          "edge_id": "B2A1",
+          "lane_id": "B2A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 9.057662089290188,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B1A1_0": {
+          "edge_id": "B1A1",
+          "lane_id": "B1A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 13.163363062273712,
+          "occupancy_percent": 0.11859522716786583,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B4A1_0": {
+          "edge_id": "B4A1",
+          "lane_id": "B4A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 0.5702416398243342,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B3A1_0": {
+          "edge_id": "B3A1",
+          "lane_id": "B3A1_0",
+          "vehicle_count": 0,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 13.89,
+          "occupancy_percent": 0.0542180529487687,
+          "green_signal_time": 0.0,
+          "vehicle_types": {},
+          "lane_length": 81.07
+        }
+      },
+      "lane_summary": {
+        "total_lanes": 4,
+        "total_vehicles": 3,
+        "total_queue_length": 0,
+        "total_waiting_time": 0.0,
+        "average_speed": 9.17031669784706,
+        "average_occupancy": 0.07404086782735772,
+        "num_congested_lanes": 0
+      }
+    }
+  },
+  {
+    "round": 3,
+    "metrics": {
+      "total_reward": 209.32468453533141,
+      "average_reward": 0.5233117113383285,
+      "total_steps": 400,
+      "waiting_time": 786.0,
+      "queue_length": 3.6525,
+      "max_queue_length": 6,
+      "avg_waiting_time_per_vehicle": 1.7671232876712328,
+      "green_signal_time": {
+        "per_edge": {
+          "B2A1": 4.0,
+          "B1A1": 4.0,
+          "B4A1": 4.0,
+          "B3A1": 4.0
+        },
+        "avg_gst": 4.0,
+        "num_lanes": 4,
+        "min_green_time": 5.0,
+        "max_green_time": 30.0
+      },
+      "per_lane_metrics": {
+        "B2A1_0": {
+          "edge_id": "B2A1",
+          "lane_id": "B2A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 9.107243721634239,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B1A1_0": {
+          "edge_id": "B1A1",
+          "lane_id": "B1A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 13.548831085264684,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B4A1_0": {
+          "edge_id": "B4A1",
+          "lane_id": "B4A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 2.0583248609775926,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B3A1_0": {
+          "edge_id": "B3A1",
+          "lane_id": "B3A1_0",
+          "vehicle_count": 1,
+          "queue_length": 1,
+          "waiting_time": 2.0,
+          "average_speed": 0.0018488069870412549,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        }
+      },
+      "lane_summary": {
+        "total_lanes": 4,
+        "total_vehicles": 4,
+        "total_queue_length": 1,
+        "total_waiting_time": 2.0,
+        "average_speed": 6.179062118715889,
+        "average_occupancy": 0.06167509559639818,
+        "num_congested_lanes": 0
+      }
+    }
+  },
+  {
+    "round": 4,
+    "metrics": {
+      "total_reward": 200.78339706144195,
+      "average_reward": 0.5019584926536048,
+      "total_steps": 400,
+      "waiting_time": 1037.0,
+      "queue_length": 3.785,
+      "max_queue_length": 5,
+      "avg_waiting_time_per_vehicle": 2.0616438356164384,
+      "green_signal_time": {
+        "per_edge": {
+          "B2A1": 4.0,
+          "B1A1": 4.0,
+          "B4A1": 0.0,
+          "B3A1": 4.0
+        },
+        "avg_gst": 3.0,
+        "num_lanes": 4,
+        "min_green_time": 5.0,
+        "max_green_time": 30.0
+      },
+      "per_lane_metrics": {
+        "B2A1_0": {
+          "edge_id": "B2A1",
+          "lane_id": "B2A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 9.201826891331093,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B1A1_0": {
+          "edge_id": "B1A1",
+          "lane_id": "B1A1_0",
+          "vehicle_count": 1,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 12.683315347074531,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        },
+        "B4A1_0": {
+          "edge_id": "B4A1",
+          "lane_id": "B4A1_0",
+          "vehicle_count": 0,
+          "queue_length": 0,
+          "waiting_time": 0.0,
+          "average_speed": 13.89,
+          "occupancy_percent": 0.005691092186989864,
+          "green_signal_time": 0.0,
+          "vehicle_types": {},
+          "lane_length": 81.07
+        },
+        "B3A1_0": {
+          "edge_id": "B3A1",
+          "lane_id": "B3A1_0",
+          "vehicle_count": 1,
+          "queue_length": 1,
+          "waiting_time": 2.0,
+          "average_speed": 0.009301203195452315,
+          "occupancy_percent": 0.06167509559639818,
+          "green_signal_time": 4.0,
+          "vehicle_types": {
+            "car": 1
+          },
+          "lane_length": 81.07
+        }
+      },
+      "lane_summary": {
+        "total_lanes": 4,
+        "total_vehicles": 3,
+        "total_queue_length": 1,
+        "total_waiting_time": 2.0,
+        "average_speed": 8.94611086040027,
+        "average_occupancy": 0.04767909474404611,
+        "num_congested_lanes": 0
+      }
+    }
+  }
+]

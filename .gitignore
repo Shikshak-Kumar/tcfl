@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter/IPython
+.ipynb_checkpoints/
+
+# Logs
+logs/
+*.log
+
+# IDEs/editors
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Data/artifacts
+results/
+*.h5
+*.hdf5
+*.ckpt
+*.pth
+*.pt
+*.pb
+
+# SUMO output
+trafficCongestionControlUsingFederatedLearning/results/
+
+# Specific repo files that should not be versioned
+trafficCongestionControlUsingFederatedLearning/requirements.txt
+

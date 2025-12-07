@@ -1,0 +1,2693 @@
+{
+  "total_waiting_time": 910.0,
+  "total_vehicles": 1489,
+  "average_queue_length": 3.7225,
+  "max_queue_length": 6,
+  "steps": 400,
+  "avg_waiting_time_per_vehicle": 1.917808219178082,
+  "per_lane_metrics": {
+    "B2A1_0": {
+      "edge_id": "B2A1",
+      "lane_id": "B2A1_0",
+      "vehicle_count": 1,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 9.604458487061875,
+      "occupancy_percent": 0.06167509559639818,
+      "green_signal_time": 4.0,
+      "vehicle_types": {
+        "car": 1
+      },
+      "lane_length": 81.07
+    },
+    "B1A1_0": {
+      "edge_id": "B1A1",
+      "lane_id": "B1A1_0",
+      "vehicle_count": 1,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 12.816546265883371,
+      "occupancy_percent": 0.06167509559639818,
+      "green_signal_time": 4.0,
+      "vehicle_types": {
+        "car": 1
+      },
+      "lane_length": 81.07
+    },
+    "B4A1_0": {
+      "edge_id": "B4A1",
+      "lane_id": "B4A1_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 13.89,
+      "occupancy_percent": 0.0,
+      "green_signal_time": 0.0,
+      "vehicle_types": {},
+      "lane_length": 81.07
+    },
+    "B3A1_0": {
+      "edge_id": "B3A1",
+      "lane_id": "B3A1_0",
+      "vehicle_count": 1,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 0.14468917603322917,
+      "occupancy_percent": 0.06167509559639818,
+      "green_signal_time": 4.0,
+      "vehicle_types": {
+        "car": 1
+      },
+      "lane_length": 81.07
+    }
+  },
+  "lane_summary": {
+    "total_lanes": 4,
+    "total_vehicles": 3,
+    "total_queue_length": 0,
+    "total_waiting_time": 0.0,
+    "average_speed": 9.11392348224462,
+    "average_occupancy": 0.04625632169729864,
+    "num_congested_lanes": 0
+  },
+  "green_signal_time": {
+    "per_edge": {
+      "B2A1": 4.0,
+      "B1A1": 4.0,
+      "B4A1": 0.0,
+      "B3A1": 4.0
+    },
+    "avg_gst": 3.0,
+    "num_lanes": 4,
+    "min_green_time": 5.0,
+    "max_green_time": 30.0
+  },
+  "green_signal_time_avg_per_edge": {
+    "B2A1": 4.478048780487805,
+    "B1A1": 3.707317073170732,
+    "B4A1": 3.8536585365853657,
+    "B3A1": 2.7804878048780486
+  },
+  "green_signal_time_history": [
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 211.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 212.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 213.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 214.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 215.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 216.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 217.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 6.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 218.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 219.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 220.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 221.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 222.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 223.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 224.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 225.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 226.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 0.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 1.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 227.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 0.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 1.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 228.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 229.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 230.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 231.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 232.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 233.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 234.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 235.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 236.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 237.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 238.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 239.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 240.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 241.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 242.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 243.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 244.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 245.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 246.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 247.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 248.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 249.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 250.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 251.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 252.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 253.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 254.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 255.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 256.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 257.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 258.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 259.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 260.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 261.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 262.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 263.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 264.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 265.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 266.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 267.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 268.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 269.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 270.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 271.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 272.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 273.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 274.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 8.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 275.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 8.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 276.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 277.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 278.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 279.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 6.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 280.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 6.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 281.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 282.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 283.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 284.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 285.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 286.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 287.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 1.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 288.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 289.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 290.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 291.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 292.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 293.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 294.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 295.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 296.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 297.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 298.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 299.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 8.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 300.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 301.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 302.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 303.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 304.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 305.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 306.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 307.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 308.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 309.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 310.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 311.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 312.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 313.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 314.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 315.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 316.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 317.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 318.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 319.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 6.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 320.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 321.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 322.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 323.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 324.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 325.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 326.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 327.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 328.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 329.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 330.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 331.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 332.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 333.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 334.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 335.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 336.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 337.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 338.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 339.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 340.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 341.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 342.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 343.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 344.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 345.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 346.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 347.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 348.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 349.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 350.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 351.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 6.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 352.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 6.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 353.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 8.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 6.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 354.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 355.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 356.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 357.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 358.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 359.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 360.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 0.0,
+        "B3A1": 8.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 361.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 8.0
+      },
+      "avg_gst": 6.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 362.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 363.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 364.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 365.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 366.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 367.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 368.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 369.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 370.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 371.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 0.0,
+        "B4A1": 8.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 372.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 373.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 374.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 375.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 376.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 377.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 378.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 379.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 380.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 381.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 0.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 1.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 382.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 383.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 0.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 2.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 384.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 385.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 386.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 387.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 388.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 389.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 8.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 390.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 391.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 392.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 393.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 4.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 394.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 395.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 0.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 396.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 397.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 8.0,
+        "B4A1": 4.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 5.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 398.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 399.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 4.0,
+        "B3A1": 0.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    },
+    {
+      "per_edge": {
+        "B2A1": 4.0,
+        "B1A1": 4.0,
+        "B4A1": 0.0,
+        "B3A1": 4.0
+      },
+      "avg_gst": 3.0,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0,
+      "time": 400.0
+    }
+  ]
+}

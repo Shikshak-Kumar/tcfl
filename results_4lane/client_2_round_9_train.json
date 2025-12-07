@@ -1,0 +1,102 @@
+[
+  {
+    "round": 0,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": -70.58713673065203,
+      "total_steps": 1200,
+      "average_loss": 0.01585225703220972,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 1,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 26.905373335442693,
+      "total_steps": 1200,
+      "average_loss": 0.0730467937529708,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 2,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 182.74031760010874,
+      "total_steps": 1200,
+      "average_loss": 0.20487135984624424,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 3,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 202.73738577454844,
+      "total_steps": 1200,
+      "average_loss": 0.3008989964177211,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 4,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 199.99176437905783,
+      "total_steps": 1200,
+      "average_loss": 0.37816074644525843,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 5,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 202.6103610037181,
+      "total_steps": 1200,
+      "average_loss": 0.4648812455808123,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 6,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 193.86749395333572,
+      "total_steps": 1200,
+      "average_loss": 0.6151735941569011,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 7,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 197.5028429486023,
+      "total_steps": 1200,
+      "average_loss": 0.8067455894624194,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 8,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 186.52931258024785,
+      "total_steps": 1200,
+      "average_loss": 1.1699696709463994,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 9,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 198.6517733906027,
+      "total_steps": 1200,
+      "average_loss": 1.5586747620503107,
+      "episodes": 3
+    }
+  }
+]

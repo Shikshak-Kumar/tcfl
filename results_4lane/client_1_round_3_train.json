@@ -1,0 +1,42 @@
+[
+  {
+    "round": 0,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 76.39061539183294,
+      "total_steps": 1200,
+      "average_loss": 0.015843087928631986,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 1,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 144.92879288872498,
+      "total_steps": 1200,
+      "average_loss": 0.10258120605411629,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 2,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 188.49771157769487,
+      "total_steps": 1200,
+      "average_loss": 0.1886430112256979,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 3,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 200.58145720213528,
+      "total_steps": 1200,
+      "average_loss": 0.2664776442758739,
+      "episodes": 3
+    }
+  }
+]

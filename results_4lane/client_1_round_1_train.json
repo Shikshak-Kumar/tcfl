@@ -1,0 +1,22 @@
+[
+  {
+    "round": 0,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 76.39061539183294,
+      "total_steps": 1200,
+      "average_loss": 0.015843087928631986,
+      "episodes": 3
+    }
+  },
+  {
+    "round": 1,
+    "episodes": 3,
+    "metrics": {
+      "average_reward": 144.92879288872498,
+      "total_steps": 1200,
+      "average_loss": 0.10258120605411629,
+      "episodes": 3
+    }
+  }
+]
