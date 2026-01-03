@@ -253,7 +253,7 @@ chmod +x scripts/*.py
 
 ---
 
-## 📊 What You'll Get
+## What You'll Get
 
 After completing all steps:
 
@@ -270,7 +270,7 @@ After completing all steps:
 
 ---
 
-## 🎯 Quick Summary
+## Quick Summary
 
 **Do these 8 steps:**
 1. ✅ Check Python and SUMO installed
@@ -286,7 +286,7 @@ After completing all steps:
 
 ---
 
-## 💡 Tips
+## Tips
 
 - **Start with quick test** (STEP 5) to make sure everything works
 - **Run full comparison** (STEP 7) when you're ready for paper results
@@ -295,12 +295,12 @@ After completing all steps:
 
 ---
 
-## 📞 Need Help?
+## Need Help?
 
 If you get stuck:
 1. Check the error message - it usually tells you what's wrong
 2. See `ALL_COMMANDS.md` for detailed command explanations
 3. See `INSTALLATION_AND_RUN_GUIDE.md` for more troubleshooting
 
-**Good luck! 🚀**
+
 
