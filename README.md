@@ -1,230 +1,71 @@
-# Smart Traffic Control with AI
+# Intelligent Traffic Signal Control via Federated Knowledge Distillation (FedKD)
 
-A simple yet powerful system that uses artificial intelligence to control traffic lights and reduce congestion. Think of it as teaching multiple intersections to work together to keep traffic flowing smoothly.
+A professional research framework for optimizing urban traffic flow across heterogeneous intersections using **Federated Knowledge Distillation (FedKD)** and **Double Deep Q-Learning (Double DQN)**. This system enables collaborative learning on high-fidelity OpenStreetMap (OSM) data while preserving data privacy and supporting varied hardware architectures.
 
-## What This Does
+## 🔬 Core Innovations
 
-Instead of having traffic lights that just follow a fixed timer, this system uses **federated learning** to make them smarter. Each intersection learns from its own traffic patterns and shares knowledge with other intersections - but without sharing any personal data about drivers.
-
-**Key Benefits:**
-- 🚦 **Smarter Traffic Lights**: AI learns the best timing for each intersection
-- 🔄 **Collaborative Learning**: Intersections share knowledge to improve city-wide traffic
-- 🛡️ **Privacy Safe**: No personal data is shared between intersections
-- 📊 **Real Results**: See actual improvements in waiting times and traffic flow
-
-## How It Works (Simple Version)
-
-1. **Each intersection** runs its own traffic simulation and AI agent
-2. **The AI learns** the best timing by watching traffic patterns
-3. **Intersections share** their learning (but not personal data) with a central server
-4. **Everyone gets smarter** as the system learns from all intersections together
-
-## What You Need
-
-### Software Requirements
-- **Python 3.8 or newer** (download from python.org)
-- **SUMO Traffic Simulator** (download from sumo.dlr.de)
-
-### Quick Setup
-1. **Install Python dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Verify SUMO is working:**
-   ```bash
-   sumo --version
-   ```
-
-3. **Run the setup script:**
-   ```bash
-   python setup.py
-   ```
-
-## Getting Started
-
-### Quick single-client smoke test
-```bash
-python train_federated.py --mode single --sumo-config sumo_configs/intersection.sumocfg --gui --show-phase-console
-```
-
-### Federated training (server + clients)
-
-- Server (1 terminal):
-```bash
-python train_federated.py --mode server --num-rounds 10 --min-clients 2 --server-address localhost:8080
-```
-
-- Clients (N terminals):
-```bash
-python client.py --client-id client_1 --sumo-config sumo_configs/osm_client1.sumocfg --server-address localhost:8080 --gui
-python client.py --client-id client_2 --sumo-config sumo_configs/osm_client2.sumocfg --server-address localhost:8080 --gui
-```
-
-Remove `--gui` to run headless. When GUI is enabled, you'll see signal colors and live phase switching.
-
-### Local multi-client simulation (no external server)
-
-You can also run a simple two-client federated simulation in a single process:
-
-```bash
-python train_federated.py --mode multi --num-rounds 15 --results-dir results_4lane
-```
-
-- **`--results-dir`**: controls where all JSON logs for this run are stored (e.g. `results_3lane`, `results_4lane`, `results_5lane`).
-
-## Understanding the Results
-
-By default, the system automatically saves results to the `results/` folder, but you can override this with `--results-dir`:
-- Example folders for different intersection types:
-  - `results_3lane` – experiments on 3‑approach intersection
-  - `results_4lane` – experiments on 4‑approach (standard) intersection
-  - `results_5lane` – experiments on 5‑approach intersection
-
-Each results directory contains per‑round JSON files for each client (e.g. `client_1_round_4_eval.json`, `client_1_round_4_detailed.json`):
-- **Training progress**: How well the AI is learning
-- **Performance metrics**: Waiting times, queue lengths, traffic flow
-- **Visual charts**: Easy-to-read graphs showing improvements
-
-## Project Structure
-
-```
-traffic32/
-├── agents/                      # The AI brains
-│   ├── dqn_agent.py             # Deep learning agent
-│   └── traffic_environment.py   # Traffic simulation interface
-├── federated_learning/          # Collaboration system
-│   ├── fl_client.py             # Individual intersection
-│   └── fl_server.py             # Central coordinator
-├── sumo_configs/                # Simple test intersections (clients)
-├── sumo_configs2/               # Real city network
-├── utils/visualization.py       # Federated results and charts
-├── analyze_results.py           # Text/ASCII training analysis
-├── plot_client_lane_waiting.py  # Multi-scenario lane/queue plots (3/4/5 lanes)
-├── run_viz.py                   # One-command script to generate all graphs
-├── train_federated.py           # Main program (single/server/client/multi)
-└── client.py                    # Individual intersection runner
-```
-
-## Multi-lane Intersection Experiments (3 / 4 / 5 Lanes)
-
-To compare different intersection geometries (e.g. 3‑lane, 4‑lane, 5‑lane) with two clients each:
-
-1. **Run separate experiments**, each with its own results folder (examples):
-   - 3‑lane:
-     ```bash
-     python train_federated.py --mode multi --num-rounds 15 --results-dir results_3lane
-     ```
-   - 4‑lane:
-     ```bash
-     python train_federated.py --mode multi --num-rounds 15 --results-dir results_4lane
-     ```
-   - 5‑lane:
-     ```bash
-     python train_federated.py --mode multi --num-rounds 15 --results-dir results_5lane
-     ```
-
-2. **Configure scenario folders** in `plot_client_lane_waiting.py` if your folder names differ:
-   ```python
-   SCENARIOS = {
-       "3_lane": "results_3lane",
-       "4_lane": "results_4lane",
-       "5_lane": "results_5lane",
-   }
-   DEFAULT_CLIENT_IDS = ["client_1", "client_2"]
-   ```
-
-3. **Generate all graphs in one command** from inside `traffic32/`:
-   ```bash
-   python run_viz.py
-   ```
-
-   This will create, for each scenario and each client:
-   - Old `run_viz` graphs: average waiting time per vehicle and congestion vs aggregation weight.
-   - New detailed graphs: lane waiting time, intersection waiting time, average queue length per round, and per‑lane queue length over rounds.
-
-## Technical Details (For Developers)
-
-### AI Agent (DQN)
-- **Architecture**: 3-layer neural network (128 → 128 → 64 neurons)
-- **Learning**: Uses experience replay and target networks
-- **Exploration**: Starts random, becomes smarter over time
-- **Memory**: Remembers 10,000 traffic situations
-
-### Traffic Simulation (SUMO)
-- **State**: Monitors vehicle count, queue length, and waiting time
-- **Actions**: Controls traffic light phases
-- **Safety**: Minimum green times and collision prevention
-- **Realism**: Based on real traffic patterns
-
-### Federated Learning (Flower)
-- **Privacy**: Only model weights are shared, never raw data
-- **Aggregation**: Server combines learning from all intersections
-- **Scalability**: Works with any number of intersections
-
-## Troubleshooting
-
-### Common Issues
-
-**"SUMO not found" error:**
-- Make sure SUMO is installed and added to your system PATH
-- Test with: `sumo --version`
-
-**"GUI not opening":**
-- Try running without `--gui` first
-- Make sure `sumo-gui` is installed
-
-**"Python import errors":**
-- Run: `pip install -r requirements.txt`
-- Make sure you're using Python 3.8+
-
-**"Server connection failed":**
-- Check that the server is running first
-- Make sure all clients use the same server address
-
-### Getting Help
-
-If you run into issues:
-1. Check the error messages carefully
-2. Make sure all requirements are installed
-3. Try running the simple test first: `python train_federated.py --mode single`
-
-## Examples and Use Cases
-
-### For Researchers
-- Study federated learning in real-world applications
-- Experiment with different AI architectures
-- Analyze traffic optimization algorithms
-
-### For Students
-- Learn about reinforcement learning
-- Understand federated learning concepts
-- Practice with traffic simulation
-
-### For Cities
-- Test traffic optimization strategies
-- Evaluate AI-based traffic management
-- Plan smart city infrastructure
-
-## Contributing
-
-We welcome contributions! Areas where help is especially appreciated:
-- Adding new traffic scenarios
-- Improving the AI algorithms
-- Creating better visualizations
-- Writing documentation
-
-## License
-
-This project is open source. Feel free to use it for research, education, or commercial applications.
-
-## Acknowledgments
-
-Thanks to:
-- **SUMO team** for the excellent traffic simulator
-- **Flower team** for federated learning framework
-- **PyTorch team** for the deep learning tools
+- **Heterogeneous Architecture Support**: Allows intersections with different computational capacities (e.g., edge devices vs. cloud servers) to share knowledge via **behavioral alignment (Logits)** rather than structural replication (Weights).
+- **Real-World Map Integration**: Natively utilizes the **`sumo_configs2`** dataset, derived from real-world city networks via OpenStreetMap.
+- **Fairness-Aware Aggregation**: A customized congestion-weighting system that prioritizes learning from the most bottlenecked intersections.
+- **Simulation-Free Verification**: Intelligent fallback mode for logic verification in environments without a running SUMO instance.
 
 ---
 
-**Ready to make traffic smarter? Start with the quick test and watch AI learn to control traffic lights!**
+## 🚀 Quick Execution Guide
+
+### 1. Environment Setup
+```bash
+# Initialize virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install research dependencies
+pip install -r requirements.txt
+```
+
+### 2. Running Simulations (Real Map Focus)
+
+#### **Federated Knowledge Distillation (FedKD)**
+*Our primary innovation—supports behavioral alignment and heterogeneous models.*
+```bash
+python3 train_fedkd.py --rounds 15 --results-dir results_fedkd
+```
+
+#### **Standard Federated Learning (FedAvg)**
+*Baseline comparison using fairness-aware parameter synchronization.*
+```bash
+python3 train_federated.py --mode multi --num-rounds 15 --results-dir results_federated
+```
+
+---
+
+## 📁 Project Architecture
+
+```
+.
+├── agents/                  # RL optimization engines (Double DQN)
+├── federated_learning/      # Collaborative orchestration modules (FedKD/FedAvg)
+├── sumo_configs2/           # High-fidelity Real-World City Network (OSM)
+├── RESEARCH_Theory.md       # Comprehensive mathematical & algorithmic framework
+├── train_fedkd.py           # FedKD simulation entry point
+├── train_federated.py       # Standard FL simulation entry point
+├── scripts/                 # Comparative analysis & visualization utilities
+└── README.md                # Project overview and execution guide
+```
+
+---
+
+## 📉 Theoretical Foundation
+For a deep dive into the mathematical justifications, reward function components, and distillation loss logic, please refer to:
+👉 **[RESEARCH_Theory.md](file:///Users/shikshakkumar/Documents/WebProjects/btp/tt/RESEARCH_Theory.md)**
+
+---
+
+## 🧪 Technical Verification
+The system includes highly detailed reporting for research analysis:
+- **Waiting Time Metrics**: Reduction in vehicular delay across the network.
+- **Throughput Analysis**: Volume of traffic cleared per signal cycle.
+- **Knowledge Convergence**: Monitoring of distillation loss during collaborative rounds.
+
+---
+*Developed for professional academic presentation and technical review.*
