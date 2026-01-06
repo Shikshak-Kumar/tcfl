@@ -224,21 +224,21 @@ def weighted_avg_params(params_list, weights):
         agg.append(layer_sum)
     return agg
 
-def run_multi_client_simulation(results_dir: str = "results"):
-    print("Running multi-client simulation...")
+def run_multi_client_simulation(results_dir: str = "results_federated", gui: bool = False, num_rounds: int = 15):
+    print("STARTING STANDARD FEDERATED LEARNING SIMULATION")
 
     import os
-
     os.makedirs(results_dir, exist_ok=True)
 
-    # CREATE CLIENTS
-    clients = []
+    # Heterogeneous map data configurations
     client_configs = [
-        {"id": "client_1", "config": "sumo_configs/osm_client1.sumocfg", "gui": False},
-        {"id": "client_2", "config": "sumo_configs/osm_client2.sumocfg", "gui": False}
+        {"id": "client_1", "config": "sumo_configs2/osm.netccfg", "gui": gui},
+        {"id": "client_2", "config": "sumo_configs2/osm.polycfg", "gui": gui}
     ]
 
+    clients = []
     for cfg in client_configs:
+        print(f"Initializing {cfg['id']}...")
         clients.append(
             TrafficFLClient(
                 client_id=cfg["id"],
@@ -247,11 +247,12 @@ def run_multi_client_simulation(results_dir: str = "results"):
             )
         )
 
-    num_rounds = 15
+    print(f"\nSimulation configured for {num_rounds} collaborative rounds.")
     global_params = None
 
     for round_num in range(num_rounds):
-        print(f"\n--- Federated Learning Round {round_num + 1} ---")
+        # Local training phase
+        print(f"Round {round_num + 1}: Local Training...")
 
         # TRAINING
         train_metrics_list = []
@@ -270,13 +271,10 @@ def run_multi_client_simulation(results_dir: str = "results"):
             train_metrics_list.append(train_metrics)
             params_list.append(updated_params)
 
-            client.save_training_history(
-                os.path.join(
-                    results_dir, f"{client.client_id}_round_{round_num}_train.json"
-                )
-            )
+            print(f"  {client.client_id} training complete.")
 
-        # EVALUATION & CONGESTION SCORES
+        # Performance evaluation and aggregation
+        print("Evaluating performance and calculating consensus...")
         eval_metrics_list = []
         congestion_scores = []
 
@@ -303,7 +301,8 @@ def run_multi_client_simulation(results_dir: str = "results"):
             congestion = 0.4 * norm_wait + 0.3 * norm_queue + 0.3 * norm_cong
             congestion_scores.append(max(congestion, 0.0))
 
-        # FAIRNESS-AWARE AGGREGATION
+        # Parameter aggregation
+        print("Aggregating model parameters...")
         sum_cong = sum(congestion_scores)
         if sum_cong > 0:
             weights = [c / sum_cong for c in congestion_scores]
@@ -327,15 +326,15 @@ def run_multi_client_simulation(results_dir: str = "results"):
 
         # SAVE METRICS
         for client in clients:
-            detailed = client.env.get_performance_metrics()
-            detailed_path = os.path.join(
-                results_dir, f"{client.client_id}_round_{round_num}_detailed.json"
-            )
-            with open(detailed_path, "w") as f:
-                json.dump(detailed, f, indent=2)
+            if not client.use_mock:
+                detailed = client.env.get_performance_metrics()
+                detailed_path = os.path.join(
+                    results_dir, f"{client.client_id}_round_{round_num}_detailed.json"
+                )
+                with open(detailed_path, "w") as f:
+                    json.dump(detailed, f, indent=2)
 
-    print("\nMulti-client simulation completed!")
-    print("Results saved to results/ directory")
+    print("FEDERATED LEARNING SIMULATION COMPLETED")
 
 
 def main():
@@ -387,7 +386,7 @@ def main():
             results_dir=args.results_dir,
         )
     elif args.mode == "multi":
-        run_multi_client_simulation(results_dir=args.results_dir)
+        run_multi_client_simulation(results_dir=args.results_dir, gui=args.gui, num_rounds=args.num_rounds)
     
     print("Training completed!")
 

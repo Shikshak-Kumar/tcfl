@@ -1,16 +1,12 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3x
 """
 Baseline Comparison Script
 
-Compares your federated learning method against 4 key baselines:
-1. Fixed-Time Control (traditional baseline)
-2. MaxPressure (state-of-the-art classical method)
-3. Centralized RL (non-federated, pooled data - shows privacy benefits)
-4. Independent RL (no collaboration - shows collaboration benefits)
-5. Your Federated Learning Method
-
-Usage:
-    python scripts/compare_all_baselines.py --sumo-config sumo_configs/intersection.sumocfg --num-runs 5
+Evaluates Federated Learning performance against:
+1. Fixed-Time Control
+2. MaxPressure
+3. Centralized RL
+4. Independent RL
 """
 
 import os
@@ -196,7 +192,7 @@ def compare_all_methods(
         print(f"RUN {run + 1}/{num_runs}")
         print(f"{'='*60}")
         
-        # 1. Fixed-Time (Traditional Baseline)
+        # Baseline executions
         result_ft = run_classical_baseline(
             FixedTimeController,
             'fixed_time',
@@ -206,7 +202,6 @@ def compare_all_methods(
         )
         all_results['fixed_time'].append(result_ft)
         
-        # 2. MaxPressure (State-of-the-art Classical)
         result_mp = run_classical_baseline(
             MaxPressureController,
             'maxpressure',
@@ -217,7 +212,6 @@ def compare_all_methods(
         )
         all_results['maxpressure'].append(result_mp)
         
-        # 3. Centralized RL (only run once, takes longer)
         if run == 0:  # Only run once due to training time
             print("\nTraining Centralized RL (this may take a while)...")
             try:
@@ -241,7 +235,6 @@ def compare_all_methods(
                     'success': False
                 })
         
-        # 4. Independent RL (only run once)
         if run == 0:
             print("\nTraining Independent RL (this may take a while)...")
             try:
@@ -265,7 +258,6 @@ def compare_all_methods(
                     'success': False
                 })
         
-        # 5. Federated Learning (Your Method - only run once)
         if run == 0:
             print("\nTraining Federated Learning (this may take a while)...")
             temp_dir = os.path.join(results_dir, "temp_federated")
