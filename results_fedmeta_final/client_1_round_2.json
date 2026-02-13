@@ -1,0 +1,82 @@
+{
+  "avg_adaptation_loss": 0.189642034471035,
+  "k_steps": 2,
+  "total_reward": -19490.045,
+  "average_reward": -19.490045,
+  "total_steps": 1000,
+  "waiting_time": 761008.0,
+  "queue_length": 761.008,
+  "max_queue_length": 1013,
+  "avg_waiting_time_per_vehicle": 760.2477522477523,
+  "green_signal_time": {
+    "per_edge": {
+      "edge_n": 30.0,
+      "edge_e": 30.0,
+      "edge_s": 30.0,
+      "edge_w": 30.0
+    },
+    "avg_gst": 30.0,
+    "num_lanes": 4,
+    "min_green_time": 5.0,
+    "max_green_time": 30.0
+  },
+  "per_lane_metrics": {
+    "edge_n_0": {
+      "edge_id": "edge_n",
+      "lane_id": "edge_n_0",
+      "vehicle_count": 267,
+      "queue_length": 267,
+      "waiting_time": 199877.0,
+      "average_speed": 0.5593012121982666,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 267
+      },
+      "lane_length": 100.0
+    },
+    "edge_e_0": {
+      "edge_id": "edge_e",
+      "lane_id": "edge_e_0",
+      "vehicle_count": 261,
+      "queue_length": 261,
+      "waiting_time": 200012.0,
+      "average_speed": 2.823025262840254,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 261
+      },
+      "lane_length": 100.0
+    },
+    "edge_s_0": {
+      "edge_id": "edge_s",
+      "lane_id": "edge_s_0",
+      "vehicle_count": 240,
+      "queue_length": 240,
+      "waiting_time": 178385.0,
+      "average_speed": 0.5426296162657518,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 240
+      },
+      "lane_length": 100.0
+    },
+    "edge_w_0": {
+      "edge_id": "edge_w",
+      "lane_id": "edge_w_0",
+      "vehicle_count": 245,
+      "queue_length": 245,
+      "waiting_time": 182734.0,
+      "average_speed": 4.342131704158094,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 245
+      },
+      "lane_length": 100.0
+    }
+  },
+  "lane_summary": {}
+}

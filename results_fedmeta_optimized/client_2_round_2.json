@@ -1,0 +1,83 @@
+{
+  "avg_adaptation_loss": 4055.53720703125,
+  "k_steps": 5,
+  "buffer_size": 5089,
+  "total_reward": -19152.985,
+  "average_reward": -19.152985,
+  "total_steps": 1000,
+  "waiting_time": 399275.0,
+  "queue_length": 399.275,
+  "max_queue_length": 521,
+  "avg_waiting_time_per_vehicle": 399.275,
+  "green_signal_time": {
+    "per_edge": {
+      "edge_n": 30.0,
+      "edge_e": 5.0,
+      "edge_s": 30.0,
+      "edge_w": 5.0
+    },
+    "avg_gst": 17.5,
+    "num_lanes": 4,
+    "min_green_time": 5.0,
+    "max_green_time": 30.0
+  },
+  "per_lane_metrics": {
+    "edge_n_0": {
+      "edge_id": "edge_n",
+      "lane_id": "edge_n_0",
+      "vehicle_count": 258,
+      "queue_length": 258,
+      "waiting_time": 197225.0,
+      "average_speed": 4.936713001704271,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 258
+      },
+      "lane_length": 100.0
+    },
+    "edge_e_0": {
+      "edge_id": "edge_e",
+      "lane_id": "edge_e_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 9.94827868790824,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    },
+    "edge_s_0": {
+      "edge_id": "edge_s",
+      "lane_id": "edge_s_0",
+      "vehicle_count": 263,
+      "queue_length": 263,
+      "waiting_time": 202050.0,
+      "average_speed": 4.435576458183935,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 263
+      },
+      "lane_length": 100.0
+    },
+    "edge_w_0": {
+      "edge_id": "edge_w",
+      "lane_id": "edge_w_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 6.47519838693423,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    }
+  },
+  "lane_summary": {}
+}

@@ -7,7 +7,7 @@ import torch
 from federated_learning.fedkd_server import TrafficFedKDServer
 from federated_learning.fedkd_client import TrafficFedKDClient
 
-def run_fedkd_simulation(num_rounds=15, results_dir="results_fedkd", gui=False):
+def run_fedkd_simulation(num_rounds=15, results_dir="results_fedkd", gui=False, num_clients=2):
     print("STARTING FEDKD SIMULATION")
     
     os.makedirs(results_dir, exist_ok=True)
@@ -16,18 +16,26 @@ def run_fedkd_simulation(num_rounds=15, results_dir="results_fedkd", gui=False):
     server.initialize_proxy_dataset(state_size=12)
     
     # Heterogeneous architecture configuration
-    client_configs = [
-        {
-            "id": "client_1", 
-            "config": "sumo_configs/osm_client1.sumocfg", 
-            "hidden_dims": [256, 256, 128]
-        },
-        {
-            "id": "client_2", 
-            "config": "sumo_configs/osm_client2.sumocfg", 
-            "hidden_dims": [64, 32]
-        }
+    base_configs = [
+        "sumo_configs2/osm.netccfg",
+        "sumo_configs2/osm.polycfg"
     ]
+    
+    # Architecture templates: [Large, Small]
+    arch_templates = [
+        {"hidden": [256, 256, 128]},
+        {"hidden": [64, 32]}
+    ]
+    
+    client_configs = []
+    for i in range(num_clients):
+        cfg = base_configs[i % len(base_configs)]
+        arch = arch_templates[i % len(arch_templates)]
+        client_configs.append({
+            "id": f"client_{i+1}",
+            "config": cfg,
+            "hidden_dims": arch["hidden"]
+        })
     
     clients = []
     for cfg in client_configs:
@@ -95,6 +103,21 @@ def run_fedkd_simulation(num_rounds=15, results_dir="results_fedkd", gui=False):
                 json.dump(eval_metrics, f, indent=2)
                 
         avg_wait = np.mean([m['waiting_time'] for m in eval_results])
+        
+        # Standardized Performance Table
+        mode_str = "SUMO" if gui else "Mock"
+        print(f"\nRound {round_num + 1} Client Performance Summary:")
+        print(f"{'-'*90}")
+        print(f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'Throughput':<10} | {'Mode':<6}")
+        print(f"{'-'*90}")
+        for i, client in enumerate(clients):
+            m = eval_results[i]
+            t = train_metrics[i]
+            # Use data from configs list
+            arch_str = f"{client_configs[i]['hidden_dims']}"
+            tp = m.get('total_vehicles', 0)
+            print(f"{client.client_id:<12} | {arch_str:<16} | {t['average_reward']:>12.1f} | {m['waiting_time']:>14.2f} | {tp:>10} | {mode_str:<6}")
+        print(f"{'-'*90}")
         print(f"Round Summary: Avg Waiting Time = {avg_wait:.2f}s")
 
     print("\n" + "="*60)
@@ -103,10 +126,16 @@ def run_fedkd_simulation(num_rounds=15, results_dir="results_fedkd", gui=False):
     print("="*60)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--rounds", type=int, default=15)
-    parser.add_argument("--results-dir", type=str, default="results_fedkd")
-    parser.add_argument("--gui", action="store_true", help="Run with SUMO GUI")
+    parser = argparse.ArgumentParser(description="FedKD-RL Training")
+    parser.add_argument("--rounds", type=int, default=15, help="Number of federated rounds")
+    parser.add_argument("--num-clients", type=int, default=2, help="Number of simulated clients")
+    parser.add_argument("--results-dir", type=str, default="results_fedkd", help="Results directory")
+    parser.add_argument("--gui", action="store_true", help="Use SUMO GUI (Enforces real SUMO simulation)")
     args = parser.parse_args()
     
-    run_fedkd_simulation(num_rounds=args.rounds, results_dir=args.results_dir, gui=args.gui)
+    run_fedkd_simulation(
+        num_rounds=args.rounds, 
+        results_dir=args.results_dir, 
+        gui=args.gui,
+        num_clients=args.num_clients
+    )

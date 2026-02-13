@@ -224,17 +224,25 @@ def weighted_avg_params(params_list, weights):
         agg.append(layer_sum)
     return agg
 
-def run_multi_client_simulation(results_dir: str = "results_federated", gui: bool = False, num_rounds: int = 15):
+def run_multi_client_simulation(results_dir: str = "results_federated", gui: bool = False, num_rounds: int = 15, num_clients: int = 2):
     print("STARTING STANDARD FEDERATED LEARNING SIMULATION")
 
     import os
     os.makedirs(results_dir, exist_ok=True)
 
     # Heterogeneous map data configurations
-    client_configs = [
-        {"id": "client_1", "config": "sumo_configs2/osm.netccfg", "gui": gui},
-        {"id": "client_2", "config": "sumo_configs2/osm.polycfg", "gui": gui}
+    base_configs = [
+        "sumo_configs2/osm.netccfg",
+        "sumo_configs2/osm.polycfg"
     ]
+    
+    client_configs = []
+    for i in range(num_clients):
+        client_configs.append({
+            "id": f"client_{i+1}", 
+            "config": base_configs[i % len(base_configs)], 
+            "gui": gui
+        })
 
     clients = []
     for cfg in client_configs:
@@ -317,10 +325,27 @@ def run_multi_client_simulation(results_dir: str = "results_federated", gui: boo
 
         # ROUND SUMMARY
         avg_reward = np.mean([m.get("average_reward", 0) for m in train_metrics_list])
-        avg_waiting = np.mean([m.get("waiting_time", 0) for m in eval_metrics_list])
+        avg_waiting_time = np.mean([m.get('waiting_time', 0) for m in eval_metrics_list])
+        
+        # Standardized Performance Table
+        mode_str = "SUMO" if gui else "Mock"
+        print(f"\nRound {round_num + 1} Client Performance Summary:")
+        print(f"{'-'*90}")
+        print(f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'Throughput':<10} | {'Mode':<6}")
+        print(f"{'-'*90}")
+        for i, cfg in enumerate(client_configs):
+            e = eval_metrics_list[i]
+            t = train_metrics_list[i].get('average_reward', 0)
+            cid = cfg['id']
+            # Get short config name for context
+            ctx = os.path.basename(cfg['config'])
+            tp = e.get('total_vehicles', 0)
+            print(f"{cid:<12} | {ctx:<16} | {t:>12.1f} | {e.get('waiting_time', 0):>14.2f} | {tp:>10} | {mode_str:<6}")
+        print(f"{'-'*90}")
+        
         print(f"\nRound {round_num + 1} Summary:")
         print(f"  Avg Reward: {avg_reward:.4f}")
-        print(f"  Avg Waiting Time: {avg_waiting:.2f}")
+        print(f"  Avg Waiting Time: {avg_waiting_time:.2f}")
         print(f"  Congestion scores: {[round(c, 2) for c in congestion_scores]}")
         print(f"  Aggregation weights: {[round(w, 3) for w in weights]}")
 
@@ -338,57 +363,23 @@ def run_multi_client_simulation(results_dir: str = "results_federated", gui: boo
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Federated Learning Traffic Control")
-    parser.add_argument("--mode", choices=["server", "client", "single", "multi"], 
-                       default="single", help="Run mode")
-    parser.add_argument("--client-id", type=str, help="Client ID (for client mode)")
-    parser.add_argument("--sumo-config", type=str, default="sumo_configs/intersection.sumocfg",
-                       help="Path to SUMO config")
-    parser.add_argument("--server-address", type=str, default="localhost:8080",
-                       help="Server address")
-    parser.add_argument("--num-rounds", type=int, default=10, help="Number of rounds")
-    parser.add_argument("--min-clients", type=int, default=2, help="Minimum clients")
-    parser.add_argument(
-        "--results-dir",
-        type=str,
-        default="results",
-        help="Directory to store training/eval results",
-    )
-    parser.add_argument("--gui", action="store_true", help="Enable SUMO GUI")
-    parser.add_argument("--show-phase-console", action="store_true", help="Print TLS phase/time each step")
+    parser = argparse.ArgumentParser(description="Standard Federated Learning (FedAvg) Simulation")
+    parser.add_argument("--rounds", type=int, default=15, help="Number of federated rounds")
+    parser.add_argument("--clients", type=int, default=2, help="Number of simulated clients")
+    parser.add_argument("--results-dir", type=str, default="results_federated", help="Directory to store results")
+    parser.add_argument("--gui", action="store_true", help="Use SUMO GUI (Enforces real SUMO simulation)")
     
     args = parser.parse_args()
     
-    os.makedirs(args.results_dir, exist_ok=True)
+    # Run the multi-client simulation by default to match other orchestrators
+    run_multi_client_simulation(
+        results_dir=args.results_dir, 
+        gui=args.gui, 
+        num_rounds=args.rounds,
+        num_clients=args.clients
+    )
     
-    if args.mode == "server":
-        run_server(args.num_rounds, args.min_clients, args.server_address)
-    elif args.mode == "client":
-        if not args.client_id:
-            print("Error: --client-id is required for client mode")
-            return
-        
-        client = TrafficFLClient(
-            client_id=args.client_id,
-            sumo_config_path=args.sumo_config,
-            gui=args.gui,
-            show_phase_console=args.show_phase_console
-        )
-        
-        fl.client.start_numpy_client(
-            server_address=args.server_address,
-            client=client
-        )
-    elif args.mode == "single":
-        run_single_client_training(
-            gui=args.gui,
-            show_phase_console=args.show_phase_console,
-            results_dir=args.results_dir,
-        )
-    elif args.mode == "multi":
-        run_multi_client_simulation(results_dir=args.results_dir, gui=args.gui, num_rounds=args.num_rounds)
-    
-    print("Training completed!")
+    print("\nFedAvg simulation completed!")
 
 if __name__ == "__main__":
     create_client_script()

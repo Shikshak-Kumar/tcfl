@@ -1,0 +1,82 @@
+{
+  "avg_adaptation_loss": 4.3120036125183105,
+  "k_steps": 2,
+  "total_reward": -9657.5425,
+  "average_reward": -9.6575425,
+  "total_steps": 1000,
+  "waiting_time": 391796.0,
+  "queue_length": 391.796,
+  "max_queue_length": 513,
+  "avg_waiting_time_per_vehicle": 391.01397205588825,
+  "green_signal_time": {
+    "per_edge": {
+      "edge_n": 5.0,
+      "edge_e": 30.0,
+      "edge_s": 5.0,
+      "edge_w": 30.0
+    },
+    "avg_gst": 17.5,
+    "num_lanes": 4,
+    "min_green_time": 5.0,
+    "max_green_time": 30.0
+  },
+  "per_lane_metrics": {
+    "edge_n_0": {
+      "edge_id": "edge_n",
+      "lane_id": "edge_n_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 9.95020862566434,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    },
+    "edge_e_0": {
+      "edge_id": "edge_e",
+      "lane_id": "edge_e_0",
+      "vehicle_count": 251,
+      "queue_length": 251,
+      "waiting_time": 192489.0,
+      "average_speed": 3.346385760338362,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 251
+      },
+      "lane_length": 100.0
+    },
+    "edge_s_0": {
+      "edge_id": "edge_s",
+      "lane_id": "edge_s_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 4.140340054446905,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    },
+    "edge_w_0": {
+      "edge_id": "edge_w",
+      "lane_id": "edge_w_0",
+      "vehicle_count": 262,
+      "queue_length": 262,
+      "waiting_time": 199295.0,
+      "average_speed": 2.0211149297925917,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 262
+      },
+      "lane_length": 100.0
+    }
+  },
+  "lane_summary": {}
+}

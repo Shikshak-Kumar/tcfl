@@ -27,13 +27,25 @@ class TrafficFedKDClient(TrafficFLClient):
         self.agent = DQNAgent(state_size, action_size, hidden_dims=hidden_dims)
         
         # Environment initialization
+        # Environment initialization
         sumo_binary = "sumo-gui" if gui else "sumo"
-        if not shutil.which(sumo_binary):
-            raise RuntimeError(f"SUMO binary '{sumo_binary}' not found. Real system requires SUMO installation.")
+        self.use_mock = False
         
-        self.env = SUMOTrafficEnvironment(sumo_config_path, gui=gui, 
-                                          show_phase_console=show_phase_console, 
-                                          show_gst_gui=show_gst_gui)
+        if not shutil.which(sumo_binary):
+            print(f"Warning: SUMO binary '{sumo_binary}' not found. Using MockTrafficEnvironment.")
+            self.use_mock = True
+            
+        if self.use_mock:
+            from agents.mock_traffic_environment import MockTrafficEnvironment
+            self.env = MockTrafficEnvironment(sumo_config_path, gui=gui, 
+                                              show_phase_console=show_phase_console, 
+                                              show_gst_gui=show_gst_gui,
+                                              max_vehicles=1000,
+                                              traffic_pattern="rush_hour")
+        else:
+            self.env = SUMOTrafficEnvironment(sumo_config_path, gui=gui, 
+                                              show_phase_console=show_phase_console, 
+                                              show_gst_gui=show_gst_gui)
         
         self.episodes_per_round = 10
         self.max_steps_per_episode = 1000
@@ -72,12 +84,23 @@ class TrafficFedKDClient(TrafficFLClient):
         
         for episode in range(episodes):
             self.env.close()
-            self.env = SUMOTrafficEnvironment(
-                self.config_path,
-                gui=self.gui,
-                show_phase_console=self.show_phase_console,
-                show_gst_gui=self.show_gst_gui
-            )
+            if self.use_mock:
+                from agents.mock_traffic_environment import MockTrafficEnvironment
+                self.env = MockTrafficEnvironment(
+                    self.config_path,
+                    gui=self.gui,
+                    show_phase_console=self.show_phase_console,
+                    show_gst_gui=self.show_gst_gui,
+                    max_vehicles=1000,
+                    traffic_pattern="rush_hour"
+                )
+            else:
+                self.env = SUMOTrafficEnvironment(
+                    self.config_path,
+                    gui=self.gui,
+                    show_phase_console=self.show_phase_console,
+                    show_gst_gui=self.show_gst_gui
+                )
             state = self.env.reset()
             episode_reward = 0
             
@@ -118,12 +141,24 @@ class TrafficFedKDClient(TrafficFLClient):
         # Standard logic
         if self.env:
             self.env.close()
-        self.env = SUMOTrafficEnvironment(
-            self.config_path,
-            gui=self.gui,
-            show_phase_console=self.show_phase_console,
-            show_gst_gui=self.show_gst_gui
-        )
+        
+        if self.use_mock:
+            from agents.mock_traffic_environment import MockTrafficEnvironment
+            self.env = MockTrafficEnvironment(
+                self.config_path,
+                gui=self.gui,
+                show_phase_console=self.show_phase_console,
+                show_gst_gui=self.show_gst_gui,
+                max_vehicles=1000,
+                traffic_pattern="rush_hour"
+            )
+        else:
+            self.env = SUMOTrafficEnvironment(
+                self.config_path,
+                gui=self.gui,
+                show_phase_console=self.show_phase_console,
+                show_gst_gui=self.show_gst_gui
+            )
         state = self.env.reset()
         total_reward = 0
         total_steps = 0

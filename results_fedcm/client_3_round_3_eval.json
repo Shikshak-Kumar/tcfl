@@ -1,0 +1,102 @@
+{
+  "total_reward": -407.5425,
+  "average_reward": -0.7505386740331492,
+  "total_steps": 543,
+  "waiting_time": 56577.0,
+  "queue_length": 4.900552486187845,
+  "max_queue_length": 12,
+  "avg_waiting_time_per_vehicle": 56.464071856287426,
+  "green_signal_time": {
+    "per_edge": {
+      "edge_n": 5.0,
+      "edge_e": 5.0,
+      "edge_s": 5.0,
+      "edge_w": 5.0
+    },
+    "avg_gst": 5.0,
+    "num_lanes": 4,
+    "min_green_time": 5.0,
+    "max_green_time": 30.0
+  },
+  "per_lane_metrics": {
+    "edge_n_0": {
+      "edge_id": "edge_n",
+      "lane_id": "edge_n_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 6.160714158289567,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    },
+    "edge_e_0": {
+      "edge_id": "edge_e",
+      "lane_id": "edge_e_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 33.0,
+      "average_speed": 13.293265655309717,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    },
+    "edge_s_0": {
+      "edge_id": "edge_s",
+      "lane_id": "edge_s_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 9.79085388972158,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    },
+    "edge_w_0": {
+      "edge_id": "edge_w",
+      "lane_id": "edge_w_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 13.0,
+      "average_speed": 8.852687807247936,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    }
+  },
+  "lane_summary": {},
+  "training": {
+    "average_reward": -5747.549499999999,
+    "total_steps": 6884,
+    "average_loss": 0.1441337830305342,
+    "episodes": 10
+  },
+  "distillation": {
+    "distill_loss": 107.9057113647461,
+    "epochs": 5,
+    "method": "mse",
+    "temperature": 2.0,
+    "lambda": 0.5
+  },
+  "architecture": {
+    "type": "DQN",
+    "hidden_dims": [
+      64,
+      32
+    ],
+    "state_size": 12,
+    "action_size": 4
+  }
+}

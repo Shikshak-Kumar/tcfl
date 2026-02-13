@@ -25,35 +25,71 @@ python3 -c "import torch, numpy, flwr, traci; print('Environment check passed.')
 
 ## 2. Simulation Execution
 
-### Federated Knowledge Distillation (FedKD)
-The FedKD module utilizes real-world traffic states observed during simulation for knowledge transfer.
+The system supports two environment modes for all federated reinforcement learning algorithms.
 
-**1. Execution without GUI (Headless/Optimized)**
-Use this for faster training and technical verification.
-```bash
-python3 train_fedkd.py --rounds 20 --results-dir results_fedkd_final
-```
+> [!IMPORTANT]
+> - **Mock Mode** (Default): Run *without* the `--gui` flag. Uses high-fidelity internal traffic data for fast logic verification.
+> - **SUMO Mode**: Run *with* the `--gui` flag. Requires an installed SUMO simulator to open a real-time visual simulation.
 
-**2. Execution with SUMO GUI (Visual Simulation)**
-Use this to visually inspect traffic dynamics and signal transitions.
-```bash
-python3 train_fedkd.py --rounds 20 --results-dir results_fedkd_visual --gui
-```
+### 2.1 FedFlow-TSC (Hierarchical Graph-Aware)
+**Goal**: Optimize traffic flow through spatial clustering and graph-coupled agents.
 
-### Standard Federated Learning
-To execute a standard federated simulation with or without GUI:
+*   **Default Command**: `python3 train_fedflow.py`
+*   **Default Behavior**: 5 rounds, 6 nodes, 2 clusters, Mock Mode.
+*   **Parameters**:
+    *   `--rounds`: Number of federated rounds (Default: 5).
+    *   `--nodes`: Total number of simulated intersections (Default: 6).
+    *   `--clusters`: Number of spatial clusters to group nodes into (Default: 2).
+    *   `--gui`: Enable SUMO GUI (Action: store_true).
 
-**Headless Mode:**
-```bash
-python3 train_federated.py --mode multi --num-rounds 15 --results-dir results_standard_final
-```
+### 2.2 FedCM-RL (Cross-Model Distillation)
+**Goal**: Enable collaborative training between agents with different AI architectures.
 
-**GUI Mode:**
-```bash
-python3 train_federated.py --mode multi --num-rounds 15 --results-dir results_standard_visual --gui
-```
+*   **Default Command**: `python3 train_fedcm.py`
+*   **Default Behavior**: 15 rounds, 3 clients, "performance" weighting, Mock Mode.
+*   **Parameters**:
+    *   `--rounds`: Number of federated rounds (Default: 15).
+    *   `--num-clients`: Number of simulated clients (Default: 3).
+    *   `--proxy-size`: Size of the knowledge-sharing proxy dataset (Default: 2000).
+    *   `--weighting`: Aggregation method: `uniform` or `performance` (Default: `performance`).
+    *   `--results-dir`: Output directory (Default: `results_fedcm`).
+    *   `--gui`: Enable SUMO GUI.
 
-## 3. Results Analysis and Visualization
+### 2.3 FedKD-RL (Knowledge Distillation)
+**Goal**: State-representation sharing via Teacher-Student distillation.
+
+*   **Default Command**: `python3 train_fedkd.py`
+*   **Default Behavior**: 15 rounds, 2 clients, Mock Mode.
+*   **Parameters**:
+    *   `--rounds`: Number of federated rounds (Default: 15).
+    *   `--num-clients`: Number of simulated clients (Default: 2).
+    *   `--results-dir`: Output directory (Default: `results_fedkd`).
+    *   `--gui`: Enable SUMO GUI.
+
+### 2.4 FedAvg (Standard Baseline)
+**Goal**: Standard federated averaging for traffic control.
+
+*   **Default Command**: `python3 train_federated.py`
+*   **Default Behavior**: 15 rounds, 2 clients, Mock Mode.
+*   **Parameters**:
+    *   `--rounds`: Number of federated rounds (Default: 15).
+    *   `--clients`: Number of simulated clients (Default: 2).
+    *   `--results-dir`: Output directory (Default: `results_federated`).
+    *   `--gui`: Enable SUMO GUI.
+
+---
+
+## 3. Parameter Customization Guide
+
+| Parameter | Recommended Use Case | Explanation |
+| :--- | :--- | :--- |
+| **`--rounds`** | Convergence testing | Increase (20+) for deeper training; decrease (1-5) for fast logic checks. |
+| **`--num-clients`** | City-scale simulation | Use 10+ clients to simulate large-scale city networks. Configs will cycle automatically. |
+| **`--gui`** | Visual Debugging | Pass this flag to watch vehicles move and traffic lights change in real-time. |
+| **`--proxy-size`** | Distillation Quality | (FedCM/FedKD) Increase for better knowledge transfer between heterogeneous models. |
+| **`--weighting`** | Heterogeneity tuning | (FedCM) Use `performance` to favor clients with lower wait times during aggregation. |
+
+## 4. Results Analysis and Visualization
 
 Utilize the following utilities to generate professional-grade performance reports:
 
@@ -61,16 +97,19 @@ Utilize the following utilities to generate professional-grade performance repor
    ```bash
    python3 visualize_results.py
    ```
-   Generates comprehensive performance visualizations in `results/training_dashboard_latest.png`.
+   Generates comprehensive performance visualizations in `results/`.
 
 2. **Statistical Summary**:
    ```bash
    python3 analyze_results.py
    ```
-   Outputs a detailed statistical summary of traffic flow improvements and reward metrics.
+   Outputs a detailed statistical summary of traffic flow improvements.
 
-## 4. Operational Considerations
+## 5. Operational Considerations
 
-- **GUI Execution**: To visualize traffic dynamics, include the `--gui` flag. 
-- **Headless Execution**: For performance-optimized training or execution on remote servers, omit the `--gui` flag.
-- **Data Persistence**: Metrics are archived in `.json` format within the specified results directory for further post-processing.
+- **Strict Separation**: CLI mode (no flag) *always* uses Mock data for performance. GUI mode (`--gui`) *always* opens SUMO.
+- **Reporting**: All algorithms produce a detailed **Performance Table** at the end of each round.
+- **Unit Testing**: You can verify individual component health using:
+  ```bash
+  python3 test_fedflow_components.py
+  ```

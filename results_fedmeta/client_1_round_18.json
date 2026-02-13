@@ -1,0 +1,83 @@
+{
+  "avg_adaptation_loss": 1293619276.8,
+  "k_steps": 5,
+  "buffer_size": 499,
+  "total_reward": -19486.295,
+  "average_reward": -19.486295,
+  "total_steps": 1000,
+  "waiting_time": 313167448.0,
+  "queue_length": 778.913,
+  "max_queue_length": 1012,
+  "avg_waiting_time_per_vehicle": 312230.75573280157,
+  "green_signal_time": {
+    "per_edge": {
+      "edge_n": 30.0,
+      "edge_e": 30.0,
+      "edge_s": 30.0,
+      "edge_w": 30.0
+    },
+    "avg_gst": 30.0,
+    "num_lanes": 4,
+    "min_green_time": 5.0,
+    "max_green_time": 30.0
+  },
+  "per_lane_metrics": {
+    "edge_n_0": {
+      "edge_id": "edge_n",
+      "lane_id": "edge_n_0",
+      "vehicle_count": 246,
+      "queue_length": 246,
+      "waiting_time": 190525.0,
+      "average_speed": 2.375106479408529,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 246
+      },
+      "lane_length": 100.0
+    },
+    "edge_e_0": {
+      "edge_id": "edge_e",
+      "lane_id": "edge_e_0",
+      "vehicle_count": 272,
+      "queue_length": 272,
+      "waiting_time": 209362.0,
+      "average_speed": 0.5845348188244714,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 272
+      },
+      "lane_length": 100.0
+    },
+    "edge_s_0": {
+      "edge_id": "edge_s",
+      "lane_id": "edge_s_0",
+      "vehicle_count": 244,
+      "queue_length": 244,
+      "waiting_time": 190805.0,
+      "average_speed": 1.9630110183890896,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 244
+      },
+      "lane_length": 100.0
+    },
+    "edge_w_0": {
+      "edge_id": "edge_w",
+      "lane_id": "edge_w_0",
+      "vehicle_count": 250,
+      "queue_length": 250,
+      "waiting_time": 188221.0,
+      "average_speed": 0.7277079586545804,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 250
+      },
+      "lane_length": 100.0
+    }
+  },
+  "lane_summary": {}
+}

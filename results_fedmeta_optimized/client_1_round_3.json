@@ -1,0 +1,83 @@
+{
+  "avg_adaptation_loss": 4532.58056640625,
+  "k_steps": 5,
+  "buffer_size": 5197,
+  "total_reward": -19034.2575,
+  "average_reward": -19.0342575,
+  "total_steps": 1000,
+  "waiting_time": 388020.0,
+  "queue_length": 388.02,
+  "max_queue_length": 510,
+  "avg_waiting_time_per_vehicle": 388.02,
+  "green_signal_time": {
+    "per_edge": {
+      "edge_n": 30.0,
+      "edge_e": 5.0,
+      "edge_s": 30.0,
+      "edge_w": 5.0
+    },
+    "avg_gst": 17.5,
+    "num_lanes": 4,
+    "min_green_time": 5.0,
+    "max_green_time": 30.0
+  },
+  "per_lane_metrics": {
+    "edge_n_0": {
+      "edge_id": "edge_n",
+      "lane_id": "edge_n_0",
+      "vehicle_count": 266,
+      "queue_length": 266,
+      "waiting_time": 202857.0,
+      "average_speed": 2.554442754482963,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 266
+      },
+      "lane_length": 100.0
+    },
+    "edge_e_0": {
+      "edge_id": "edge_e",
+      "lane_id": "edge_e_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 2.191044836340084,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    },
+    "edge_s_0": {
+      "edge_id": "edge_s",
+      "lane_id": "edge_s_0",
+      "vehicle_count": 244,
+      "queue_length": 244,
+      "waiting_time": 185162.0,
+      "average_speed": 3.451811901259444,
+      "occupancy_percent": 100,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 244
+      },
+      "lane_length": 100.0
+    },
+    "edge_w_0": {
+      "edge_id": "edge_w",
+      "lane_id": "edge_w_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 13.026865399968875,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    }
+  },
+  "lane_summary": {}
+}

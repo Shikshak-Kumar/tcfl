@@ -24,14 +24,32 @@ class TrafficFLClient(fl.client.NumPyClient):
         
         self.agent = DQNAgent(state_size, action_size)
         
-        # Environment initialization
-        sumo_binary = "sumo-gui" if gui else "sumo"
-        if not shutil.which(sumo_binary):
-            raise RuntimeError(f"SUMO binary '{sumo_binary}' not found. Real system requires SUMO installation.")
+        # Environment selection: CLI=Mock, GUI=SUMO
+        if not gui:
+            self.use_mock = True
+            print(f"[{self.client_id}] CLI mode: Using high-fidelity MockTrafficEnvironment.")
+        else:
+            self.use_mock = False
+            sumo_binary = "sumo-gui"
+            if not shutil.which(sumo_binary):
+                raise RuntimeError(
+                    f"CRITICAL ERROR: 'sumo-gui' not found in PATH.\n"
+                    f"GUI mode requires an installed SUMO simulator.\n"
+                    f"To run without SUMO, omit the --gui flag to use Mock mode."
+                )
+            print(f"[{self.client_id}] GUI mode: Initializing real SUMO simulation.")
         
-        self.env = SUMOTrafficEnvironment(sumo_config_path, gui=gui, 
-                                          show_phase_console=show_phase_console, 
-                                          show_gst_gui=show_gst_gui)
+        if self.use_mock:
+            from agents.mock_traffic_environment import MockTrafficEnvironment
+            self.env = MockTrafficEnvironment(sumo_config_path, gui=False, 
+                                              show_phase_console=show_phase_console, 
+                                              show_gst_gui=show_gst_gui,
+                                              max_vehicles=1000,
+                                              traffic_pattern="rush_hour")
+        else:
+            self.env = SUMOTrafficEnvironment(sumo_config_path, gui=True, 
+                                              show_phase_console=show_phase_console, 
+                                              show_gst_gui=show_gst_gui)
         
         self.episodes_per_round = 10
         self.max_steps_per_episode = 1000
@@ -95,12 +113,23 @@ class TrafficFLClient(fl.client.NumPyClient):
         
         for episode in range(episodes):
             self.env.close()
-            self.env = SUMOTrafficEnvironment(
-                self.config_path,
-                gui=self.gui,
-                show_phase_console=self.show_phase_console,
-                show_gst_gui=self.show_gst_gui
-            )
+            if self.use_mock:
+                from agents.mock_traffic_environment import MockTrafficEnvironment
+                self.env = MockTrafficEnvironment(
+                    self.config_path,
+                    gui=False,
+                    show_phase_console=self.show_phase_console,
+                    show_gst_gui=self.show_gst_gui,
+                    max_vehicles=1000,
+                    traffic_pattern="rush_hour"
+                )
+            else:
+                self.env = SUMOTrafficEnvironment(
+                    self.config_path,
+                    gui=True,
+                    show_phase_console=self.show_phase_console,
+                    show_gst_gui=self.show_gst_gui
+                )
             state = self.env.reset()
             episode_reward = 0
             episode_steps = 0
@@ -138,12 +167,24 @@ class TrafficFLClient(fl.client.NumPyClient):
         """Evaluation loop in simulation."""
         if self.env:
             self.env.close()
-        self.env = SUMOTrafficEnvironment(
-            self.config_path,
-            gui=self.gui,
-            show_phase_console=self.show_phase_console,
-            show_gst_gui=self.show_gst_gui
-        )
+        
+        if self.use_mock:
+            from agents.mock_traffic_environment import MockTrafficEnvironment
+            self.env = MockTrafficEnvironment(
+                self.config_path,
+                gui=False,
+                show_phase_console=self.show_phase_console,
+                show_gst_gui=self.show_gst_gui,
+                max_vehicles=1000,
+                traffic_pattern="rush_hour"
+            )
+        else:
+            self.env = SUMOTrafficEnvironment(
+                self.config_path,
+                gui=True,
+                show_phase_console=self.show_phase_console,
+                show_gst_gui=self.show_gst_gui
+            )
         state = self.env.reset()
         total_reward = 0
         total_steps = 0
