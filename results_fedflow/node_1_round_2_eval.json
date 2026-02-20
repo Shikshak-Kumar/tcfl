@@ -1,0 +1,109 @@
+{
+  "node_id": "node_1",
+  "cluster_id": "cluster_0",
+  "round": 2,
+  "total_reward": -258.20000000000016,
+  "avg_waiting_time": 9.817490494296578,
+  "total_vehicles": 263,
+  "loss": 0.4984610080718994,
+  "mode": "Mock",
+  "metrics": {
+    "total_waiting_time": 2582.0,
+    "total_vehicles": 263,
+    "average_queue_length": 12.91,
+    "max_queue_length": 28,
+    "steps": 200,
+    "avg_waiting_time_per_vehicle": 9.817490494296578,
+    "green_signal_time": {
+      "per_edge": {
+        "edge_n": 6.5,
+        "edge_e": 6.5,
+        "edge_s": 5.0,
+        "edge_w": 15.5
+      },
+      "avg_gst": 8.375,
+      "num_lanes": 4,
+      "min_green_time": 5.0,
+      "max_green_time": 30.0
+    },
+    "safety": {
+      "total_accidents": 0,
+      "near_misses": 0,
+      "safety_score": 100
+    },
+    "per_lane_metrics": {
+      "edge_n_0": {
+        "edge_id": "edge_n",
+        "lane_id": "edge_n_0",
+        "vehicle_count": 1,
+        "queue_length": 1,
+        "waiting_time": 27.0,
+        "average_speed": 0.31587639646991517,
+        "occupancy_percent": 5,
+        "green_signal_time": 0,
+        "vehicle_types": {
+          "car": 1
+        },
+        "lane_length": 100.0
+      },
+      "edge_e_0": {
+        "edge_id": "edge_e",
+        "lane_id": "edge_e_0",
+        "vehicle_count": 1,
+        "queue_length": 1,
+        "waiting_time": 170.0,
+        "average_speed": 1.0006146218135807,
+        "occupancy_percent": 5,
+        "green_signal_time": 0,
+        "vehicle_types": {
+          "car": 1
+        },
+        "lane_length": 100.0
+      },
+      "edge_s_0": {
+        "edge_id": "edge_s",
+        "lane_id": "edge_s_0",
+        "vehicle_count": 0,
+        "queue_length": 0,
+        "waiting_time": 363.0,
+        "average_speed": 4.052725270152993,
+        "occupancy_percent": 0,
+        "green_signal_time": 0,
+        "vehicle_types": {
+          "car": 0
+        },
+        "lane_length": 100.0
+      },
+      "edge_w_0": {
+        "edge_id": "edge_w",
+        "lane_id": "edge_w_0",
+        "vehicle_count": 7,
+        "queue_length": 7,
+        "waiting_time": 761.0,
+        "average_speed": 0.2813355152124136,
+        "occupancy_percent": 35,
+        "green_signal_time": 0,
+        "vehicle_types": {
+          "car": 7
+        },
+        "lane_length": 100.0
+      }
+    },
+    "lane_summary": {
+      "total_waiting_time": 2582.0,
+      "total_queue_length": 12.91,
+      "num_congested_lanes": 1.0,
+      "total_lanes": 4.0,
+      "average_gst": 0.0,
+      "min_gst": 0.0,
+      "max_gst": 0.0,
+      "max_queue_length": 28.0,
+      "max_waiting_time": 2582.0,
+      "average_speed": 0.0,
+      "num_active_lanes": 3.0,
+      "total_occupancy": 64.55,
+      "total_vehicles": 263
+    },
+    "total_reward": -258.20000000000016
+  }
+}

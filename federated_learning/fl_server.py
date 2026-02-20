@@ -5,6 +5,7 @@ import json
 import time
 from datetime import datetime
 import os
+from federated_learning.congestion_strategy import CongestionStrategy
 
 class TrafficFLServer:
     
@@ -122,22 +123,31 @@ class TrafficFLServer:
         return aggregated
     
     def run_federated_learning(self, server_address: str = "localhost:8080"):
-        print(f"Starting Federated Learning Server on {server_address}")
-        print(f"Rounds: {self.num_rounds}, Min clients: {self.min_clients}")
-        
-        strategy = fl.server.strategy.FedAvg(
+
+        import flwr as fl
+        from flwr.server import ServerConfig
+        from flwr.server.server import Server
+
+        print(f"\n🚦 Federated Traffic Server running on {server_address}")
+        print("Waiting for clients to connect...\n")
+
+        strategy = CongestionStrategy(
             min_available_clients=self.min_clients,
             min_fit_clients=self.min_fit_clients,
             min_evaluate_clients=self.min_eval_clients,
             on_fit_config_fn=self.get_fit_config,
             on_evaluate_config_fn=self.get_eval_config,
         )
-        
+
+        #server = Server(strategy=strategy)
+
         fl.server.start_server(
             server_address=server_address,
-            config=fl.server.ServerConfig(num_rounds=self.num_rounds),
             strategy=strategy,
+            config=ServerConfig(num_rounds=self.num_rounds),
         )
+
+
     
     def save_results(self):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

@@ -64,7 +64,8 @@ class SUMOTrafficEnvironment:
             "--no-step-log", "true",
             "--collision.action", "teleport",
             "--time-to-teleport", "60",
-            "--step-length", "1.0"
+            "--step-length", "1.0",
+            "--ignore-route-errors", "true"
         ]
         try:
             cfg_dir = os.path.dirname(self.sumo_config_path)
