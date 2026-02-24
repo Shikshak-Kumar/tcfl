@@ -68,7 +68,7 @@ class TrafficFLClient(fl.client.NumPyClient):
             )
 
         self.episodes_per_round = 2
-        self.max_steps_per_episode = 200
+        self.max_steps_per_episode = 1000
 
         self.training_history = []
         self.performance_metrics = []
@@ -137,6 +137,8 @@ class TrafficFLClient(fl.client.NumPyClient):
             "average_reward": float(evaluation_metrics.get("average_reward", 0.0)),
             "waiting_time": float(evaluation_metrics.get("waiting_time", 0.0)),
             "queue_length": float(evaluation_metrics.get("queue_length", 0.0)),
+            "throughput": float(evaluation_metrics.get("throughput", 0)),
+            "throughput_ratio": float(evaluation_metrics.get("throughput_ratio", 0.0)),
             "max_queue_length": float(evaluation_metrics.get("max_queue_length", 0.0)),
             "total_steps": int(evaluation_metrics.get("total_steps", 1)),
         }
@@ -274,6 +276,9 @@ class TrafficFLClient(fl.client.NumPyClient):
             "waiting_time": performance["total_waiting_time"],
             "queue_length": performance["average_queue_length"],
             "max_queue_length": performance["max_queue_length"],
+            "throughput": performance.get("throughput", 0),
+            "total_departed": performance.get("total_departed", 0),
+            "throughput_ratio": performance.get("throughput_ratio", 0.0),
             "avg_waiting_time_per_vehicle": performance.get(
                 "avg_waiting_time_per_vehicle", 0.0
             ),

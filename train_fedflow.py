@@ -156,7 +156,7 @@ class FedFlowTrainer:
                 if done:
                     break
 
-            loss = agent.replay()
+            loss = agent.replay()  # Replay memory
             metrics = env.get_performance_metrics()
             metrics["total_reward"] = total_reward
             node_metrics[nid] = metrics
@@ -172,12 +172,16 @@ class FedFlowTrainer:
                 f"  {nid}: Reward={total_reward:.1f}, AvgWait={wait_time:.2f}s, Loss={loss:.4f}"
             )
 
+            # Close SUMO connection after each node to avoid "already active" error
+            if self.gui:
+                env.stop_simulation()
+
         # 2. Intra-Cluster Aggregation (Level 1)
         cluster_params = []
         cluster_info = {}
         for cluster in self.clusters:
             for nid in cluster.agent_ids:
-                throughput = node_metrics[nid]["total_vehicles"]
+                throughput = node_metrics[nid].get("throughput_ratio", 0.0)
                 cluster.update_flow(nid, float(throughput))
 
             agent_params = [self.agents[nid].get_weights() for nid in cluster.agent_ids]
@@ -202,9 +206,7 @@ class FedFlowTrainer:
             for nid in cluster.agent_ids:
                 wt = node_metrics[nid].get("avg_waiting_time_per_vehicle", 0.0)
                 if self.gui:
-                    wt = node_metrics[nid].get("total_waiting_time", 0.0) / max(
-                        1, node_metrics[nid].get("total_vehicles", 1)
-                    )
+                    wt = node_metrics[nid].get("avg_waiting_time_per_vehicle", 0.0)
                 wait_times.append(wt)
 
             congestion = float(np.mean(wait_times))
@@ -224,7 +226,7 @@ class FedFlowTrainer:
         print(f"\nRound {round_idx} Client Performance Summary:")
         print(f"{'-' * 90}")
         print(
-            f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'Throughput':<10} | {'Mode':<6}"
+            f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'TP Ratio':<10} | {'Mode':<6}"
         )
         print(f"{'-' * 90}")
 
@@ -243,7 +245,7 @@ class FedFlowTrainer:
                 wt = m.get("total_waiting_time", 0.0) / max(
                     1, m.get("total_vehicles", 1)
                 )
-            tp = m.get("total_vehicles", 0)
+            tp = m.get("throughput_ratio", 0)
 
             cid = "Unknown"
             for c in self.clusters:
@@ -309,7 +311,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="FedFlow-TSC Training")
-    parser.add_argument("--rounds", type=int, default=5, help="Number of rounds")
+    parser.add_argument("--rounds", type=int, default=3, help="Number of rounds")
     parser.add_argument("--nodes", type=int, default=6, help="Number of nodes")
     parser.add_argument("--clusters", type=int, default=2, help="Number of clusters")
     parser.add_argument(

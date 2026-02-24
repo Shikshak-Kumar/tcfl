@@ -163,7 +163,7 @@ def run_fedkd_simulation(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="FedKD-RL Training")
     parser.add_argument(
-        "--rounds", type=int, default=15, help="Number of federated rounds"
+        "--rounds", type=int, default=2, help="Number of federated rounds"
     )
     parser.add_argument(
         "--num-clients", type=int, default=2, help="Number of simulated clients"

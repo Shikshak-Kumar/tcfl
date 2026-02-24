@@ -1,6 +1,9 @@
 {
-  "average_reward": -101.40575000000015,
-  "total_steps": 5113,
-  "average_loss": 0.15181514676081068,
-  "episodes": 10
+  "average_reward": 380.59978129266904,
+  "total_steps": 800,
+  "average_loss": 0.014890958864307323,
+  "waiting_time": 0.0,
+  "queue_length": 0.0,
+  "num_congested_lanes": 0.0,
+  "total_lanes": 7.0
 }

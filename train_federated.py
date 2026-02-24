@@ -56,7 +56,7 @@ if __name__ == "__main__":
     print("Client script created: client.py")
 
 
-def run_server(num_rounds=4, min_clients=2, server_address="localhost:8080"):
+def run_server(num_rounds=3, min_clients=2, server_address="localhost:8080"):
     print("Starting Federated Learning Server...")
     print(f"Server Address: {server_address}")
     print(f"Rounds: {num_rounds}, Min Clients: {min_clients}")
@@ -245,7 +245,10 @@ def run_multi_client_simulation(
     os.makedirs(results_dir, exist_ok=True)
 
     # Heterogeneous map data configurations
-    base_configs = ["sumo_configs2/osm.sumocfg", "sumo_configs2/osm.sumocfg"]
+    base_configs = [
+        "sumo_configs2/osm_client1.sumocfg",
+        "sumo_configs2/osm_client2.sumocfg",
+    ]
 
     client_configs = []
     for i in range(num_clients):
@@ -392,7 +395,7 @@ def main():
         help="sim = old local simulation, server = FL server",
     )
 
-    parser.add_argument("--rounds", type=int, default=15)
+    parser.add_argument("--rounds", type=int, default=3)
     parser.add_argument("--clients", type=int, default=2)
     parser.add_argument("--results-dir", type=str, default="results_federated")
     parser.add_argument("--gui", action="store_true")

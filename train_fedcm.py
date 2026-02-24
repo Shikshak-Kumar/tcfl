@@ -276,7 +276,7 @@ def run_fedcm_simulation(
         print(f"\nRound {round_num} Client Performance Summary:")
         print(f"{'-' * 90}")
         print(
-            f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'Throughput':<10} | {'Mode':<6}"
+            f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'Throughput':<10} | {'TP Ratio':<9} | {'Mode':<6}"
         )
         print(f"{'-' * 90}")
         for i, client in enumerate(clients):
@@ -284,10 +284,12 @@ def run_fedcm_simulation(
             t = training_metrics[i]
             # Use data from configs list
             arch_str = f"{client_configs[i]['hidden_dims']}"
-            tp = e.get("total_vehicles", 0)
+            tp = e.get("throughput", 0)
+            ratio = e.get("throughput_ratio", 0.0)
 
             print(
-                f"{client.client_id:<12} | {arch_str:<16} | {t['average_reward']:>12.1f} | {e.get('waiting_time', 0):>14.2f} | {tp:>10} | {mode_str:<6}"
+                f"{client.client_id:<12} | {arch_str:<16} | {t['average_reward']:>12.1f} | "
+                f"{e.get('waiting_time', 0):>14.2f} | {tp:>10} | {ratio:>9.2f} | {mode_str:<6}"
             )
         print(f"{'-' * 90}")
 
@@ -331,7 +333,7 @@ def convert_to_json_serializable(obj):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="FedCM-RL Training")
     parser.add_argument(
-        "--rounds", type=int, default=5, help="Number of federated rounds"
+        "--rounds", type=int, default=2, help="Number of federated rounds"
     )
     parser.add_argument(
         "--num-clients", type=int, default=2, help="Number of simulated clients"
