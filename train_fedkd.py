@@ -139,6 +139,10 @@ def run_fedkd_simulation(
             with open(save_path, "w") as f:
                 json.dump(combined_metrics, f, indent=2)
 
+            # Save the local model for this round
+            model_path = os.path.join(results_dir, f"{client.client_id}_round_{round_num}_model.pt")
+            client.save_model(model_path)
+
         avg_wait = np.mean([m["waiting_time"] for m in eval_results])
 
         # Standardized Performance Table

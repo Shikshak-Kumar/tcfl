@@ -279,6 +279,10 @@ def run_fedcm_simulation(
             print(
                 f"  {client.client_id}: Waiting Time = {eval_metrics.get('waiting_time', 0):.2f}s"
             )
+            
+            # Save the local model for this round
+            model_path = os.path.join(results_dir, f"{client.client_id}_round_{round_num}_model.pt")
+            client.save_model(model_path)
 
         # ============================================
         # 7. Standardized Performance Table

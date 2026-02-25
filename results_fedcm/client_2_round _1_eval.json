@@ -1,0 +1,122 @@
+{
+  "total_reward": -3168.2000000000594,
+  "average_reward": -3.168200000000059,
+  "total_steps": 1000,
+  "waiting_time": 31302.0,
+  "queue_length": 31.302,
+  "max_queue_length": 52,
+  "throughput": 0,
+  "total_departed": 0,
+  "throughput_ratio": 0.0,
+  "avg_waiting_time_per_vehicle": 78.255,
+  "green_signal_time": {
+    "per_edge": {
+      "edge_n": 24.5,
+      "edge_e": 5.0,
+      "edge_s": 29.0,
+      "edge_w": 6.5
+    },
+    "avg_gst": 16.25,
+    "num_lanes": 4,
+    "min_green_time": 5.0,
+    "max_green_time": 30.0
+  },
+  "per_lane_metrics": {
+    "edge_n_0": {
+      "edge_id": "edge_n",
+      "lane_id": "edge_n_0",
+      "vehicle_count": 13,
+      "queue_length": 13,
+      "waiting_time": 13500.0,
+      "average_speed": 3.3843578254927777,
+      "occupancy_percent": 65,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 13
+      },
+      "lane_length": 100.0
+    },
+    "edge_e_0": {
+      "edge_id": "edge_e",
+      "lane_id": "edge_e_0",
+      "vehicle_count": 0,
+      "queue_length": 0,
+      "waiting_time": 0.0,
+      "average_speed": 7.109537603374332,
+      "occupancy_percent": 0,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 0
+      },
+      "lane_length": 100.0
+    },
+    "edge_s_0": {
+      "edge_id": "edge_s",
+      "lane_id": "edge_s_0",
+      "vehicle_count": 16,
+      "queue_length": 16,
+      "waiting_time": 16370.0,
+      "average_speed": 4.124721733621665,
+      "occupancy_percent": 80,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 16
+      },
+      "lane_length": 100.0
+    },
+    "edge_w_0": {
+      "edge_id": "edge_w",
+      "lane_id": "edge_w_0",
+      "vehicle_count": 1,
+      "queue_length": 1,
+      "waiting_time": 0.0,
+      "average_speed": 3.6933367124748857,
+      "occupancy_percent": 5,
+      "green_signal_time": 0,
+      "vehicle_types": {
+        "car": 1
+      },
+      "lane_length": 100.0
+    }
+  },
+  "lane_summary": {
+    "total_waiting_time": 31302.0,
+    "total_queue_length": 31.302,
+    "num_congested_lanes": 2.0,
+    "total_lanes": 4.0,
+    "average_gst": 0.0,
+    "min_gst": 0.0,
+    "max_gst": 0.0,
+    "max_queue_length": 52.0,
+    "max_waiting_time": 31302.0,
+    "average_speed": 0.0,
+    "num_active_lanes": 3.0,
+    "total_occupancy": 100.0,
+    "total_vehicles": 400
+  },
+  "training": {
+    "average_reward": -1502.4,
+    "total_steps": 636,
+    "average_loss": 0.009045459625495996,
+    "waiting_time": 15629.0,
+    "queue_length": 50.988431568431565,
+    "num_congested_lanes": 0.0,
+    "total_lanes": 4.0
+  },
+  "distillation": {
+    "distill_loss": 0.0736665353178978,
+    "epochs": 3,
+    "method": "mse",
+    "temperature": 2.5,
+    "lambda": 0.5
+  },
+  "architecture": {
+    "type": "DQN",
+    "hidden_dims": [
+      128,
+      64
+    ],
+    "state_size": 12,
+    "action_size": 4
+  }
+}

@@ -395,7 +395,7 @@ def run_multi_client_simulation(
         print(f"  Congestion scores: {[round(c, 2) for c in congestion_scores]}")
         print(f"  Aggregation weights: {[round(w, 3) for w in weights]}")
 
-        # SAVE METRICS
+        # SAVE METRICS & MODELS
         for client in clients:
             if not client.use_mock:
                 detailed = client.env.get_performance_metrics()
@@ -404,6 +404,16 @@ def run_multi_client_simulation(
                 )
                 with open(detailed_path, "w") as f:
                     json.dump(detailed, f, indent=2)
+
+            # Save the local model for this round
+            model_path = os.path.join(results_dir, f"{client.client_id}_round_{round_num}_model.pt")
+            client.save_model(model_path)
+            
+        # Optional: save the aggregated global parameters by assigning them back
+        # to the first client temporarily, mostly for offline inference.
+        global_model_path = os.path.join(results_dir, f"global_model_round_{round_num}.pt")
+        clients[0].set_parameters(global_params)
+        clients[0].save_model(global_model_path)
 
     print("FEDERATED LEARNING SIMULATION COMPLETED")
 

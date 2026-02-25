@@ -38,6 +38,7 @@ class ConfigResponse(BaseModel):
 
 @app.get("/api/config", response_model=ConfigResponse)
 async def get_config():
+    print("[API] GET /api/config requested by frontend")
     return {
         "cities": list(CITY_COORDINATES.keys()),
         "algorithms": ["Demo (No RL)", "FedFlow", "FedAvg", "FedCM", "FedKD"],
@@ -109,102 +110,172 @@ async def yield_simulated_ui_steps(websocket, round_idx, base_queue=50, base_rew
         })
         await asyncio.sleep(delay)
 
+async def run_live_inference(websocket, env, agent):
+    """Generic inference loop that streams real environment data to the websocket."""
+    state = env.reset()
+    step = 0
+    while True:
+        # Allow the agent to take actions without training
+        action = agent.act(state, training=False)
+        next_state, reward, done, info = env.step(action)
+        state = next_state
+        
+        # Extract metrics
+        total_queue = sum(env.lane_queues.values())
+        avg_wait = sum(env.lane_waiting_times.values()) / max(1, len(env.lane_waiting_times))
+        
+        payload = {
+            "step": step,
+            "reward": round(reward, 2),
+            "total_queue": total_queue,
+            "avg_wait": round(avg_wait, 1),
+            "total_vehicles": env.total_vehicles,
+            "accidents": env.total_accidents,
+        }
+        
+        if hasattr(env, 'congestion_multiplier'):
+            payload["congestion"] = round(env.congestion_multiplier, 2)
+            if hasattr(env, 'incident_jam_multiplier'):
+                payload["congestion"] *= env.incident_jam_multiplier
+            if hasattr(env, 'arrival_rate'):
+                payload["arrival_rate"] = round(env.arrival_rate, 2)
+            
+        try:
+            await websocket.send_json(payload)
+        except Exception as e:
+            print(f"[LiveInference] Failed to send over websocket: {e}")
+            break
+            
+        await asyncio.sleep(0.1)
+        if done:
+            print(f"[LiveInference] Environment reported DONE on step {step}. Resetting for continuous streaming.")
+            state = env.reset()
+            
+        step += 1
+        
+    print(f"[LiveInference] Exited inference loop after {step} steps.")
+
+def get_latest_model(directory: str) -> str:
+    """Helper to find the most recently modified .pt file in a directory."""
+    if not os.path.exists(directory):
+        return None
+        
+    models = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".pt")]
+    if not models:
+        return None
+        
+    return max(models, key=os.path.getmtime)
+
 async def run_fedavg_simulation(websocket, city, target_pois, use_tomtom):
     client1 = TrafficFLClient("client_1", "sumo_configs2/osm_client1.sumocfg", gui=False, use_tomtom=use_tomtom, tomtom_city=city, target_pois=target_pois)
-    client2 = TrafficFLClient("client_2", "sumo_configs2/osm_client2.sumocfg", gui=False, use_tomtom=use_tomtom, tomtom_city=city, target_pois=target_pois)
-    clients = [client1, client2]
-    global_params = None
-
-    for round_num in range(5):
-        await yield_simulated_ui_steps(websocket, round_num, base_queue=40, base_reward=0.1)
-        params_list = []
-        for client in clients:
-            current_params = global_params if global_params is not None else client.get_parameters({})
-            config = {"round": round_num, "episodes": 1, "learning_rate": 0.001}
-            updated_params, _, _ = client.fit(current_params, config)
-            params_list.append(updated_params)
-
-        weights = [0.5, 0.5]
-        num_layers = len(params_list[0])
-        agg = []
-        for layer_idx in range(num_layers):
-            layer_sum = None
-            for params, w in zip(params_list, weights):
-                if layer_sum is None:
-                    layer_sum = params[layer_idx] * w
-                else:
-                    layer_sum += params[layer_idx] * w
-            agg.append(layer_sum)
-        global_params = agg
-
-        for client in clients:
-            client.set_parameters(global_params)
+    # Attempt to load pre-trained weights dynamically
+    model_path = get_latest_model("results_federated")
+    if model_path:
+        try:
+            client1.load_model(model_path)
+            print(f"[WS] Loaded FedAvg model from {model_path}")
+        except Exception as e:
+            print(f"[WS] Error loading model: {e}")
+    else:
+        print(f"[WS] Warning: No trained model found for FedAvg in results_federated/. Using untrained weights.")
+        
+    await run_live_inference(websocket, client1.env, client1.agent)
 
 async def run_fedflow_simulation(websocket, city, target_pois, use_tomtom):
     trainer = FedFlowTrainer(num_nodes=4, num_clusters=2, gui=False, use_tomtom=use_tomtom, target_pois=target_pois)
     
-    for round_idx in range(3):
-        await yield_simulated_ui_steps(websocket, round_idx, base_queue=55, base_reward=-0.5)
-        trainer.run_round(round_idx)
-
-async def run_fedcm_simulation(websocket, city, target_pois, use_tomtom):
-    server = FedCMServer(state_dim=12, action_dim=4, proxy_dataset_size=500, weighting_method="performance")
-    client1 = FedCMClient("client_1", "sumo_configs2/osm_client1.sumocfg", "DQN", [256, 128], use_tomtom=use_tomtom, tomtom_city=city, target_pois=target_pois, gui=False)
-    client2 = FedCMClient("client_2", "sumo_configs2/osm_client2.sumocfg", "DQN", [128, 64], use_tomtom=use_tomtom, tomtom_city=city, target_pois=target_pois, gui=False)
-    clients = [client1, client2]
-
-    for round_num in range(1, 4):
-        await yield_simulated_ui_steps(websocket, round_num-1, base_queue=45, base_reward=-0.2)
+    # Grab the first focal node for visualization
+    nid = "node_0"
+    if nid in trainer.agents:
+        agent = trainer.agents[nid]
+        env = trainer.envs[nid]
         
-        client_states = []
-        all_logits = []
-        client_ids = []
-        for client in clients:
-            client.train(round_num)
-            if hasattr(client.agent, "memory") and len(client.agent.memory) > 0:
-                client_states.append(np.array([exp[0] for exp in list(client.agent.memory)[:200]]))
-                
-        if len(client_states) > 0:
-            proxy_states = server.construct_proxy_dataset(client_states)
+        # Try to load latest model
+        model_path = get_latest_model("results_fedflow")
+        if model_path:
+            try:
+                agent.load_model(model_path)
+                print(f"[WS] Loaded FedFlow model from {model_path}")
+            except Exception as e:
+                print(f"[WS] Error loading model: {e}")
         else:
-            proxy_states = np.random.rand(500, 12)
+            print(f"[WS] Warning: No trained model found for FedFlow in results_fedflow/. Using untrained weights.")
             
-        for client in clients:
-            all_logits.append(client.get_logits(proxy_states))
-            client_ids.append(client.client_id)
-            server.update_client_performance(client.client_id, 0.5) 
-
-        teacher_logits = server.compute_ensemble_teacher(all_logits, client_ids)
-        for client in clients:
-            client.distill(proxy_states, teacher_logits, epochs=2)
+        # FedFlow has a different signature for act/get_action needing a graph
+        # Since we are modifying server to do live inference, we need to adapt it
+        state = env.reset()
+        for step in range(200):
+            # Same mock graph construction as train_fedflow
+            state_graph, adj_node = trainer._get_node_graph_state(nid, state)
+            
+            action = agent.get_action(state_graph, adj_node)
+            next_state, reward, done, info = env.step(action)
+            state = next_state
+            
+            total_queue = sum(env.lane_queues.values())
+            avg_wait = sum(env.lane_waiting_times.values()) / max(1, len(env.lane_waiting_times))
+            
+            payload = {
+                "step": step,
+                "reward": round(reward, 2),
+                "total_queue": total_queue,
+                "avg_wait": round(avg_wait, 1),
+                "total_vehicles": env.total_vehicles,
+                "accidents": env.total_accidents,
+            }
+            if hasattr(env, 'congestion_multiplier'):
+                payload["congestion"] = round(env.congestion_multiplier, 2)
+                
+            await websocket.send_json(payload)
+            await asyncio.sleep(0.1)
+            if done:
+                break
+async def run_fedcm_simulation(websocket, city, target_pois, use_tomtom):
+    client1 = FedCMClient(
+        client_id="client_1", 
+        sumo_config_path="sumo_configs2/osm_client1.sumocfg", 
+        agent_type="DQN", 
+        hidden_dims=[256, 128], 
+        use_tomtom=use_tomtom, 
+        tomtom_city=city, 
+        target_pois=target_pois, 
+        gui=False
+    )
+    
+    model_path = get_latest_model("results_fedcm")
+    if model_path:
+        try:
+            client1.load_model(model_path)
+            print(f"[WS] Loaded FedCM model from {model_path}")
+        except Exception as e:
+            print(f"[WS] Error loading model: {e}")
+    else:
+        print(f"[WS] Warning: No trained model found for FedCM in results_fedcm/. Using untrained weights.")
+        
+    await run_live_inference(websocket, client1.env, client1.agent)
 
 async def run_fedkd_simulation(websocket, city, target_pois, use_tomtom):
-    server = TrafficFedKDServer(num_rounds=3, min_clients=2)
-    server.initialize_proxy_dataset(state_size=12)
-    client1 = TrafficFedKDClient("client_1", "sumo_configs2/osm_client1.sumocfg", [256, 128], gui=False, use_tomtom=use_tomtom, tomtom_city=city, target_pois=target_pois)
-    client2 = TrafficFedKDClient("client_2", "sumo_configs2/osm_client2.sumocfg", [64, 32], gui=False, use_tomtom=use_tomtom, tomtom_city=city, target_pois=target_pois)
-    clients = [client1, client2]
+    client1 = TrafficFedKDClient(
+        client_id="client_1", 
+        sumo_config_path="sumo_configs2/osm_client1.sumocfg", 
+        hidden_dims=[256, 128], 
+        use_tomtom=use_tomtom, 
+        tomtom_city=city, 
+        target_pois=target_pois, 
+        gui=False
+    )
 
-    for round_num in range(3):
-        await yield_simulated_ui_steps(websocket, round_num, base_queue=50, base_reward=-0.3)
+    model_path = get_latest_model("results_fedkd_sumo")
+    if model_path:
+        try:
+            client1.load_model(model_path)
+            print(f"[WS] Loaded FedKD model from {model_path}")
+        except Exception as e:
+            print(f"[WS] Error loading model: {e}")
+    else:
+        print(f"[WS] Warning: No trained model found for FedKD in results_fedkd_sumo/. Using untrained weights.")
         
-        observed_states = []
-        for client in clients:
-            client._train_agent(episodes=1)
-            observed_states.append(client.get_observed_states(limit=100))
-            
-        server.update_proxy_dataset(observed_states)
-        
-        if server.proxy_states.size > 0:
-            all_logits = []
-            for client in clients:
-                all_logits.append(client.get_logits(server.proxy_states))
-            
-            consensus_logits = server.aggregate_logits(all_logits)
-            
-            for client in clients:
-                client.distill(server.proxy_states, consensus_logits)
-
+    await run_live_inference(websocket, client1.env, client1.agent)
 @app.websocket("/api/simulate")
 async def websocket_simulate(websocket: WebSocket):
     await websocket.accept()

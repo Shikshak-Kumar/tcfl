@@ -96,8 +96,8 @@ const Sidebar = ({ config, simConfig, setSimConfig, isRunning, onToggleSimulatio
                                     disabled={isRunning}
                                     onClick={() => handlePoiToggle(poi)}
                                     className={`text-xs px-3 py-1.5 rounded-full border transition-all ${isSelected
-                                            ? 'bg-brand-500/20 border-brand-500/50 text-brand-400'
-                                            : 'bg-dark-900/50 border-slate-700/50 text-slate-400 hover:border-slate-600 disabled:opacity-50'
+                                        ? 'bg-brand-500/20 border-brand-500/50 text-brand-400'
+                                        : 'bg-dark-900/50 border-slate-700/50 text-slate-400 hover:border-slate-600 disabled:opacity-50'
                                         }`}
                                 >
                                     {poi}
@@ -112,8 +112,8 @@ const Sidebar = ({ config, simConfig, setSimConfig, isRunning, onToggleSimulatio
                 <button
                     onClick={onToggleSimulation}
                     className={`w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium transition-all ${isRunning
-                            ? 'bg-rose-500/20 text-rose-400 border border-rose-500/50 hover:bg-rose-500/30'
-                            : 'bg-brand-500 text-white shadow-lg shadow-brand-500/25 hover:bg-brand-400'
+                        ? 'bg-rose-500/20 text-rose-400 border border-rose-500/50 hover:bg-rose-500/30'
+                        : 'bg-brand-500 text-white shadow-lg shadow-brand-500/25 hover:bg-brand-400'
                         }`}
                 >
                     {isRunning ? (

@@ -1,9 +1,9 @@
 {
-  "average_reward": 380.59978129266904,
-  "total_steps": 800,
-  "average_loss": 0.014890958864307323,
-  "waiting_time": 0.0,
-  "queue_length": 0.0,
+  "average_reward": -97.15000000000006,
+  "total_steps": 546,
+  "average_loss": 0.020800972214111917,
+  "waiting_time": 971.5,
+  "queue_length": 3.563848631239935,
   "num_congested_lanes": 0.0,
-  "total_lanes": 7.0
+  "total_lanes": 4.0
 }

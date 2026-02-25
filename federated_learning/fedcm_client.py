@@ -36,9 +36,14 @@ class FedCMClient(TrafficFLClient):
                  gui: bool = False, show_phase_console: bool = False,
                  show_gst_gui: bool = False, 
                  use_tomtom: bool = False,
+                 tomtom_city: Optional[str] = None,
+                 target_pois: Optional[List[str]] = None,
+                 agent_type: str = "DQN",
+                 hidden_dims: List[int] = None,
+                 results_dir: str = "results_fedcm",
+                 temperature: float = 3.0,
                  lambda_distill: float = 0.5,
-                 distill_method: str = "mse",
-                 target_pois: Optional[List[str]] = None):
+                 distill_method: str = "mse"):
         """
         Initialize FedCM client.
         
@@ -57,6 +62,9 @@ class FedCMClient(TrafficFLClient):
             lambda_distill: Distillation loss weight
             distill_method: "mse" or "kl"
         """
+        
+        if hidden_dims is None:
+            hidden_dims = [256, 256, 128]
         
         # Store FedCM-specific params before parent init
         self.agent_type = agent_type
@@ -262,3 +270,9 @@ class FedCMClient(TrafficFLClient):
             return [self._convert_to_json_serializable(item) for item in obj]
         else:
             return obj
+
+    def save_model(self, filepath: str):
+        self.agent.save_model(filepath)
+        
+    def load_model(self, filepath: str):
+        self.agent.load_model(filepath)

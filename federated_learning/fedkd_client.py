@@ -261,3 +261,9 @@ class TrafficFedKDClient(TrafficFLClient):
             "waiting_time": performance["total_waiting_time"],
             "queue_length": performance["average_queue_length"],
         }
+
+    def save_model(self, filepath: str):
+        self.agent.save_model(filepath)
+        
+    def load_model(self, filepath: str):
+        self.agent.load_model(filepath)

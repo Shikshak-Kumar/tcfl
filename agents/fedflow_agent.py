@@ -135,3 +135,10 @@ class FedFlowAgent:
     def set_weights(self, weights: Dict):
         self.policy_net.load_state_dict(weights)
         self.target_net.load_state_dict(weights)
+
+    def save_model(self, filepath: str):
+        torch.save(self.policy_net.state_dict(), filepath)
+
+    def load_model(self, filepath: str):
+        self.policy_net.load_state_dict(torch.load(filepath, map_location=self.device))
+        self.update_target_network()

@@ -302,6 +302,10 @@ class FedFlowTrainer:
             )
             with open(node_file, "w") as f:
                 json.dump(convert_to_json_serializable(node_result), f, indent=2)
+                
+            # Save the local model for this round
+            model_path = os.path.join(self.results_dir, f"{nid}_round_{round_idx}_model.pt")
+            self.agents[nid].save_model(model_path)
 
         print(f"{'-' * 90}")
 

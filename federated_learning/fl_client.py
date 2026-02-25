@@ -346,6 +346,12 @@ class TrafficFLClient(fl.client.NumPyClient):
         with open(filepath, "w") as f:
             json.dump(self.performance_metrics, f, indent=2)
 
+    def save_model(self, filepath: str):
+        self.agent.save_model(filepath)
+        
+    def load_model(self, filepath: str):
+        self.agent.load_model(filepath)
+
     def get_client_info(self) -> Dict:
         return {
             "client_id": self.client_id,
