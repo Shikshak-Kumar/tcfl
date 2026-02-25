@@ -31,12 +31,24 @@ if __name__ == "__main__":
     parser.add_argument("--server-address", type=str, default="localhost:8080", help="Server address")
     parser.add_argument("--gui", action="store_true", help="Enable SUMO GUI")
     parser.add_argument("--show-phase-console", action="store_true", help="Print TLS phase/time each step")
+    parser.add_argument("--use-tomtom", action="store_true", help="Use real-time TomTom traffic data")
+    parser.add_argument("--tomtom-city", type=str, default="", help="City for TomTom data (if using TomTom)")
+    parser.add_argument("--target-pois", type=str, default="", help="Comma-separated list of target POIs")
     args = parser.parse_args()
     
+    # Parse target_pois if provided
+    target_pois_list = None
+    if args.target_pois:
+        target_pois_list = [p.strip() for p in args.target_pois.split(",")]
+
+    # Pass them into the client
     client = TrafficFLClient(
         client_id=args.client_id,
         sumo_config_path=args.sumo_config,
-        gui=args.gui
+        gui=args.gui,
+        use_tomtom=args.use_tomtom,
+        tomtom_city=args.tomtom_city if args.tomtom_city else None,
+        target_pois=target_pois_list
     )
     
     fl.client.start_numpy_client(
@@ -237,6 +249,8 @@ def run_multi_client_simulation(
     gui: bool = False,
     num_rounds: int = 15,
     num_clients: int = 2,
+    use_tomtom: bool = False,
+    target_pois: Optional[List[str]] = None,
 ):
     print("STARTING STANDARD FEDERATED LEARNING SIMULATION")
 
@@ -250,13 +264,18 @@ def run_multi_client_simulation(
         "sumo_configs2/osm_client2.sumocfg",
     ]
 
+    from utils.tomtom_api import CITY_COORDINATES
+    cities = list(CITY_COORDINATES.keys())
+
     client_configs = []
     for i in range(num_clients):
+        city = cities[i % len(cities)]
         client_configs.append(
             {
                 "id": f"client_{i + 1}",
                 "config": base_configs[i % len(base_configs)],
                 "gui": gui,
+                "city": city,
             }
         )
 
@@ -265,7 +284,12 @@ def run_multi_client_simulation(
         print(f"Initializing {cfg['id']}...")
         clients.append(
             TrafficFLClient(
-                client_id=cfg["id"], sumo_config_path=cfg["config"], gui=cfg["gui"]
+                client_id=cfg["id"],
+                sumo_config_path=cfg["config"],
+                gui=cfg["gui"],
+                use_tomtom=use_tomtom,
+                tomtom_city=cfg["city"],
+                target_pois=target_pois,
             )
         )
 
@@ -400,13 +424,29 @@ def main():
     parser.add_argument("--results-dir", type=str, default="results_federated")
     parser.add_argument("--gui", action="store_true")
 
+    parser.add_argument("--use-tomtom", action="store_true", help="Use real-time TomTom traffic data")
+    parser.add_argument("--target-pois", type=str, default=None, help="Comma-separated list of target POI categories")
+
     args = parser.parse_args()
     print("Running mode:", args.mode)
     create_client_script()
 
+    # Parse target_pois if provided
+    target_pois_list = None
+    if args.target_pois:
+        target_pois_list = [p.strip() for p in args.target_pois.split(",")]
+
     if args.mode == "server":
         run_server(num_rounds=args.rounds, min_clients=args.clients)
-
+    elif args.mode == "sim":
+        run_multi_client_simulation(
+            results_dir=args.results_dir,
+            gui=args.gui,
+            num_rounds=args.rounds,
+            num_clients=args.clients,
+            use_tomtom=args.use_tomtom,
+            target_pois=target_pois_list,
+        )
 
 if __name__ == "__main__":
     main()

@@ -27,7 +27,7 @@ def convert_to_json_serializable(obj):
 
 
 def run_fedkd_simulation(
-    num_rounds=15, results_dir="results_fedkd_sumo", gui=False, num_clients=2
+    num_rounds=15, results_dir="results_fedkd_sumo", gui=False, num_clients=2, use_tomtom=False, target_pois=None
 ):
     print("STARTING FEDKD SIMULATION")
 
@@ -46,12 +46,16 @@ def run_fedkd_simulation(
     # Architecture templates: [Large, Small]
     arch_templates = [{"hidden": [256, 256, 128]}, {"hidden": [64, 32]}]
 
+    from utils.tomtom_api import CITY_COORDINATES
+    cities = list(CITY_COORDINATES.keys())
+
     client_configs = []
     for i in range(num_clients):
         cfg = base_configs[i % len(base_configs)]
         arch = arch_templates[i % len(arch_templates)]
+        city = cities[i % len(cities)]
         client_configs.append(
-            {"id": f"client_{i + 1}", "config": cfg, "hidden_dims": arch["hidden"]}
+            {"id": f"client_{i + 1}", "config": cfg, "hidden_dims": arch["hidden"], "city": city}
         )
 
     clients = []
@@ -63,6 +67,9 @@ def run_fedkd_simulation(
                 sumo_config_path=cfg["config"],
                 hidden_dims=cfg["hidden_dims"],
                 gui=gui,
+                use_tomtom=use_tomtom,
+                tomtom_city=cfg["city"],
+                target_pois=target_pois,
             )
         )
 
@@ -179,11 +186,30 @@ if __name__ == "__main__":
         action="store_true",
         help="Use SUMO GUI (Enforces real SUMO simulation)",
     )
+    parser.add_argument(
+        "--use-tomtom",
+        action="store_true",
+        help="Use real-time TomTom traffic data"
+    )
+    parser.add_argument(
+        "--target-pois",
+        type=str,
+        default=None,
+        help="Comma-separated list of target POI categories (e.g. healthcare,education)",
+    )
+
     args = parser.parse_args()
+    
+    # Parse target_pois if provided
+    target_pois_list = None
+    if args.target_pois:
+        target_pois_list = [p.strip() for p in args.target_pois.split(",")]
 
     run_fedkd_simulation(
         num_rounds=args.rounds,
         results_dir=args.results_dir,
         gui=args.gui,
         num_clients=args.num_clients,
+        use_tomtom=args.use_tomtom,
+        target_pois=target_pois_list,
     )

@@ -14,12 +14,17 @@ if __name__ == "__main__":
     parser.add_argument("--server-address", type=str, default="localhost:8080", help="Server address")
     parser.add_argument("--gui", action="store_true", help="Enable SUMO GUI")
     parser.add_argument("--show-phase-console", action="store_true", help="Print TLS phase/time each step")
+    parser.add_argument("--use-tomtom", action="store_true", help="Use real-time TomTom traffic data")
+    parser.add_argument("--tomtom-city", type=str, default="", help="City for TomTom data (if using TomTom)")
     args = parser.parse_args()
     
+    # Pass them into the client
     client = TrafficFLClient(
         client_id=args.client_id,
         sumo_config_path=args.sumo_config,
-        gui=args.gui
+        gui=args.gui,
+        use_tomtom=args.use_tomtom,
+        tomtom_city=args.tomtom_city if args.tomtom_city else None
     )
     
     fl.client.start_numpy_client(

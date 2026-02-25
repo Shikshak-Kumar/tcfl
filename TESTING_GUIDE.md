@@ -23,7 +23,42 @@ pip install -r requirements.txt
 python3 -c "import torch, numpy, flwr, traci; print('Environment check passed.')"
 ```
 
-## 2. Simulation Execution
+## 2. API Configuration (Real-Time Traffic)
+
+To enable real-time traffic and POI data, you must configure a TomTom API Key.
+
+1.  **Obtain Key**: Register at [TomTom Developer Portal](https://developer.tomtom.com/).
+2.  **Environment Variable**:
+    ```bash
+    export TOMTOM_API_KEY="your_api_key_here"
+    ```
+
+## 3. Standalone API & Utility Testing
+
+Before running full simulations, verify the API connectivity and data parsing:
+
+### 3.1 TomTom Traffic & Incidents
+```bash
+# Test Traffic Flow for a specific city
+python3 -m utils.tomtom_api --flow --city Delhi
+
+# Test Traffic Incidents for custom coordinates
+python3 -m utils.tomtom_api --incidents --lat 28.5 --lon 77.1
+```
+
+### 3.2 OpenStreetMap POIs (Target Discovery)
+```bash
+# Verify POI discovery with raw coordinate returns
+python3 -m utils.osm_api --city Mumbai --radius 0.05
+```
+
+### 3.3 Live Simulation Demo
+Quickly verify the environment logic (POI weights + Live Flow) without full training:
+```bash
+python3 demo_tomtom.py --city Bangalore --target-pois healthcare,education
+```
+
+## 4. Simulation Execution
 
 The system supports two environment modes for all federated reinforcement learning algorithms.
 
@@ -74,6 +109,8 @@ The system supports two environment modes for all federated reinforcement learni
 *   **Parameters**:
     *   `--rounds`: Number of federated rounds (Default: 15).
     *   `--clients`: Number of simulated clients (Default: 2).
+    *   `--use-tomtom`: **[NEW]** Enable live traffic/incident data.
+    *   `--target-pois`: **[NEW]** Comma-separated categories (e.g. `commercial,leisure`).
     *   `--results-dir`: Output directory (Default: `results_federated`).
     *   `--gui`: Enable SUMO GUI.
 
@@ -88,6 +125,8 @@ The system supports two environment modes for all federated reinforcement learni
 | **`--gui`** | Visual Debugging | Pass this flag to watch vehicles move and traffic lights change in real-time. |
 | **`--proxy-size`** | Distillation Quality | (FedCM/FedKD) Increase for better knowledge transfer between heterogeneous models. |
 | **`--weighting`** | Heterogeneity tuning | (FedCM) Use `performance` to favor clients with lower wait times during aggregation. |
+| **`--use-tomtom`** | Real-world Simulation | Connects the simulation to live traffic flow and accident data via TomTom API. |
+| **`--target-pois`** | Targeted Optimization | Focuses traffic generators on specific areas (e.g. `healthcare`, `education`) to test priority routing. |
 
 ## 4. Results Analysis and Visualization
 

@@ -19,15 +19,19 @@ class TrafficFLClient(fl.client.NumPyClient):
         gui: bool = False,
         show_phase_console: bool = False,
         show_gst_gui: bool = False,
+        use_tomtom: bool = False,
+        tomtom_city: Optional[str] = None,
+        target_pois: Optional[List[str]] = None,
     ):
 
         self.client_id = client_id
-
         self.config_path = sumo_config_path
-
         self.gui = gui
         self.show_phase_console = show_phase_console
         self.show_gst_gui = show_gst_gui
+        self.use_tomtom = use_tomtom
+        self.tomtom_city = tomtom_city
+        self.target_pois = target_pois
 
         self.agent = DQNAgent(state_size, action_size)
 
@@ -49,16 +53,32 @@ class TrafficFLClient(fl.client.NumPyClient):
             print(f"[{self.client_id}] GUI mode: Initializing real SUMO simulation.")
 
         if self.use_mock:
-            from agents.mock_traffic_environment import MockTrafficEnvironment
-
-            self.env = MockTrafficEnvironment(
-                sumo_config_path,
-                gui=False,
-                show_phase_console=show_phase_console,
-                show_gst_gui=show_gst_gui,
-                max_vehicles=1000,
-                traffic_pattern="rush_hour",
-            )
+            if self.use_tomtom and self.tomtom_city:
+                from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
+                from utils.tomtom_api import CITY_COORDINATES
+                lat, lon = CITY_COORDINATES[self.tomtom_city]
+                self.env = TomTomTrafficEnvironment(
+                    self.config_path,
+                    tomtom_api_key=os.environ.get("TOMTOM_API_KEY", "oK2pgm45ieRxyEPgv876db2lGarwDFm2"),
+                    lat=lat,
+                    lon=lon,
+                    gui=False,
+                    show_phase_console=show_phase_console,
+                    show_gst_gui=show_gst_gui,
+                    max_vehicles=1000,
+                    traffic_pattern="real_time",
+                    target_pois=self.target_pois
+                )
+            else:
+                from agents.mock_traffic_environment import MockTrafficEnvironment
+                self.env = MockTrafficEnvironment(
+                    sumo_config_path,
+                    gui=False,
+                    show_phase_console=show_phase_console,
+                    show_gst_gui=show_gst_gui,
+                    max_vehicles=1000,
+                    traffic_pattern="rush_hour",
+                )
         else:
             self.env = SUMOTrafficEnvironment(
                 sumo_config_path,
@@ -166,16 +186,31 @@ class TrafficFLClient(fl.client.NumPyClient):
                 self.env.close()
 
             if self.use_mock:
-                from agents.mock_traffic_environment import MockTrafficEnvironment
-
-                self.env = MockTrafficEnvironment(
-                    self.config_path,
-                    gui=False,
-                    show_phase_console=self.show_phase_console,
-                    show_gst_gui=self.show_gst_gui,
-                    max_vehicles=1000,
-                    traffic_pattern="rush_hour",
-                )
+                if self.use_tomtom and self.tomtom_city:
+                    from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
+                    from utils.tomtom_api import CITY_COORDINATES, get_api_key
+                    lat, lon = CITY_COORDINATES[self.tomtom_city]
+                    self.env = TomTomTrafficEnvironment(
+                        self.config_path,
+                        tomtom_api_key=get_api_key(),
+                        lat=lat,
+                        lon=lon,
+                        gui=False,
+                        show_phase_console=self.show_phase_console,
+                        show_gst_gui=self.show_gst_gui,
+                        max_vehicles=1000,
+                        traffic_pattern="real_time",
+                    )
+                else:
+                    from agents.mock_traffic_environment import MockTrafficEnvironment
+                    self.env = MockTrafficEnvironment(
+                        self.config_path,
+                        gui=False,
+                        show_phase_console=self.show_phase_console,
+                        show_gst_gui=self.show_gst_gui,
+                        max_vehicles=1000,
+                        traffic_pattern="rush_hour",
+                    )
             else:
                 self.env = SUMOTrafficEnvironment(
                     self.config_path,
@@ -235,16 +270,32 @@ class TrafficFLClient(fl.client.NumPyClient):
             self.env.close()
 
         if self.use_mock:
-            from agents.mock_traffic_environment import MockTrafficEnvironment
-
-            self.env = MockTrafficEnvironment(
-                self.config_path,
-                gui=False,
-                show_phase_console=self.show_phase_console,
-                show_gst_gui=self.show_gst_gui,
-                max_vehicles=1000,
-                traffic_pattern="rush_hour",
-            )
+            if self.use_tomtom and self.tomtom_city:
+                from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
+                from utils.tomtom_api import CITY_COORDINATES
+                lat, lon = CITY_COORDINATES[self.tomtom_city]
+                self.env = TomTomTrafficEnvironment(
+                    self.config_path,
+                    tomtom_api_key="oK2pgm45ieRxyEPgv876db2lGarwDFm2",
+                    lat=lat,
+                    lon=lon,
+                    gui=False,
+                    show_phase_console=self.show_phase_console,
+                    show_gst_gui=self.show_gst_gui,
+                    target_pois=self.target_pois,
+                    max_vehicles=1000,
+                    traffic_pattern="real_time",
+                )
+            else:
+                from agents.mock_traffic_environment import MockTrafficEnvironment
+                self.env = MockTrafficEnvironment(
+                    self.config_path,
+                    gui=False,
+                    show_phase_console=self.show_phase_console,
+                    show_gst_gui=self.show_gst_gui,
+                    max_vehicles=1000,
+                    traffic_pattern="rush_hour",
+                )
         else:
             self.env = SUMOTrafficEnvironment(
                 self.config_path,

@@ -22,11 +22,15 @@ class FedFlowTrainer:
         num_clusters: int = 2,
         gui: bool = False,
         results_dir: str = "results_fedflow",
+        use_tomtom: bool = False,
+        target_pois: Optional[List[str]] = None,
     ):
         self.num_nodes = num_nodes
         self.num_clusters = num_clusters
         self.gui = gui
         self.results_dir = results_dir
+        self.use_tomtom = use_tomtom
+        self.target_pois = target_pois
         os.makedirs(self.results_dir, exist_ok=True)
         self.all_round_results = []
 
@@ -60,13 +64,34 @@ class FedFlowTrainer:
         ]
         self.envs = {}
         if not self.gui:
-            from agents.mock_traffic_environment import MockTrafficEnvironment
+            if self.use_tomtom:
+                from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
+                from utils.tomtom_api import CITY_COORDINATES
+                
+                print("FedFlow-TSC: CLI Mode (TomTom Real-Time Traffic)")
+                cities = list(CITY_COORDINATES.keys())
+                api_key = "oK2pgm45ieRxyEPgv876db2lGarwDFm2"
+                for i in range(num_nodes):
+                    config = self.sumo_configs[i % len(self.sumo_configs)]
+                    city = cities[i % len(cities)]
+                    lat, lon = CITY_COORDINATES[city]
+                    self.envs[f"node_{i}"] = TomTomTrafficEnvironment(
+                        sumo_config_path=config,
+                        tomtom_api_key=api_key,
+                        lat=lat,
+                        lon=lon,
+                        tl_id=f"{city}_{i}",
+                        target_pois=self.target_pois
+                    )
+                    print(f"  node_{i} -> {config} ({city})")
+            else:
+                from agents.mock_traffic_environment import MockTrafficEnvironment
 
-            print("FedFlow-TSC: CLI Mode (Mock with real config mapping)")
-            for i in range(num_nodes):
-                config = self.sumo_configs[i % len(self.sumo_configs)]
-                self.envs[f"node_{i}"] = MockTrafficEnvironment(config)
-                print(f"  node_{i} -> {config}")
+                print("FedFlow-TSC: CLI Mode (Mock with real config mapping)")
+                for i in range(num_nodes):
+                    config = self.sumo_configs[i % len(self.sumo_configs)]
+                    self.envs[f"node_{i}"] = MockTrafficEnvironment(config)
+                    print(f"  node_{i} -> {config}")
         else:
             from agents.traffic_environment import SUMOTrafficEnvironment
 
@@ -322,16 +347,31 @@ if __name__ == "__main__":
         action="store_true",
         help="Use SUMO GUI (Enforces real SUMO simulation)",
     )
+    parser.add_argument(
+        "--use-tomtom", action="store_true", help="Use real-time TomTom traffic data"
+    )
+    parser.add_argument(
+        "--target-pois",
+        type=str,
+        default=None,
+        help="Comma-separated list of target POI categories",
+    )
+
     args = parser.parse_args()
+
+    # Parse target_pois if provided
+    target_pois_list = None
+    if args.target_pois:
+        target_pois_list = [p.strip() for p in args.target_pois.split(",")]
 
     trainer = FedFlowTrainer(
         num_nodes=args.nodes,
         num_clusters=args.clusters,
         gui=args.gui,
-        results_dir=args.results_dir,
+        use_tomtom=args.use_tomtom,
+        target_pois=target_pois_list,
     )
-    for r in range(1, args.rounds + 1):
-        trainer.run_round(r)
+    trainer.train(num_rounds=args.rounds)
 
     # Save final combined results
     final_file = os.path.join(args.results_dir, "fedflow_all_rounds.json")

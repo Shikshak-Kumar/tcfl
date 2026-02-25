@@ -20,10 +20,16 @@ class TrafficFedKDClient(TrafficFLClient):
         gui: bool = False,
         show_phase_console: bool = False,
         show_gst_gui: bool = False,
+        use_tomtom: bool = False,
+        tomtom_city: Optional[str] = None,
+        target_pois: Optional[List[str]] = None,
         hidden_dims: List[int] = [128, 128, 64],
     ):
 
         # Initialize with flexible architecture
+        self.use_tomtom = use_tomtom
+        self.tomtom_city = tomtom_city
+        self.target_pois = target_pois
         self.client_id = client_id
         self.state_size = state_size
         self.action_size = action_size
@@ -46,16 +52,33 @@ class TrafficFedKDClient(TrafficFLClient):
             self.use_mock = True
 
         if self.use_mock:
-            from agents.mock_traffic_environment import MockTrafficEnvironment
+            if self.use_tomtom and self.tomtom_city:
+                from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
+                from utils.tomtom_api import CITY_COORDINATES, get_api_key
+                lat, lon = CITY_COORDINATES[self.tomtom_city]
+                self.env = TomTomTrafficEnvironment(
+                    sumo_config_path,
+                    tomtom_api_key=get_api_key(),
+                    lat=lat,
+                    lon=lon,
+                    gui=gui,
+                    show_phase_console=show_phase_console,
+                    show_gst_gui=show_gst_gui,
+                    max_vehicles=1000,
+                    traffic_pattern="real_time",
+                    target_pois=self.target_pois
+                )
+            else:
+                from agents.mock_traffic_environment import MockTrafficEnvironment
 
-            self.env = MockTrafficEnvironment(
-                sumo_config_path,
-                gui=gui,
-                show_phase_console=show_phase_console,
-                show_gst_gui=show_gst_gui,
-                max_vehicles=1000,
-                traffic_pattern="rush_hour",
-            )
+                self.env = MockTrafficEnvironment(
+                    sumo_config_path,
+                    gui=gui,
+                    show_phase_console=show_phase_console,
+                    show_gst_gui=show_gst_gui,
+                    max_vehicles=1000,
+                    traffic_pattern="rush_hour",
+                )
         else:
             self.env = SUMOTrafficEnvironment(
                 sumo_config_path,
@@ -106,16 +129,32 @@ class TrafficFedKDClient(TrafficFLClient):
         for episode in range(episodes):
             self.env.close()
             if self.use_mock:
-                from agents.mock_traffic_environment import MockTrafficEnvironment
+                if self.use_tomtom and self.tomtom_city:
+                    from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
+                    from utils.tomtom_api import CITY_COORDINATES, get_api_key
+                    lat, lon = CITY_COORDINATES[self.tomtom_city]
+                    self.env = TomTomTrafficEnvironment(
+                        self.config_path,
+                        tomtom_api_key=get_api_key(),
+                        lat=lat,
+                        lon=lon,
+                        gui=self.gui,
+                        show_phase_console=self.show_phase_console,
+                        show_gst_gui=self.show_gst_gui,
+                        max_vehicles=1000,
+                        traffic_pattern="real_time",
+                    )
+                else:
+                    from agents.mock_traffic_environment import MockTrafficEnvironment
 
-                self.env = MockTrafficEnvironment(
-                    self.config_path,
-                    gui=self.gui,
-                    show_phase_console=self.show_phase_console,
-                    show_gst_gui=self.show_gst_gui,
-                    max_vehicles=1000,
-                    traffic_pattern="rush_hour",
-                )
+                    self.env = MockTrafficEnvironment(
+                        self.config_path,
+                        gui=self.gui,
+                        show_phase_console=self.show_phase_console,
+                        show_gst_gui=self.show_gst_gui,
+                        max_vehicles=1000,
+                        traffic_pattern="rush_hour",
+                    )
             else:
                 self.env = SUMOTrafficEnvironment(
                     self.config_path,
@@ -168,16 +207,32 @@ class TrafficFedKDClient(TrafficFLClient):
             self.env.close()
 
         if self.use_mock:
-            from agents.mock_traffic_environment import MockTrafficEnvironment
+            if self.use_tomtom and self.tomtom_city:
+                from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
+                from utils.tomtom_api import CITY_COORDINATES, get_api_key
+                lat, lon = CITY_COORDINATES[self.tomtom_city]
+                self.env = TomTomTrafficEnvironment(
+                    self.config_path,
+                    tomtom_api_key=get_api_key(),
+                    lat=lat,
+                    lon=lon,
+                    gui=self.gui,
+                    show_phase_console=self.show_phase_console,
+                    show_gst_gui=self.show_gst_gui,
+                    max_vehicles=1000,
+                    traffic_pattern="real_time",
+                )
+            else:
+                from agents.mock_traffic_environment import MockTrafficEnvironment
 
-            self.env = MockTrafficEnvironment(
-                self.config_path,
-                gui=self.gui,
-                show_phase_console=self.show_phase_console,
-                show_gst_gui=self.show_gst_gui,
-                max_vehicles=1000,
-                traffic_pattern="rush_hour",
-            )
+                self.env = MockTrafficEnvironment(
+                    self.config_path,
+                    gui=self.gui,
+                    show_phase_console=self.show_phase_console,
+                    show_gst_gui=self.show_gst_gui,
+                    max_vehicles=1000,
+                    traffic_pattern="rush_hour",
+                )
         else:
             self.env = SUMOTrafficEnvironment(
                 self.config_path,

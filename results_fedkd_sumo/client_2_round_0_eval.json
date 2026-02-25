@@ -1,13 +1,13 @@
 {
-  "total_reward": 394.0469144348602,
-  "average_reward": 0.9851172860871504,
-  "total_steps": 400,
-  "waiting_time": 31.0,
-  "queue_length": 0.3875,
+  "total_reward": -80.80000000000004,
+  "average_reward": -0.293818181818182,
+  "total_steps": 275,
+  "waiting_time": 808.0,
+  "queue_length": 2.938181818181818,
   "training": {
-    "average_reward": 375.7842462449931,
-    "total_steps": 1200,
-    "average_loss": 0.02733965514823121,
+    "average_reward": -710.5000000000003,
+    "total_steps": 999,
+    "average_loss": 0.02521474031522312,
     "episodes": 3
   },
   "architecture": [

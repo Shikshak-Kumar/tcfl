@@ -27,6 +27,8 @@ def run_fedcm_simulation(
     num_clients: int = 2,
     proxy_size: int = 1000,
     weighting_method: str = "performance",
+    use_tomtom: bool = False,
+    target_pois: Optional[List[str]] = None,
 ):
     """
     Run FedCM-RL simulation.
@@ -68,14 +70,19 @@ def run_fedcm_simulation(
         {"hidden": [128, 64], "temp": 2.5, "lam": 0.5, "lr": 2e-3},
     ]
 
+    from utils.tomtom_api import CITY_COORDINATES
+    cities = list(CITY_COORDINATES.keys())
+    
     client_configs = []
     for i in range(num_clients):
         cfg = base_configs[i % len(base_configs)]
         arch = arch_templates[i % len(arch_templates)]
+        city = cities[i % len(cities)]
         client_configs.append(
             {
                 "id": f"client_{i + 1}",
                 "config": cfg,
+                "city": city,
                 "agent_type": "DQN",
                 "hidden_dims": arch["hidden"],
                 "temperature": arch["temp"],
@@ -109,7 +116,10 @@ def run_fedcm_simulation(
             agent_type=config["agent_type"],
             hidden_dims=config["hidden_dims"],
             gui=gui,
+            use_tomtom=use_tomtom,
+            tomtom_city=config["city"],
             results_dir=results_dir,
+            target_pois=target_pois,
             temperature=config["temperature"],
             lambda_distill=config["lambda_distill"],
             distill_method="mse",
@@ -251,7 +261,7 @@ def run_fedcm_simulation(
 
             # Save combined metrics
             save_path = os.path.join(
-                results_dir, f"{client.client_id}_round_{round_num}_eval.json"
+                results_dir, f"{client.client_id}_round _{round_num}_eval.json"
             )
             combined_metrics = {
                 **eval_metrics,
@@ -356,8 +366,24 @@ if __name__ == "__main__":
         choices=["uniform", "performance"],
         help="Aggregation weighting method",
     )
+    parser.add_argument(
+        "--use-tomtom",
+        action="store_true",
+        help="Use real-time TomTom traffic data"
+    )
+    parser.add_argument(
+        "--target-pois",
+        type=str,
+        default=None,
+        help="Comma-separated list of target POI categories (e.g. healthcare,education)",
+    )
 
     args = parser.parse_args()
+
+    # Parse target_pois if provided
+    target_pois_list = None
+    if args.target_pois:
+        target_pois_list = [p.strip() for p in args.target_pois.split(",")]
 
     run_fedcm_simulation(
         num_rounds=args.rounds,
@@ -366,4 +392,6 @@ if __name__ == "__main__":
         num_clients=args.num_clients,
         proxy_size=args.proxy_size,
         weighting_method=args.weighting,
+        use_tomtom=args.use_tomtom,
+        target_pois=target_pois_list,
     )

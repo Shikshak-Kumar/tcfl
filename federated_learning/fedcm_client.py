@@ -35,12 +35,10 @@ class FedCMClient(TrafficFLClient):
                  state_size: int = 12, action_size: int = 4,
                  gui: bool = False, show_phase_console: bool = False,
                  show_gst_gui: bool = False, 
-                 agent_type: str = "DQN",
-                 hidden_dims: List[int] = [128, 128, 64],
-                 results_dir: str = "results_fedcm",
-                 temperature: float = 2.0,
+                 use_tomtom: bool = False,
                  lambda_distill: float = 0.5,
-                 distill_method: str = "mse"):
+                 distill_method: str = "mse",
+                 target_pois: Optional[List[str]] = None):
         """
         Initialize FedCM client.
         
@@ -69,7 +67,7 @@ class FedCMClient(TrafficFLClient):
         
         # Initialize parent class
         super().__init__(client_id, sumo_config_path, state_size, action_size,
-                        gui, show_phase_console, show_gst_gui)
+                        gui, show_phase_console, show_gst_gui, use_tomtom, tomtom_city, target_pois)
         
         # Override agent with custom architecture
         if agent_type == "DQN":
