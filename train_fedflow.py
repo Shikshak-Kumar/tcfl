@@ -3,7 +3,7 @@ import json
 import torch
 import numpy as np
 import random
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 
 from agents.mock_traffic_environment import MockTrafficEnvironment
 from agents.fedflow_agent import FedFlowAgent
