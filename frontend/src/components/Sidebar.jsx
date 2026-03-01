@@ -1,130 +1,128 @@
-import React from 'react';
-import { Play, Square, Activity, Settings } from 'lucide-react';
+import { Activity, Zap, ZapOff } from 'lucide-react';
 
-const Sidebar = ({ config, simConfig, setSimConfig, isRunning, onToggleSimulation }) => {
+export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggleSimulation, cities, algorithms, poiResults }) {
+  const handleChange = (key, value) => {
+    onConfigChange({ ...simConfig, [key]: value });
+  };
 
-    const handleChange = (field, value) => {
-        setSimConfig(prev => ({ ...prev, [field]: value }));
-    };
+  return (
+    <aside className="glass-panel p-5 flex flex-col gap-5 w-full custom-scrollbar overflow-y-auto" style={{ maxHeight: '100vh' }}>
+      <div className="flex items-center gap-2 mb-2">
+        <Activity className="w-5 h-5 text-indigo-400" />
+        <h2 className="text-lg font-bold tracking-tight">Simulation Control</h2>
+      </div>
 
-    const handlePoiToggle = (poi) => {
-        setSimConfig(prev => {
-            const currentPois = prev.target_pois || [];
-            const newPois = currentPois.includes(poi)
-                ? currentPois.filter(p => p !== poi)
-                : [...currentPois, poi];
-            return { ...prev, target_pois: newPois };
-        });
-    };
-
-    return (
-        <div className="w-80 glass-panel h-full p-6 flex flex-col pt-8">
-            <div className="flex items-center gap-3 mb-8">
-                <div className="bg-brand-500/20 p-2 rounded-lg border border-brand-500/50">
-                    <Activity className="w-6 h-6 text-brand-400" />
-                </div>
-                <div>
-                    <h1 className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Smart Traffic</h1>
-                    <p className="text-xs text-slate-400 font-medium">Control System</p>
-                </div>
-            </div>
-
-            <div className="flex-1 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
-
-                {/* Environment Selection */}
-                <div className="space-y-3">
-                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block flex items-center gap-2">
-                        <Settings className="w-3 h-3" /> Data Source
-                    </label>
-                    <div className="bg-dark-900/50 p-1 rounded-lg flex border border-slate-700/50">
-                        <button
-                            className={`flex-1 py-2 px-3 text-sm rounded-md font-medium transition-all ${simConfig.use_tomtom ? 'bg-dark-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-300'}`}
-                            onClick={() => handleChange('use_tomtom', true)}
-                            disabled={isRunning}
-                        >
-                            Real-Time
-                        </button>
-                        <button
-                            className={`flex-1 py-2 px-3 text-sm rounded-md font-medium transition-all ${!simConfig.use_tomtom ? 'bg-dark-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-300'}`}
-                            onClick={() => handleChange('use_tomtom', false)}
-                            disabled={isRunning}
-                        >
-                            Mock
-                        </button>
-                    </div>
-                </div>
-
-                {/* Algorithm Selection */}
-                <div className="space-y-3">
-                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Algorithm</label>
-                    <select
-                        value={simConfig.algorithm}
-                        onChange={(e) => handleChange('algorithm', e.target.value)}
-                        disabled={isRunning}
-                        className="w-full bg-dark-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-200 outline-none focus:border-brand-500/50 transition-colors disabled:opacity-50"
-                    >
-                        {config.algorithms?.map(algo => (
-                            <option key={algo} value={algo}>{algo}</option>
-                        ))}
-                    </select>
-                </div>
-
-                {/* City Selection */}
-                <div className="space-y-3">
-                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Target City</label>
-                    <select
-                        value={simConfig.city}
-                        onChange={(e) => handleChange('city', e.target.value)}
-                        disabled={isRunning}
-                        className="w-full bg-dark-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-200 outline-none focus:border-brand-500/50 transition-colors disabled:opacity-50"
-                    >
-                        {config.cities?.map(city => (
-                            <option key={city} value={city}>{city}</option>
-                        ))}
-                    </select>
-                </div>
-
-                {/* POI Targeting */}
-                <div className="space-y-3">
-                    <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Target POIs</label>
-                    <div className="flex flex-wrap gap-2">
-                        {config.poi_categories?.map(poi => {
-                            const isSelected = simConfig.target_pois.includes(poi);
-                            return (
-                                <button
-                                    key={poi}
-                                    disabled={isRunning}
-                                    onClick={() => handlePoiToggle(poi)}
-                                    className={`text-xs px-3 py-1.5 rounded-full border transition-all ${isSelected
-                                        ? 'bg-brand-500/20 border-brand-500/50 text-brand-400'
-                                        : 'bg-dark-900/50 border-slate-700/50 text-slate-400 hover:border-slate-600 disabled:opacity-50'
-                                        }`}
-                                >
-                                    {poi}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-
-            <div className="pt-6 mt-4 border-t border-slate-700/50">
-                <button
-                    onClick={onToggleSimulation}
-                    className={`w-full py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium transition-all ${isRunning
-                        ? 'bg-rose-500/20 text-rose-400 border border-rose-500/50 hover:bg-rose-500/30'
-                        : 'bg-brand-500 text-white shadow-lg shadow-brand-500/25 hover:bg-brand-400'
-                        }`}
-                >
-                    {isRunning ? (
-                        <><Square className="w-4 h-4 fill-current" /> Stop Simulation</>
-                    ) : (
-                        <><Play className="w-4 h-4 fill-current" /> Start Simulation</>
-                    )}
-                </button>
-            </div>
+      {/* Data Source Toggle */}
+      <div>
+        <label className="block text-xs font-medium text-slate-400 mb-2">Data Source</label>
+        <div className="flex rounded-lg overflow-hidden border border-white/10">
+          <button
+            disabled={isRunning}
+            onClick={() => handleChange('use_tomtom', true)}
+            className={`flex-1 py-2 text-xs font-semibold transition-all flex items-center justify-center gap-1.5
+              ${simConfig.use_tomtom 
+                ? 'bg-indigo-500/30 text-indigo-300 border-indigo-400/30' 
+                : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
+          >
+            <Zap className="w-3.5 h-3.5" /> Real-Time
+          </button>
+          <button
+            disabled={isRunning}
+            onClick={() => handleChange('use_tomtom', false)}
+            className={`flex-1 py-2 text-xs font-semibold transition-all flex items-center justify-center gap-1.5
+              ${!simConfig.use_tomtom 
+                ? 'bg-amber-500/30 text-amber-300 border-amber-400/30' 
+                : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
+          >
+            <ZapOff className="w-3.5 h-3.5" /> Mock
+          </button>
         </div>
-    );
-};
+      </div>
 
-export default Sidebar;
+      {/* City Selection */}
+      <div>
+        <label className="block text-xs font-medium text-slate-400 mb-1.5">City</label>
+        <select
+          disabled={isRunning}
+          value={simConfig.city}
+          onChange={(e) => handleChange('city', e.target.value)}
+          className="w-full border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/50"
+          style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+        >
+          {Object.keys(cities).map((c) => (
+            <option key={c} value={c} style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}>{c}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Algorithm */}
+      <div>
+        <label className="block text-xs font-medium text-slate-400 mb-1.5">Algorithm</label>
+        <select
+          disabled={isRunning}
+          value={simConfig.algorithm}
+          onChange={(e) => handleChange('algorithm', e.target.value)}
+          className="w-full border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/50"
+          style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+        >
+          {algorithms.map((a) => (
+            <option key={a} value={a} style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}>{a}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* POI Detection Results */}
+      {poiResults && poiResults.length > 0 && (
+        <div>
+          <label className="block text-xs font-medium text-slate-400 mb-1.5">POI Detection Results</label>
+          <div className="flex flex-col gap-2">
+            {poiResults.map((r, i) => (
+              <div key={i} className="glass-panel p-3 rounded-lg">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">{r.tier_emoji}</span>
+                  <span className="text-sm font-semibold">{r.name}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${
+                    r.tier === 1 ? 'bg-red-500/20 text-red-300' :
+                    r.tier === 2 ? 'bg-amber-500/20 text-amber-300' :
+                    'bg-blue-500/20 text-blue-300'
+                  }`}>
+                    Tier {r.tier}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400">
+                  {r.tier_label} — {r.poi_count} POIs within 1km
+                </p>
+                {r.detected_pois?.length > 0 && (
+                  <p className="text-xs text-slate-500 mt-1 italic">
+                    {r.detected_pois.slice(0, 3).join(', ')}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Start / Stop */}
+      <button
+        onClick={onToggleSimulation}
+        disabled={!isRunning && (!simConfig.intersections || simConfig.intersections.length === 0)}
+        className={`w-full py-3 rounded-xl font-bold text-sm tracking-wide transition-all uppercase
+          ${isRunning 
+            ? 'bg-rose-500/80 hover:bg-rose-500 text-white' 
+            : simConfig.intersections?.length > 0
+              ? 'bg-indigo-500/80 hover:bg-indigo-500 text-white'
+              : 'bg-white/10 text-slate-500 cursor-not-allowed'
+          }`}
+      >
+        {isRunning ? '◼ Stop Simulation' : '▶ Start Simulation'}
+      </button>
+      
+      {!isRunning && (!simConfig.intersections || simConfig.intersections.length === 0) && (
+        <p className="text-xs text-center text-slate-500">
+          Place at least 1 pin on the map to start
+        </p>
+      )}
+    </aside>
+  );
+}

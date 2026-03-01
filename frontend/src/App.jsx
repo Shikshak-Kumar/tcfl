@@ -1,171 +1,269 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import { useState, useEffect, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import LiveCharts from './components/LiveCharts';
-import { Car, AlertTriangle, Clock, Route } from 'lucide-react';
+import LocationInput from './components/LocationInput';
+import { Activity, Timer, Car, AlertTriangle } from 'lucide-react';
+import './App.css';
 
-const WEBSOCKET_URL = "ws://localhost:8000/api/simulate";
-const API_URL = "http://localhost:8000/api/config";
-
-const InfoCard = ({ title, value, icon: Icon, colorClass }) => (
-  <div className="glass-panel p-5 flex items-center gap-4">
-    <div className={`p-3 rounded-xl bg-dark-900 border ${colorClass}`}>
-      <Icon className={`w-6 h-6 ${colorClass.replace('border-', 'text-')}`} />
-    </div>
-    <div>
-      <p className="text-sm font-medium text-slate-400 mb-1">{title}</p>
-      <h3 className="text-2xl font-bold text-white tracking-tight">{value}</h3>
-    </div>
-  </div>
-);
+const API_BASE = 'http://localhost:8000';
 
 function App() {
-  const [sysConfig, setSysConfig] = useState({ cities: [], algorithms: [], poi_categories: [] });
+  const [systemConfig, setSystemConfig] = useState({ cities: {}, algorithms: [], poi_categories: [] });
   const [simConfig, setSimConfig] = useState({
     city: 'Delhi',
     algorithm: 'Demo (No RL)',
-    target_pois: [],
-    use_tomtom: true
+    use_tomtom: true,
+    intersections: [],
   });
-
   const [isRunning, setIsRunning] = useState(false);
   const [simData, setSimData] = useState([]);
-  const [latestMetrics, setLatestMetrics] = useState({
-    total_queue: 0,
-    avg_wait: 0,
-    total_vehicles: 0,
-    accidents: 0,
-    congestion: 1.0
-  });
-
+  const [latestMetrics, setLatestMetrics] = useState(null);
+  const [poiResults, setPoiResults] = useState(null);
+  const [statusMessage, setStatusMessage] = useState('');
   const wsRef = useRef(null);
 
-  // Fetch initial config from backend
+  // Fetch config on mount
   useEffect(() => {
-    axios.get(API_URL)
-      .then(res => {
-        setSysConfig(res.data);
-        if (res.data.cities.length > 0) setSimConfig(p => ({ ...p, city: res.data.cities[0] }));
-        if (res.data.algorithms.length > 0) setSimConfig(p => ({ ...p, algorithm: res.data.algorithms[0] }));
+    fetch(`${API_BASE}/api/config`)
+      .then(r => r.json())
+      .then(data => {
+        setSystemConfig(data);
+        // Set default city
+        const cityNames = Object.keys(data.cities || {});
+        if (cityNames.length > 0) {
+          setSimConfig(prev => ({ ...prev, city: cityNames[0] }));
+        }
       })
-      .catch(err => console.error("Failed to load config from backend", err));
+      .catch(err => console.error('Failed to fetch config:', err));
   }, []);
 
-  const toggleSimulation = () => {
+  // Get city center for map
+  const getCityCenter = () => {
+    const cityData = systemConfig.cities?.[simConfig.city];
+    if (cityData) return [cityData.lat, cityData.lon];
+    return [28.6139, 77.2090]; // Default Delhi
+  };
+
+  // Handle intersection changes and clear POI results
+  const handleIntersectionsChange = (newIntersections) => {
+    setSimConfig(prev => ({ ...prev, intersections: newIntersections }));
+    setPoiResults(null); // Clear old POI results when pins change
+  };
+
+  // POI Detection + Start Simulation
+  const toggleSimulation = async () => {
     if (isRunning) {
+      // Stop
       if (wsRef.current) wsRef.current.close();
       setIsRunning(false);
+      setStatusMessage('Simulation stopped.');
       return;
     }
 
-    // Start Simulation
-    setSimData([]);
+    if (!simConfig.intersections || simConfig.intersections.length === 0) {
+      setStatusMessage('Place at least 1 pin on the map.');
+      return;
+    }
+
     setIsRunning(true);
+    setSimData([]);
+    setLatestMetrics(null);
+    setStatusMessage('Detecting POIs...');
 
-    wsRef.current = new WebSocket(WEBSOCKET_URL);
-
-    wsRef.current.onopen = () => {
-      console.log("Connected to simulation server");
-      wsRef.current.send(JSON.stringify(simConfig));
-    };
-
-    wsRef.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.status === "error" || data.status === "complete") {
-        setIsRunning(false);
-        wsRef.current.close();
-        return;
-      }
-
-      setLatestMetrics(data);
-      setSimData(prev => {
-        const newData = [...prev, data];
-        // Keep last 50 data points for active chart window
-        if (newData.length > 50) return newData.slice(newData.length - 50);
-        return newData;
+    try {
+      // Step 1: Detect POIs for each intersection
+      const poiResponse = await fetch(`${API_BASE}/api/detect-pois`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          intersections: simConfig.intersections,
+          radius_km: 1.0,
+        }),
       });
-    };
+      const poiData = await poiResponse.json();
+      setPoiResults(poiData.intersections);
+      
+      // Step 2: Merge POI tier data into intersections for WebSocket config
+      const enrichedIntersections = simConfig.intersections.map((ix, i) => ({
+        ...ix,
+        ...(poiData.intersections[i] || {}),
+      }));
 
-    wsRef.current.onerror = (error) => {
-      console.error("WebSocket Error: ", error);
-      setIsRunning(false);
-    };
+      setStatusMessage('Starting simulation...');
 
-    wsRef.current.onclose = () => {
+      // Step 3: Open WebSocket
+      const ws = new WebSocket(`ws://localhost:8000/api/simulate`);
+      wsRef.current = ws;
+
+      ws.onopen = () => {
+        const wsConfig = {
+          ...simConfig,
+          intersections: enrichedIntersections,
+        };
+        ws.send(JSON.stringify(wsConfig));
+        setStatusMessage('Simulation running...');
+      };
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        
+        if (data.status === 'complete') {
+          setIsRunning(false);
+          setStatusMessage('Simulation complete.');
+          return;
+        }
+        if (data.status === 'error') {
+          setIsRunning(false);
+          setStatusMessage(`Error: ${data.message}`);
+          return;
+        }
+
+        setLatestMetrics(data);
+        setSimData(prev => {
+          const updated = [...prev, data];
+          return updated.slice(-50); // Keep last 50 points
+        });
+      };
+
+      ws.onclose = () => {
+        setIsRunning(false);
+      };
+
+      ws.onerror = (err) => {
+        console.error('WebSocket error:', err);
+        setIsRunning(false);
+        setStatusMessage('Connection error.');
+      };
+
+    } catch (err) {
+      console.error('Error starting simulation:', err);
       setIsRunning(false);
-    };
+      setStatusMessage('Failed to start simulation.');
+    }
   };
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (wsRef.current) wsRef.current.close();
-    };
-  }, []);
+  // Compute global metrics from latest data
+  const globalMetrics = latestMetrics?.global || {};
+  const intersectionData = latestMetrics?.intersections || {};
+  const numIntersections = Object.keys(intersectionData).length;
 
   return (
-    <div className="flex h-screen w-full bg-dark-900 overflow-hidden relative">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] rounded-full bg-brand-500/5 blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] left-[-5%] w-[40%] h-[40%] rounded-full bg-rose-500/5 blur-[120px]"></div>
-      </div>
-
-      {/* Sidebar */}
-      <div className="z-10 h-full">
-        <Sidebar
-          config={sysConfig}
-          simConfig={simConfig}
-          setSimConfig={setSimConfig}
-          isRunning={isRunning}
-          onToggleSimulation={toggleSimulation}
-        />
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col p-6 z-10 gap-6 h-full overflow-hidden">
-
-        {/* Top Stats Row */}
-        <div className="grid grid-cols-4 gap-6 shrink-0">
-          <InfoCard
-            title="Total Vehicles"
-            value={latestMetrics.total_vehicles}
-            icon={Car}
-            colorClass="border-blue-500/30 text-blue-400"
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white">
+      <div className="flex flex-col lg:flex-row h-screen">
+        
+        {/* Left Panel: Controls + Map */}
+        <div className="lg:w-[380px] flex-shrink-0 flex flex-col gap-4 p-4 overflow-y-auto custom-scrollbar">
+          <Sidebar
+            simConfig={simConfig}
+            onConfigChange={setSimConfig}
+            isRunning={isRunning}
+            onToggleSimulation={toggleSimulation}
+            cities={systemConfig.cities || {}}
+            algorithms={systemConfig.algorithms || []}
+            poiResults={poiResults}
           />
-          <InfoCard
-            title="Avg Wait Time"
-            value={`${latestMetrics.avg_wait}s`}
-            icon={Clock}
-            colorClass="border-orange-500/30 text-orange-400"
-          />
-          <InfoCard
-            title="Active Queue"
-            value={latestMetrics.total_queue}
-            icon={Route}
-            colorClass="border-rose-500/30 text-rose-400"
-          />
-          <InfoCard
-            title={simConfig.use_tomtom ? "TomTom Congestion" : "Base Congestion"}
-            value={`${latestMetrics.congestion || 1.0}x`}
-            icon={AlertTriangle}
-            colorClass="border-emerald-500/30 text-emerald-400"
-          />
+          
+          {/* Location Input */}
+          <div className="glass-panel p-4">
+            <h3 className="text-sm font-semibold text-slate-300 mb-2">📍 Select Intersections</h3>
+            <LocationInput
+              intersections={simConfig.intersections}
+              onIntersectionsChange={handleIntersectionsChange}
+              city={simConfig.city}
+              disabled={isRunning}
+            />
+          </div>
         </div>
-
-        {/* Charts Area */}
-        <div className="flex-1 min-h-0">
-          {simData.length > 0 ? (
-            <LiveCharts data={simData} />
-          ) : (
-            <div className="h-full glass-panel flex flex-col items-center justify-center text-slate-500">
-              <Route className="w-16 h-16 mb-4 opacity-50" />
-              <p className="text-lg font-medium">No active simulation.</p>
-              <p className="text-sm">Configure settings and click Start to stream data.</p>
+        
+        {/* Right Panel: Metrics + Charts */}
+        <div className="flex-1 p-4 overflow-y-auto custom-scrollbar">
+          {/* Status Bar */}
+          {statusMessage && (
+            <div className="glass-panel px-4 py-2 mb-4 text-sm text-slate-300 flex items-center gap-2">
+              <Activity className="w-4 h-4 text-indigo-400 animate-pulse" />
+              {statusMessage}
             </div>
           )}
+
+          {/* Global Stats Cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+            <StatCard
+              icon={<Car className="w-4 h-4" />}
+              label="Total Queue"
+              value={globalMetrics.total_queue ?? '—'}
+              color="text-rose-400"
+            />
+            <StatCard
+              icon={<Timer className="w-4 h-4" />}
+              label="Avg Reward"
+              value={globalMetrics.avg_reward ?? '—'}
+              color="text-emerald-400"
+            />
+            <StatCard
+              icon={<Activity className="w-4 h-4" />}
+              label="Intersections"
+              value={numIntersections || simConfig.intersections.length || '—'}
+              color="text-indigo-400"
+            />
+            <StatCard
+              icon={<AlertTriangle className="w-4 h-4" />}
+              label="Step"
+              value={latestMetrics?.step ?? '—'}
+              color="text-amber-400"
+            />
+          </div>
+
+          {/* Per-Intersection Cards */}
+          {numIntersections > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+              {Object.entries(intersectionData).map(([nid, data]) => (
+                <div key={nid} className="glass-panel p-3 rounded-xl">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">{data.tier === 1 ? '🏥' : data.tier === 2 ? '🏫' : '📍'}</span>
+                    <span className="text-sm font-bold">{data.name}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ml-auto ${
+                      data.tier === 1 ? 'bg-red-500/20 text-red-300' :
+                      data.tier === 2 ? 'bg-amber-500/20 text-amber-300' :
+                      'bg-blue-500/20 text-blue-300'
+                    }`}>
+                      {data.tier_label}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                      <p className="text-slate-500">Queue</p>
+                      <p className="text-rose-400 font-bold">{data.total_queue}</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-500">Reward</p>
+                      <p className="text-emerald-400 font-bold">{data.reward}</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-500">Congestion</p>
+                      <p className="text-amber-400 font-bold">{data.congestion}x</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Charts */}
+          <LiveCharts simData={simData} intersections={simConfig.intersections} />
         </div>
       </div>
+    </div>
+  );
+}
+
+function StatCard({ icon, label, value, color }) {
+  return (
+    <div className="glass-panel p-3 rounded-xl">
+      <div className="flex items-center gap-2 mb-1">
+        <span className={color}>{icon}</span>
+        <span className="text-xs text-slate-400">{label}</span>
+      </div>
+      <p className={`text-xl font-bold ${color}`}>{value}</p>
     </div>
   );
 }

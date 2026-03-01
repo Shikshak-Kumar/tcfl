@@ -31,3 +31,13 @@
     @apply bg-slate-700 rounded-full hover:bg-slate-600 transition-colors;
   }
 }
+
+/* Fix dropdown visibility on dark theme */
+select {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+select option {
+  background-color: #1e293b;
+  color: #e2e8f0;
+}

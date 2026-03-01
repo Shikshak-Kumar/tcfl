@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 # Internal imports
 from utils.tomtom_api import CITY_COORDINATES
+from utils.osm_api import detect_pois_for_intersections
 from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
 from agents.mock_traffic_environment import MockTrafficEnvironment
 
@@ -31,287 +32,458 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 class ConfigResponse(BaseModel):
-    cities: List[str]
+    cities: dict
     algorithms: List[str]
     poi_categories: List[str]
 
-@app.get("/api/config", response_model=ConfigResponse)
+
+class IntersectionInput(BaseModel):
+    lat: float
+    lon: float
+    name: str = "Pin"
+
+
+class DetectPoisRequest(BaseModel):
+    intersections: List[IntersectionInput]
+    radius_km: float = 1.0
+
+
+@app.get("/api/config")
 async def get_config():
     print("[API] GET /api/config requested by frontend")
     return {
-        "cities": list(CITY_COORDINATES.keys()),
+        "cities": {
+            city: {"lat": coords[0], "lon": coords[1]}
+            for city, coords in CITY_COORDINATES.items()
+        },
         "algorithms": ["Demo (No RL)", "FedFlow", "FedAvg", "FedCM", "FedKD"],
         "poi_categories": [
-            "healthcare", "education", "commercial", 
-            "leisure", "office", "food_dining", "public_service"
-        ]
+            "healthcare",
+            "education",
+            "commercial",
+            "leisure",
+            "office",
+            "food_dining",
+            "public_service",
+        ],
     }
 
-async def run_demo_simulation(websocket, city, target_pois, use_tomtom):
-    """Runs a single intersection demo using real/mock environment."""
-    lat, lon = CITY_COORDINATES.get(city, CITY_COORDINATES["Delhi"])
-    if use_tomtom:
-        api_key = os.environ.get("TOMTOM_API_KEY", "oK2pgm45ieRxyEPgv876db2lGarwDFm2")
-        env = TomTomTrafficEnvironment(
-            sumo_config_path="demo_config",
-            tomtom_api_key=api_key,
-            lat=lat,
-            lon=lon,
-            max_vehicles=500,
-            traffic_pattern="real_time",
-            target_pois=target_pois
+
+@app.post("/api/detect-pois")
+async def detect_pois(request: DetectPoisRequest):
+    """Detect POIs within radius_km of each intersection and assign priority tiers."""
+    print(f"[API] POST /api/detect-pois for {len(request.intersections)} intersections")
+    intersections = [ix.model_dump() for ix in request.intersections]
+    results = detect_pois_for_intersections(intersections, radius_km=request.radius_km)
+    # Strip full POI data for the response (only send summaries)
+    clean_results = []
+    for r in results:
+        clean_results.append(
+            {
+                "lat": r["lat"],
+                "lon": r["lon"],
+                "name": r.get("name", "Pin"),
+                "tier": r["tier"],
+                "tier_label": r["tier_label"],
+                "tier_emoji": r["tier_emoji"],
+                "detected_pois": r["detected_pois"],
+                "poi_count": r["poi_count"],
+            }
         )
-    else:
-        env = MockTrafficEnvironment(sumo_config_path="demo_config", max_vehicles=500, traffic_pattern="rush_hour")
+    return {"intersections": clean_results}
 
-    env.reset()
-    step = 0
-    done = False
-    while not done and step < 200:
-        action = 0 if step % 30 < 15 else 2 
-        _, reward, done, info = env.step(action)
-        step += 1
-        
-        total_queue = sum(env.lane_queues.values())
-        avg_wait = sum(env.lane_waiting_times.values()) / max(1, len(env.lane_waiting_times))
-        
-        payload = {
-            "step": step,
-            "reward": round(reward, 2),
-            "total_queue": total_queue,
-            "avg_wait": round(avg_wait, 1),
-            "total_vehicles": env.total_vehicles,
-            "accidents": env.total_accidents,
-        }
-        if hasattr(env, 'congestion_multiplier'):
-            payload["congestion"] = round(env.congestion_multiplier, 2)
-            payload["arrival_rate"] = round(env.arrival_rate, 2)
-            
-        await websocket.send_json(payload)
-        await asyncio.sleep(0.1)
 
-async def yield_simulated_ui_steps(websocket, round_idx, base_queue=50, base_reward=-0.5, improve_rate=0.4, step_count=100, delay=0.03):
-    """Helper to keep UI drawing charts smoothly during heavy background RL computation."""
-    step_base = round_idx * step_count
-    for step_offset in range(step_count):
-        step = step_base + step_offset
-        queue_len = max(5, base_queue - (round_idx * 10) - int(step_offset/10))
-        reward_val = base_reward + (round_idx * improve_rate) + (step_offset/step_count)
-        
-        await websocket.send_json({
-            "step": step,
-            "reward": round(reward_val, 2),
-            "total_queue": queue_len,
-            "avg_wait": queue_len * 3.5,
-            "total_vehicles": 200 + step,
-            "accidents": 0,
-            "congestion": 1.1 - (round_idx * 0.05)
-        })
-        await asyncio.sleep(delay)
+def get_latest_model(directory: str):
+    """Find the most recently modified .pt model file in the given directory."""
+    import glob
 
-async def run_live_inference(websocket, env, agent):
-    """Generic inference loop that streams real environment data to the websocket."""
-    state = env.reset()
-    step = 0
-    while True:
-        # Allow the agent to take actions without training
-        action = agent.act(state, training=False)
-        next_state, reward, done, info = env.step(action)
-        state = next_state
-        
-        # Extract metrics
-        total_queue = sum(env.lane_queues.values())
-        avg_wait = sum(env.lane_waiting_times.values()) / max(1, len(env.lane_waiting_times))
-        
-        payload = {
-            "step": step,
-            "reward": round(reward, 2),
-            "total_queue": total_queue,
-            "avg_wait": round(avg_wait, 1),
-            "total_vehicles": env.total_vehicles,
-            "accidents": env.total_accidents,
-        }
-        
-        if hasattr(env, 'congestion_multiplier'):
-            payload["congestion"] = round(env.congestion_multiplier, 2)
-            if hasattr(env, 'incident_jam_multiplier'):
-                payload["congestion"] *= env.incident_jam_multiplier
-            if hasattr(env, 'arrival_rate'):
-                payload["arrival_rate"] = round(env.arrival_rate, 2)
-            
-        try:
-            await websocket.send_json(payload)
-        except Exception as e:
-            print(f"[LiveInference] Failed to send over websocket: {e}")
-            break
-            
-        await asyncio.sleep(0.1)
-        if done:
-            print(f"[LiveInference] Environment reported DONE on step {step}. Resetting for continuous streaming.")
-            state = env.reset()
-            
-        step += 1
-        
-    print(f"[LiveInference] Exited inference loop after {step} steps.")
-
-def get_latest_model(directory: str) -> str:
-    """Helper to find the most recently modified .pt file in a directory."""
-    if not os.path.exists(directory):
+    pattern = os.path.join(directory, "*.pt")
+    files = glob.glob(pattern)
+    if not files:
         return None
-        
-    models = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".pt")]
-    if not models:
-        return None
-        
-    return max(models, key=os.path.getmtime)
+    return max(files, key=os.path.getmtime)
 
-async def run_fedavg_simulation(websocket, city, target_pois, use_tomtom):
-    client1 = TrafficFLClient("client_1", "sumo_configs2/osm_client1.sumocfg", gui=False, use_tomtom=use_tomtom, tomtom_city=city, target_pois=target_pois)
-    # Attempt to load pre-trained weights dynamically
-    model_path = get_latest_model("results_federated")
-    if model_path:
-        try:
-            client1.load_model(model_path)
-            print(f"[WS] Loaded FedAvg model from {model_path}")
-        except Exception as e:
-            print(f"[WS] Error loading model: {e}")
-    else:
-        print(f"[WS] Warning: No trained model found for FedAvg in results_federated/. Using untrained weights.")
-        
-    await run_live_inference(websocket, client1.env, client1.agent)
 
-async def run_fedflow_simulation(websocket, city, target_pois, use_tomtom):
-    trainer = FedFlowTrainer(num_nodes=4, num_clusters=2, gui=False, use_tomtom=use_tomtom, target_pois=target_pois)
-    
-    # Grab the first focal node for visualization
-    nid = "node_0"
-    if nid in trainer.agents:
-        agent = trainer.agents[nid]
-        env = trainer.envs[nid]
-        
-        # Try to load latest model
-        model_path = get_latest_model("results_fedflow")
-        if model_path:
-            try:
-                agent.load_model(model_path)
-                print(f"[WS] Loaded FedFlow model from {model_path}")
-            except Exception as e:
-                print(f"[WS] Error loading model: {e}")
+async def run_demo_simulation(websocket, config):
+    """Runs a multi-intersection demo using real/mock environments."""
+    intersections = config.get("intersections", [])
+    use_tomtom = config.get("use_tomtom", True)
+
+    envs = {}
+    for i, ix in enumerate(intersections):
+        nid = f"node_{i}"
+        if use_tomtom:
+            api_key = os.environ.get(
+                "TOMTOM_API_KEY", "oK2pgm45ieRxyEPgv876db2lGarwDFm2"
+            )
+            envs[nid] = TomTomTrafficEnvironment(
+                sumo_config_path="demo_config",
+                tomtom_api_key=api_key,
+                lat=ix["lat"],
+                lon=ix["lon"],
+                max_vehicles=500,
+                traffic_pattern="real_time",
+                priority_tier=ix.get("tier", 3),
+                tl_id=f"demo_{ix.get('name', nid)}",
+            )
         else:
-            print(f"[WS] Warning: No trained model found for FedFlow in results_fedflow/. Using untrained weights.")
-            
-        # FedFlow has a different signature for act/get_action needing a graph
-        # Since we are modifying server to do live inference, we need to adapt it
-        state = env.reset()
-        for step in range(200):
-            # Same mock graph construction as train_fedflow
-            state_graph, adj_node = trainer._get_node_graph_state(nid, state)
-            
-            action = agent.get_action(state_graph, adj_node)
-            next_state, reward, done, info = env.step(action)
-            state = next_state
-            
+            envs[nid] = MockTrafficEnvironment(
+                sumo_config_path="demo_config",
+                max_vehicles=500,
+                traffic_pattern="rush_hour",
+            )
+
+    # Reset all envs
+    for nid, env in envs.items():
+        env.reset()
+
+    for step in range(200):
+        action = 0 if step % 30 < 15 else 2
+
+        node_data = {}
+        total_reward = 0
+        total_queue_all = 0
+
+        for nid, env in envs.items():
+            _, reward, done, info = env.step(action)
             total_queue = sum(env.lane_queues.values())
-            avg_wait = sum(env.lane_waiting_times.values()) / max(1, len(env.lane_waiting_times))
-            
-            payload = {
-                "step": step,
+            avg_wait = sum(env.lane_waiting_times.values()) / max(
+                1, len(env.lane_waiting_times)
+            )
+
+            ix = intersections[int(nid.split("_")[1])]
+            node_data[nid] = {
+                "name": ix.get("name", nid),
+                "tier": ix.get("tier", 3),
+                "tier_label": ix.get("tier_label", "Normal"),
                 "reward": round(reward, 2),
                 "total_queue": total_queue,
                 "avg_wait": round(avg_wait, 1),
                 "total_vehicles": env.total_vehicles,
                 "accidents": env.total_accidents,
+                "congestion": round(getattr(env, "congestion_multiplier", 1.0), 2),
             }
-            if hasattr(env, 'congestion_multiplier'):
-                payload["congestion"] = round(env.congestion_multiplier, 2)
-                
-            await websocket.send_json(payload)
-            await asyncio.sleep(0.1)
+            total_reward += reward
+            total_queue_all += total_queue
+
+        payload = {
+            "step": step,
+            "intersections": node_data,
+            "global": {
+                "avg_reward": round(total_reward / max(1, len(envs)), 2),
+                "total_queue": total_queue_all,
+            },
+        }
+        await websocket.send_json(payload)
+        await asyncio.sleep(0.1)
+
+
+async def run_multi_inference(websocket, envs_agents, intersections, max_steps=200):
+    """
+    Generic multi-intersection inference loop.
+    envs_agents: dict of {nid: (env, agent)}
+    """
+    states = {}
+    for nid, (env, agent) in envs_agents.items():
+        states[nid] = env.reset()
+
+    for step in range(max_steps):
+        node_data = {}
+        total_reward = 0
+        total_queue_all = 0
+
+        for nid, (env, agent) in envs_agents.items():
+            action = agent.act(states[nid], training=False)
+            next_state, reward, done, info = env.step(action)
+            states[nid] = next_state
+
             if done:
-                break
-async def run_fedcm_simulation(websocket, city, target_pois, use_tomtom):
-    client1 = FedCMClient(
-        client_id="client_1", 
-        sumo_config_path="sumo_configs2/osm_client1.sumocfg", 
-        agent_type="DQN", 
-        hidden_dims=[256, 128], 
-        use_tomtom=use_tomtom, 
-        tomtom_city=city, 
-        target_pois=target_pois, 
-        gui=False
-    )
-    
-    model_path = get_latest_model("results_fedcm")
-    if model_path:
-        try:
-            client1.load_model(model_path)
-            print(f"[WS] Loaded FedCM model from {model_path}")
-        except Exception as e:
-            print(f"[WS] Error loading model: {e}")
-    else:
-        print(f"[WS] Warning: No trained model found for FedCM in results_fedcm/. Using untrained weights.")
-        
-    await run_live_inference(websocket, client1.env, client1.agent)
+                states[nid] = env.reset()
 
-async def run_fedkd_simulation(websocket, city, target_pois, use_tomtom):
-    client1 = TrafficFedKDClient(
-        client_id="client_1", 
-        sumo_config_path="sumo_configs2/osm_client1.sumocfg", 
-        hidden_dims=[256, 128], 
-        use_tomtom=use_tomtom, 
-        tomtom_city=city, 
-        target_pois=target_pois, 
-        gui=False
+            total_queue = sum(env.lane_queues.values())
+            avg_wait = sum(env.lane_waiting_times.values()) / max(
+                1, len(env.lane_waiting_times)
+            )
+
+            ix_idx = int(nid.split("_")[1])
+            ix = intersections[ix_idx] if ix_idx < len(intersections) else {}
+
+            node_data[nid] = {
+                "name": ix.get("name", nid),
+                "tier": ix.get("tier", 3),
+                "tier_label": ix.get("tier_label", "Normal"),
+                "reward": round(reward, 2),
+                "total_queue": total_queue,
+                "avg_wait": round(avg_wait, 1),
+                "total_vehicles": env.total_vehicles,
+                "accidents": env.total_accidents,
+                "congestion": round(getattr(env, "congestion_multiplier", 1.0), 2),
+            }
+            total_reward += reward
+            total_queue_all += total_queue
+
+        payload = {
+            "step": step,
+            "intersections": node_data,
+            "global": {
+                "avg_reward": round(total_reward / max(1, len(envs_agents)), 2),
+                "total_queue": total_queue_all,
+            },
+        }
+
+        try:
+            await websocket.send_json(payload)
+        except Exception as e:
+            print(f"[MultiInference] WebSocket send failed: {e}")
+            break
+        await asyncio.sleep(0.1)
+
+
+def _create_envs_for_intersections(intersections, use_tomtom):
+    """Helper: create one environment per intersection."""
+    envs = {}
+    sumo_configs = [
+        "sumo_configs2/osm_client1.sumocfg",
+        "sumo_configs2/osm_client2.sumocfg",
+    ]
+    api_key = os.environ.get("TOMTOM_API_KEY", "oK2pgm45ieRxyEPgv876db2lGarwDFm2")
+
+    for i, ix in enumerate(intersections):
+        nid = f"node_{i}"
+        config = sumo_configs[i % len(sumo_configs)]
+        if use_tomtom:
+            envs[nid] = TomTomTrafficEnvironment(
+                sumo_config_path=config,
+                tomtom_api_key=api_key,
+                lat=ix["lat"],
+                lon=ix["lon"],
+                max_vehicles=1000,
+                traffic_pattern="real_time",
+                priority_tier=ix.get("tier", 3),
+                tl_id=f"{ix.get('name', nid)}",
+            )
+        else:
+            envs[nid] = MockTrafficEnvironment(
+                config, max_vehicles=1000, traffic_pattern="rush_hour"
+            )
+    return envs
+
+
+async def run_fedavg_simulation(websocket, config):
+    intersections = config.get("intersections", [])
+    use_tomtom = config.get("use_tomtom", True)
+
+    envs_agents = {}
+    for i, ix in enumerate(intersections):
+        nid = f"node_{i}"
+        client = TrafficFLClient(
+            client_id=nid,
+            sumo_config_path=f"sumo_configs2/osm_client{(i % 2) + 1}.sumocfg",
+            gui=False,
+            use_tomtom=use_tomtom,
+            tomtom_city=config.get("city", "Delhi"),
+            target_pois=[],
+        )
+        model_path = get_latest_model("results_federated")
+        if model_path:
+            try:
+                client.load_model(model_path)
+                print(f"[WS] Loaded FedAvg model for {nid} from {model_path}")
+            except Exception as e:
+                print(f"[WS] Error loading model for {nid}: {e}")
+        envs_agents[nid] = (client.env, client.agent)
+
+    await run_multi_inference(websocket, envs_agents, intersections)
+
+
+async def run_fedflow_simulation(websocket, config):
+    intersections = config.get("intersections", [])
+    use_tomtom = config.get("use_tomtom", True)
+    num_nodes = len(intersections)
+
+    trainer = FedFlowTrainer(
+        num_nodes=num_nodes,
+        num_clusters=max(1, num_nodes // 2),
+        gui=False,
+        use_tomtom=use_tomtom,
     )
 
-    model_path = get_latest_model("results_fedkd_sumo")
+    # Override the environments with intersection-specific ones
+    envs = _create_envs_for_intersections(intersections, use_tomtom)
+    trainer.envs = envs
+
+    model_path = get_latest_model("results_fedflow")
     if model_path:
-        try:
-            client1.load_model(model_path)
-            print(f"[WS] Loaded FedKD model from {model_path}")
-        except Exception as e:
-            print(f"[WS] Error loading model: {e}")
-    else:
-        print(f"[WS] Warning: No trained model found for FedKD in results_fedkd_sumo/. Using untrained weights.")
-        
-    await run_live_inference(websocket, client1.env, client1.agent)
+        for nid in trainer.agents:
+            try:
+                trainer.agents[nid].load_model(model_path)
+            except Exception:
+                pass
+        print(f"[WS] Loaded FedFlow model from {model_path}")
+
+    # Reset all
+    states = {}
+    for nid in trainer.agents:
+        if nid in envs:
+            states[nid] = envs[nid].reset()
+
+    for step in range(200):
+        node_data = {}
+        total_reward = 0
+        total_queue_all = 0
+
+        for nid in list(trainer.agents.keys())[:num_nodes]:
+            if nid not in states:
+                continue
+            agent = trainer.agents[nid]
+            env = envs[nid]
+
+            state_graph, adj_node = trainer._get_node_graph_state(nid, states[nid])
+            action = agent.get_action(state_graph, adj_node)
+            next_state, reward, done, info = env.step(action)
+            states[nid] = next_state
+
+            if done:
+                states[nid] = env.reset()
+
+            total_queue = sum(env.lane_queues.values())
+            avg_wait = sum(env.lane_waiting_times.values()) / max(
+                1, len(env.lane_waiting_times)
+            )
+
+            ix_idx = int(nid.split("_")[1])
+            ix = intersections[ix_idx] if ix_idx < len(intersections) else {}
+
+            node_data[nid] = {
+                "name": ix.get("name", nid),
+                "tier": ix.get("tier", 3),
+                "tier_label": ix.get("tier_label", "Normal"),
+                "reward": round(reward, 2),
+                "total_queue": total_queue,
+                "avg_wait": round(avg_wait, 1),
+                "total_vehicles": env.total_vehicles,
+                "accidents": env.total_accidents,
+                "congestion": round(getattr(env, "congestion_multiplier", 1.0), 2),
+            }
+            total_reward += reward
+            total_queue_all += total_queue
+
+        payload = {
+            "step": step,
+            "intersections": node_data,
+            "global": {
+                "avg_reward": round(total_reward / max(1, num_nodes), 2),
+                "total_queue": total_queue_all,
+            },
+        }
+        await websocket.send_json(payload)
+        await asyncio.sleep(0.1)
+
+
+async def run_fedcm_simulation(websocket, config):
+    intersections = config.get("intersections", [])
+    use_tomtom = config.get("use_tomtom", True)
+    city = config.get("city", "Delhi")
+
+    envs_agents = {}
+    for i, ix in enumerate(intersections):
+        nid = f"node_{i}"
+        client = FedCMClient(
+            client_id=nid,
+            sumo_config_path=f"sumo_configs2/osm_client{(i % 2) + 1}.sumocfg",
+            agent_type="DQN",
+            hidden_dims=[256, 128],
+            use_tomtom=use_tomtom,
+            tomtom_city=city,
+            target_pois=[],
+            gui=False,
+        )
+        model_path = get_latest_model("results_fedcm")
+        if model_path:
+            try:
+                client.load_model(model_path)
+                print(f"[WS] Loaded FedCM model for {nid} from {model_path}")
+            except Exception as e:
+                print(f"[WS] Error loading model for {nid}: {e}")
+        envs_agents[nid] = (client.env, client.agent)
+
+    await run_multi_inference(websocket, envs_agents, intersections)
+
+
+async def run_fedkd_simulation(websocket, config):
+    intersections = config.get("intersections", [])
+    use_tomtom = config.get("use_tomtom", True)
+    city = config.get("city", "Delhi")
+
+    envs_agents = {}
+    for i, ix in enumerate(intersections):
+        nid = f"node_{i}"
+        client = TrafficFedKDClient(
+            client_id=nid,
+            sumo_config_path=f"sumo_configs2/osm_client{(i % 2) + 1}.sumocfg",
+            hidden_dims=[256, 128],
+            use_tomtom=use_tomtom,
+            tomtom_city=city,
+            target_pois=[],
+            gui=False,
+        )
+        model_path = get_latest_model("results_fedkd_sumo")
+        if model_path:
+            try:
+                client.load_model(model_path)
+                print(f"[WS] Loaded FedKD model for {nid} from {model_path}")
+            except Exception as e:
+                print(f"[WS] Error loading model for {nid}: {e}")
+        envs_agents[nid] = (client.env, client.agent)
+
+    await run_multi_inference(websocket, envs_agents, intersections)
+
+
 @app.websocket("/api/simulate")
 async def websocket_simulate(websocket: WebSocket):
     await websocket.accept()
     try:
         config_data = await websocket.receive_text()
         config = json.loads(config_data)
-        
-        city = config.get("city", "Delhi")
+
         algorithm = config.get("algorithm", "Demo (No RL)")
-        target_pois = config.get("target_pois", [])
-        use_tomtom = config.get("use_tomtom", True)
-        
-        print(f"[WS] Starting {algorithm} simulation for {city}")
+        intersections = config.get("intersections", [])
+
+        print(
+            f"[WS] Starting {algorithm} simulation with {len(intersections)} intersections"
+        )
 
         if algorithm == "FedAvg":
-            await run_fedavg_simulation(websocket, city, target_pois, use_tomtom)
+            await run_fedavg_simulation(websocket, config)
         elif algorithm == "FedFlow":
-            await run_fedflow_simulation(websocket, city, target_pois, use_tomtom)
+            await run_fedflow_simulation(websocket, config)
         elif algorithm == "FedCM":
-            await run_fedcm_simulation(websocket, city, target_pois, use_tomtom)
+            await run_fedcm_simulation(websocket, config)
         elif algorithm == "FedKD":
-            await run_fedkd_simulation(websocket, city, target_pois, use_tomtom)
+            await run_fedkd_simulation(websocket, config)
         else:
-            await run_demo_simulation(websocket, city, target_pois, use_tomtom)
-            
-        await websocket.send_json({"status": "complete", "message": "Simulation finished."})
-            
+            await run_demo_simulation(websocket, config)
+
+        await websocket.send_json(
+            {"status": "complete", "message": "Simulation finished."}
+        )
+
     except WebSocketDisconnect:
         print("[WS] Client disconnected.")
     except Exception as e:
         print(f"[WS] Error during simulation: {e}")
+        import traceback
+
+        traceback.print_exc()
         try:
             await websocket.send_json({"status": "error", "message": str(e)})
-        except:
+        except Exception:
             pass
+
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)

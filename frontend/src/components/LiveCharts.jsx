@@ -1,56 +1,128 @@
-import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
-const LiveCharts = ({ data }) => {
-    return (
-        <div className="grid grid-cols-2 gap-6 h-full p-2">
-            {/* Queue & Wait Time Chart */}
-            <div className="glass-panel p-5 flex flex-col">
-                <h3 className="text-sm font-semibold text-slate-300 mb-6 flex items-center gap-2">
-                    Intersection Performance
-                    <span className="flex h-2 w-2 relative">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
-                    </span>
-                </h3>
-                <div className="flex-1 w-full min-h-[250px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={data} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                            <XAxis dataKey="step" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                            <YAxis yAxisId="left" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                            <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                            <Tooltip
-                                contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '0.5rem' }}
-                                itemStyle={{ color: '#e2e8f0' }}
-                            />
-                            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                            <Line yAxisId="left" type="monotone" dataKey="total_queue" stroke="#f43f5e" name="Queue Length" strokeWidth={2} dot={false} isAnimationActive={false} />
-                            <Line yAxisId="right" type="monotone" dataKey="avg_wait" stroke="#f59e0b" name="Avg Wait (s)" strokeWidth={2} dot={false} isAnimationActive={false} />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </div>
-            </div>
-
-            {/* Reward Chart */}
-            <div className="glass-panel p-5 flex flex-col">
-                <h3 className="text-sm font-semibold text-slate-300 mb-6">Algorithm Reward</h3>
-                <div className="flex-1 w-full min-h-[250px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={data} margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                            <XAxis dataKey="step" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                            <YAxis domain={[-1.5, 1.5]} stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
-                            <Tooltip
-                                contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '0.5rem' }}
-                            />
-                            <Line type="stepAfter" dataKey="reward" stroke="#10b981" name="Reward" strokeWidth={2} dot={false} isAnimationActive={false} />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </div>
-            </div>
-        </div>
-    );
+// Tier-based colors for up to 3 intersections
+const NODE_COLORS = {
+  node_0: '#f43f5e',  // Rose
+  node_1: '#f59e0b',  // Amber
+  node_2: '#3b82f6',  // Blue
 };
 
-export default LiveCharts;
+const GLOBAL_COLOR = '#a78bfa'; // Purple for global average
+
+export default function LiveCharts({ simData, intersections }) {
+  if (!simData || simData.length === 0) {
+    return (
+      <div className="glass-panel p-6 rounded-xl text-center text-slate-500 text-sm">
+        Start a simulation to see live charts
+      </div>
+    );
+  }
+
+  // Transform simData for charts: extract per-node queue and reward + global
+  const chartData = simData.map((d) => {
+    const point = { step: d.step };
+    
+    // Per-intersection data
+    if (d.intersections) {
+      Object.entries(d.intersections).forEach(([nid, data]) => {
+        point[`${nid}_queue`] = data.total_queue;
+        point[`${nid}_reward`] = data.reward;
+        point[`${nid}_name`] = data.name;
+      });
+    }
+    
+    // Global aggregates
+    if (d.global) {
+      point['global_queue'] = d.global.total_queue;
+      point['global_reward'] = d.global.avg_reward;
+    }
+    
+    return point;
+  });
+
+  // Get node IDs from the latest data point
+  const latestIntersections = simData[simData.length - 1]?.intersections || {};
+  const nodeIds = Object.keys(latestIntersections);
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Queue Length Chart */}
+      <div className="glass-panel p-4 rounded-xl">
+        <h3 className="text-sm font-semibold text-slate-300 mb-3">Queue Length per Intersection</h3>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <XAxis dataKey="step" stroke="#475569" tick={{ fontSize: 11 }} />
+            <YAxis stroke="#475569" tick={{ fontSize: 11 }} />
+            <Tooltip
+              contentStyle={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '12px' }}
+              labelStyle={{ color: '#94a3b8' }}
+            />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
+            {nodeIds.map((nid) => (
+              <Line
+                key={nid}
+                type="monotone"
+                dataKey={`${nid}_queue`}
+                name={latestIntersections[nid]?.name || nid}
+                stroke={NODE_COLORS[nid] || '#8b5cf6'}
+                strokeWidth={2}
+                dot={false}
+                isAnimationActive={false}
+              />
+            ))}
+            <Line
+              type="monotone"
+              dataKey="global_queue"
+              name="Global Total"
+              stroke={GLOBAL_COLOR}
+              strokeWidth={2}
+              strokeDasharray="5 5"
+              dot={false}
+              isAnimationActive={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Reward Chart */}
+      <div className="glass-panel p-4 rounded-xl">
+        <h3 className="text-sm font-semibold text-slate-300 mb-3">Reward per Intersection</h3>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <XAxis dataKey="step" stroke="#475569" tick={{ fontSize: 11 }} />
+            <YAxis stroke="#475569" tick={{ fontSize: 11 }} />
+            <Tooltip
+              contentStyle={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '12px' }}
+              labelStyle={{ color: '#94a3b8' }}
+            />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
+            {nodeIds.map((nid) => (
+              <Line
+                key={nid}
+                type="stepAfter"
+                dataKey={`${nid}_reward`}
+                name={latestIntersections[nid]?.name || nid}
+                stroke={NODE_COLORS[nid] || '#8b5cf6'}
+                strokeWidth={2}
+                dot={false}
+                isAnimationActive={false}
+              />
+            ))}
+            <Line
+              type="stepAfter"
+              dataKey="global_reward"
+              name="Avg Reward"
+              stroke={GLOBAL_COLOR}
+              strokeWidth={2}
+              strokeDasharray="5 5"
+              dot={false}
+              isAnimationActive={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
