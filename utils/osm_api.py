@@ -18,14 +18,15 @@ def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
     overpass_url = "https://overpass-api.de/api/interpreter"
 
     # Query for standard traffic generators/attractors
-    # using nodes and ways for the requested keys
+    # using nwr (node/way/relation) so large buildings mapped as
+    # polygons (e.g. AIIMS, IIT) are also detected
     query = f"""
     [out:json][timeout:25];
     (
-      node["amenity"]({min_lat},{min_lon},{max_lat},{max_lon});
-      node["leisure"]({min_lat},{min_lon},{max_lat},{max_lon});
-      node["shop"]({min_lat},{min_lon},{max_lat},{max_lon});
-      node["office"]({min_lat},{min_lon},{max_lat},{max_lon});
+      nwr["amenity"]({min_lat},{min_lon},{max_lat},{max_lon});
+      nwr["leisure"]({min_lat},{min_lon},{max_lat},{max_lon});
+      nwr["shop"]({min_lat},{min_lon},{max_lat},{max_lon});
+      nwr["office"]({min_lat},{min_lon},{max_lat},{max_lon});
     );
     out center tags;
     """
@@ -49,14 +50,18 @@ def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
         for element in data.get("elements", []):
             tags = element.get("tags", {})
 
-            # Extract coordinates (ways have centers if we used center modifier, but nodes have lat/lon directly)
-            # Since we just used basic out, ways won't have lat/lon directly, but nodes will.
-            # To be safe, try to get them, or default to 0.0
+            # Extract coordinates:
+            # - Nodes have top-level lat/lon
+            # - Ways/Relations have center.lat/center.lon (from 'out center')
             poi_lat = element.get("lat", 0.0)
             poi_lon = element.get("lon", 0.0)
 
-            # If it's a way and doesn't have lat/lon, we can try to average its nodes but that requires another query.
-            # For this simulation's purposes, we'll store the node's lat/lon or skip if missing.
+            # Fallback to center coordinates for way/relation elements
+            if poi_lat == 0.0 and poi_lon == 0.0:
+                center = element.get("center", {})
+                poi_lat = center.get("lat", 0.0)
+                poi_lon = center.get("lon", 0.0)
+
             if poi_lat == 0.0 and poi_lon == 0.0:
                 continue
 
