@@ -16,15 +16,22 @@ if __name__ == "__main__":
     parser.add_argument("--show-phase-console", action="store_true", help="Print TLS phase/time each step")
     parser.add_argument("--use-tomtom", action="store_true", help="Use real-time TomTom traffic data")
     parser.add_argument("--tomtom-city", type=str, default="", help="City for TomTom data (if using TomTom)")
+    parser.add_argument("--target-pois", type=str, default="", help="Comma-separated list of target POIs")
     args = parser.parse_args()
     
+    # Parse target_pois if provided
+    target_pois_list = None
+    if args.target_pois:
+        target_pois_list = [p.strip() for p in args.target_pois.split(",")]
+
     # Pass them into the client
     client = TrafficFLClient(
         client_id=args.client_id,
         sumo_config_path=args.sumo_config,
         gui=args.gui,
         use_tomtom=args.use_tomtom,
-        tomtom_city=args.tomtom_city if args.tomtom_city else None
+        tomtom_city=args.tomtom_city if args.tomtom_city else None,
+        target_pois=target_pois_list
     )
     
     fl.client.start_numpy_client(
