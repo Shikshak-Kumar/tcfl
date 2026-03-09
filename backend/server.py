@@ -14,13 +14,10 @@ from utils.osm_api import detect_pois_for_intersections
 from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
 from agents.mock_traffic_environment import MockTrafficEnvironment
 
-# Algorithm imports
-from train_fedflow import FedFlowTrainer
-from federated_learning.fl_client import TrafficFLClient
-from federated_learning.fedcm_client import FedCMClient
-from federated_learning.fedcm_server import FedCMServer
-from federated_learning.fedkd_client import TrafficFedKDClient
-from federated_learning.fedkd_server import TrafficFedKDServer
+# Note: Algorithm and ML imports (FedFlowTrainer, FL clients, etc.) 
+# have been moved inside the simulation functions (lazy loading)
+# to prevent TensorFlow/PyTorch from blocking the FastAPI startup on Render.
+
 import numpy as np
 
 app = FastAPI(title="Smart Traffic Control API")
@@ -278,6 +275,8 @@ async def run_fedavg_simulation(websocket, config):
     use_tomtom = config.get("use_tomtom", True)
 
     envs_agents = {}
+    from federated_learning.fl_client import TrafficFLClient
+    
     for i, ix in enumerate(intersections):
         nid = f"node_{i}"
         client = TrafficFLClient(
@@ -305,6 +304,7 @@ async def run_fedflow_simulation(websocket, config):
     use_tomtom = config.get("use_tomtom", True)
     num_nodes = len(intersections)
 
+    from train_fedflow import FedFlowTrainer
     trainer = FedFlowTrainer(
         num_nodes=num_nodes,
         num_clusters=max(1, num_nodes // 2),
@@ -390,6 +390,8 @@ async def run_fedcm_simulation(websocket, config):
     city = config.get("city", "Delhi")
 
     envs_agents = {}
+    from federated_learning.fedcm_client import FedCMClient
+    
     for i, ix in enumerate(intersections):
         nid = f"node_{i}"
         client = FedCMClient(
@@ -420,6 +422,8 @@ async def run_fedkd_simulation(websocket, config):
     city = config.get("city", "Delhi")
 
     envs_agents = {}
+    from federated_learning.fedkd_client import TrafficFedKDClient
+    
     for i, ix in enumerate(intersections):
         nid = f"node_{i}"
         client = TrafficFedKDClient(
