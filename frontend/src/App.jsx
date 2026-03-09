@@ -5,7 +5,7 @@ import LocationInput from './components/LocationInput';
 import { Activity, Timer, Car, AlertTriangle } from 'lucide-react';
 import './App.css';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 function App() {
   const [systemConfig, setSystemConfig] = useState({ cities: {}, algorithms: [], poi_categories: [] });
@@ -82,7 +82,7 @@ function App() {
       });
       const poiData = await poiResponse.json();
       setPoiResults(poiData.intersections);
-      
+
       // Step 2: Merge POI tier data into intersections for WebSocket config
       const enrichedIntersections = simConfig.intersections.map((ix, i) => ({
         ...ix,
@@ -106,7 +106,7 @@ function App() {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        
+
         if (data.status === 'complete') {
           setIsRunning(false);
           setStatusMessage('Simulation complete.');
@@ -150,7 +150,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white">
       <div className="flex flex-col lg:flex-row h-screen">
-        
+
         {/* Left Panel: Controls + Map */}
         <div className="lg:w-[380px] flex-shrink-0 flex flex-col gap-4 p-4 overflow-y-auto custom-scrollbar">
           <Sidebar
@@ -162,7 +162,7 @@ function App() {
             algorithms={systemConfig.algorithms || []}
             poiResults={poiResults}
           />
-          
+
           {/* Location Input */}
           <div className="glass-panel p-4">
             <h3 className="text-sm font-semibold text-slate-300 mb-2">📍 Select Intersections</h3>
@@ -174,7 +174,7 @@ function App() {
             />
           </div>
         </div>
-        
+
         {/* Right Panel: Metrics + Charts */}
         <div className="flex-1 p-4 overflow-y-auto custom-scrollbar">
           {/* Status Bar */}
@@ -221,11 +221,10 @@ function App() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-lg">{data.tier === 1 ? '🏥' : data.tier === 2 ? '🏫' : '📍'}</span>
                     <span className="text-sm font-bold">{data.name}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ml-auto ${
-                      data.tier === 1 ? 'bg-red-500/20 text-red-300' :
-                      data.tier === 2 ? 'bg-amber-500/20 text-amber-300' :
-                      'bg-blue-500/20 text-blue-300'
-                    }`}>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ml-auto ${data.tier === 1 ? 'bg-red-500/20 text-red-300' :
+                        data.tier === 2 ? 'bg-amber-500/20 text-amber-300' :
+                          'bg-blue-500/20 text-blue-300'
+                      }`}>
                       {data.tier_label}
                     </span>
                   </div>

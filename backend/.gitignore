@@ -44,3 +44,5 @@ trafficCongestionControlUsingFederatedLearning/results/
 # Specific repo files that should not be versioned
 trafficCongestionControlUsingFederatedLearning/requirements.txt
 
+# Environment Variables
+.env
