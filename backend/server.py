@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 import json
 import asyncio
 from typing import List, Optional
@@ -115,9 +117,8 @@ async def run_demo_simulation(websocket, config):
     for i, ix in enumerate(intersections):
         nid = f"node_{i}"
         if use_tomtom:
-            api_key = os.environ.get(
-                "TOMTOM_API_KEY", "oK2pgm45ieRxyEPgv876db2lGarwDFm2"
-            )
+            from utils.tomtom_api import get_api_key
+            api_key = get_api_key()
             envs[nid] = TomTomTrafficEnvironment(
                 sumo_config_path="demo_config",
                 tomtom_api_key=api_key,
@@ -248,7 +249,8 @@ def _create_envs_for_intersections(intersections, use_tomtom):
         "sumo_configs2/osm_client1.sumocfg",
         "sumo_configs2/osm_client2.sumocfg",
     ]
-    api_key = os.environ.get("TOMTOM_API_KEY", "oK2pgm45ieRxyEPgv876db2lGarwDFm2")
+    from utils.tomtom_api import get_api_key
+    api_key = get_api_key()
 
     for i, ix in enumerate(intersections):
         nid = f"node_{i}"

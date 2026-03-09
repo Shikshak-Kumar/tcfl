@@ -17,7 +17,9 @@ if __name__ == "__main__":
     if args.target_pois:
         target_pois_list = [p.strip() for p in args.target_pois.split(",")]
         
-    api_key = os.environ.get("TOMTOM_API_KEY", "oK2pgm45ieRxyEPgv876db2lGarwDFm2")
+    api_key = os.environ.get("TOMTOM_API_KEY")
+    if not api_key:
+        raise ValueError("TOMTOM_API_KEY environment variable is missing. Please set it in your .env file or deployment settings.")
     lat, lon = CITY_COORDINATES[args.city]
     
     print("============================================================")

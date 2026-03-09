@@ -101,7 +101,8 @@ class AdaptFlowTrainer:
 
                 print("AdaptFlow-TSC: CLI Mode (TomTom Real-Time Traffic)")
                 cities = list(CITY_COORDINATES.keys())
-                api_key = "oK2pgm45ieRxyEPgv876db2lGarwDFm2"
+                from utils.tomtom_api import get_api_key
+                api_key = get_api_key()
                 for i in range(self.num_nodes):
                     config = self.sumo_configs[i % len(self.sumo_configs)]
                     city = cities[i % len(cities)]

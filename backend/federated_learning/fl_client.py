@@ -55,11 +55,11 @@ class TrafficFLClient(fl.client.NumPyClient):
         if self.use_mock:
             if self.use_tomtom and self.tomtom_city:
                 from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
-                from utils.tomtom_api import CITY_COORDINATES
+                from utils.tomtom_api import CITY_COORDINATES, get_api_key
                 lat, lon = CITY_COORDINATES[self.tomtom_city]
                 self.env = TomTomTrafficEnvironment(
                     self.config_path,
-                    tomtom_api_key=os.environ.get("TOMTOM_API_KEY", "oK2pgm45ieRxyEPgv876db2lGarwDFm2"),
+                    tomtom_api_key=get_api_key(),
                     lat=lat,
                     lon=lon,
                     gui=False,
@@ -272,11 +272,11 @@ class TrafficFLClient(fl.client.NumPyClient):
         if self.use_mock:
             if self.use_tomtom and self.tomtom_city:
                 from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
-                from utils.tomtom_api import CITY_COORDINATES
+                from utils.tomtom_api import CITY_COORDINATES, get_api_key
                 lat, lon = CITY_COORDINATES[self.tomtom_city]
                 self.env = TomTomTrafficEnvironment(
                     self.config_path,
-                    tomtom_api_key="oK2pgm45ieRxyEPgv876db2lGarwDFm2",
+                    tomtom_api_key=get_api_key(),
                     lat=lat,
                     lon=lon,
                     gui=False,

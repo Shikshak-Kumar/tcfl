@@ -13,9 +13,10 @@ CACHE_TTL = 300  # 5 minutes
 
 def get_api_key() -> str:
     """Retrieves the TomTom API key from the environment variable."""
-    return os.environ.get(
-        "TOMTOM_API_KEY", "oK2pgm45ieRxyEPgv876db2lGarwDFm2"
-    )  # Fallback for now if not set
+    api_key = os.environ.get("TOMTOM_API_KEY")
+    if not api_key:
+        raise ValueError("TOMTOM_API_KEY environment variable is missing. Please set it in your .env file or deployment settings.")
+    return api_key
 
 
 def get_real_time_flow(
