@@ -6,6 +6,7 @@ import { Activity, Timer, Car, AlertTriangle } from 'lucide-react';
 import './App.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const WS_BASE = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000';
 
 function App() {
   const [systemConfig, setSystemConfig] = useState({ cities: {}, algorithms: [], poi_categories: [] });
@@ -92,7 +93,7 @@ function App() {
       setStatusMessage('Starting simulation...');
 
       // Step 3: Open WebSocket
-      const ws = new WebSocket(`ws://localhost:8000/api/simulate`);
+      const ws = new WebSocket(`${WS_BASE}/api/simulate`);
       wsRef.current = ws;
 
       ws.onopen = () => {
