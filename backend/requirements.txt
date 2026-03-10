@@ -16,3 +16,5 @@ uvicorn
 pydantic
 websockets
 python-dotenv
+httpx
+psycopg2-binary

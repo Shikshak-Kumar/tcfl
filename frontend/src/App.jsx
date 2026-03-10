@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import LiveCharts from './components/LiveCharts';
 import LocationInput from './components/LocationInput';
+import TimeSlotStats from './components/TimeSlotStats';
 import { Activity, Timer, Car, AlertTriangle } from 'lucide-react';
 import './App.css';
 
@@ -247,6 +248,9 @@ function App() {
               ))}
             </div>
           )}
+
+          {/* Historical Time-Slot Data */}
+          {!isRunning && <TimeSlotStats city={simConfig.city} />}
 
           {/* Charts */}
           <LiveCharts simData={simData} intersections={simConfig.intersections} />

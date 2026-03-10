@@ -13,6 +13,8 @@ from utils.tomtom_api import CITY_COORDINATES
 from utils.osm_api import detect_pois_for_intersections
 from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
 from agents.mock_traffic_environment import MockTrafficEnvironment
+from utils.traffic_db import insert_record, get_time_slot_aggregations, TIME_SLOTS, cleanup_old_records
+import datetime
 
 # Note: Algorithm and ML imports (FedFlowTrainer, FL clients, etc.) 
 # have been moved inside the simulation functions (lazy loading)
@@ -21,6 +23,67 @@ from agents.mock_traffic_environment import MockTrafficEnvironment
 import numpy as np
 
 app = FastAPI(title="Smart Traffic Control API")
+
+# Setup Background Task for Time-Slot Monitoring
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(traffic_data_collector())
+
+async def traffic_data_collector():
+    """Background task to fetch and store TomTom traffic data only during specific slots."""
+    print("[Background] Starting traffic data collector (Slot-restricted)...")
+    import traceback
+    
+    # Run check every 5 minutes to catch slot boundaries effectively
+    CHECK_INTERVAL = 300 
+    last_cleanup_date = None
+    
+    while True:
+        try:
+            now = datetime.datetime.now()
+            current_time_str = now.strftime("%H:%M")
+            
+            # 1. Periodic cleanup (once per day)
+            if last_cleanup_date != now.date():
+                cleanup_old_records(days=30)
+                last_cleanup_date = now.date()
+
+            # 2. Check if current time is within any predefined slot
+            is_in_slot = False
+            active_slot_name = ""
+            for slot in TIME_SLOTS:
+                if slot["start"] <= current_time_str < slot["end"]:
+                    is_in_slot = True
+                    active_slot_name = slot["name"]
+                    break
+            
+            if is_in_slot:
+                from utils.tomtom_api import get_api_key, get_real_time_flow, CITY_COORDINATES
+                api_key = get_api_key()
+                
+                print(f"[Background] Active Slot: {active_slot_name}. Fetching traffic data...")
+                for city_name, coords in CITY_COORDINATES.items():
+                    lat, lon = coords
+                    flow_data = get_real_time_flow(api_key, lat, lon)
+                    
+                    if flow_data:
+                        insert_record(
+                            location_id=city_name,
+                            lat=lat,
+                            lon=lon,
+                            current_speed=flow_data.get("currentSpeed", 0.0),
+                            free_flow_speed=flow_data.get("freeFlowSpeed", 0.0),
+                            congestion_ratio=flow_data.get("congestion_factor", 1.0)
+                        )
+                print(f"[Background] Data collection for {active_slot_name} complete.")
+            else:
+                print(f"[Background] Idle (outside monitoring slots). Checked at {current_time_str}")
+        
+        except Exception as e:
+            print(f"[Background] Error in traffic data collector: {e}")
+            traceback.print_exc()
+            
+        await asyncio.sleep(CHECK_INTERVAL)
 
 # Allow the React frontend to communicate with this backend
 app.add_middleware(
@@ -93,6 +156,69 @@ async def detect_pois(request: DetectPoisRequest):
         )
     return {"intersections": clean_results}
 
+@app.get("/api/internal/collect")
+async def manual_collect_trigger():
+    """
+    Internal endpoint to trigger a collection cycle.
+    Useful for waking up Render via GitHub Actions/Cron.
+    """
+    print("[API] Internal collection trigger received.")
+    try:
+        from utils.tomtom_api import get_api_key, get_real_time_flow, CITY_COORDINATES
+        api_key = get_api_key()
+        
+        # We only collect if we are in a valid slot
+        now = datetime.datetime.now()
+        current_time_str = now.strftime("%H:%M")
+        
+        active_slot = None
+        for slot in TIME_SLOTS:
+            if slot["start"] <= current_time_str <= slot["end"]:
+                active_slot = slot
+                break
+        
+        if not active_slot:
+            return {"status": "ignored", "message": "Currently outside of monitoring slots."}
+            
+        print(f"[API] Triggering collection for slot: {active_slot['name']}")
+        for city_name, coords in CITY_COORDINATES.items():
+            flow_data = get_real_time_flow(api_key, coords[0], coords[1])
+            if flow_data:
+                insert_record(
+                    location_id=city_name,
+                    lat=coords[0],
+                    lon=coords[1],
+                    current_speed=flow_data.get("currentSpeed", 0.0),
+                    free_flow_speed=flow_data.get("freeFlowSpeed", 0.0),
+                    congestion_ratio=flow_data.get("congestion_factor", 1.0)
+                )
+        
+        return {"status": "success", "message": f"Collected data for {active_slot['name']}"}
+    except Exception as e:
+        print(f"[API] Error in manual collection: {e}")
+        return {"status": "error", "message": str(e)}
+
+@app.get("/api/time-slot-stats")
+async def get_time_slots(location_id: Optional[str] = None, date: Optional[str] = None):
+    """
+    Returns aggregated traffic statistics for the 5 predefined time slots.
+    Optional query parameters:
+    - location_id: CityName
+    - date: YYYY-MM-DD
+    """
+    print(f"[API] GET /api/time-slot-stats requested for {location_id if location_id else 'all locations'} on {date if date else 'today'}")
+    
+    try:
+        if date:
+            target_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+        else:
+            target_date = datetime.date.today()
+            
+        stats = get_time_slot_aggregations(location_id=location_id, target_date=target_date)
+        return {"status": "success", "data": stats}
+    except Exception as e:
+        print(f"[API] Error in time-slot-stats: {e}")
+        return {"status": "error", "message": str(e)}
 
 def get_latest_model(directory: str):
     """Find the most recently modified .pt model file in the given directory."""
