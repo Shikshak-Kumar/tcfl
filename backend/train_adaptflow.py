@@ -85,9 +85,16 @@ class AdaptFlowTrainer:
         self._setup_environments()
 
         # 6. Wire neighbors (Mock only)
+        self.priority_tiers: Dict[str, int] = {}
         if not self.gui:
             for i in range(num_nodes):
                 nid = f"node_{i}"
+                # Assign mock priority tiers (Tier 1 for node_0, Tier 2 for node_1, etc.)
+                # In real use, this comes from the environment config
+                if i == 0: self.priority_tiers[nid] = 1 # Hospital
+                elif i == 1: self.priority_tiers[nid] = 2 # School
+                else: self.priority_tiers[nid] = 3 # Normal
+
                 for j in range(num_nodes):
                     if i != j and self.adj[i, j] > 0:
                         self.envs[nid].add_neighbor(self.envs[f"node_{j}"])
@@ -175,18 +182,23 @@ class AdaptFlowTrainer:
 
             for _ in range(200):
                 state_graph, adj_node = self._get_node_graph_state(nid, state)
+                
+                # Internal agent history is updated, and sequence is used for action
+                state_seq = agent._get_sequence(state_graph)
                 action = agent.get_action(state_graph, adj_node)
                 next_state, reward, done, info = env.step(action)
 
                 next_state_graph, next_adj_node = self._get_node_graph_state(
                     nid, next_state
                 )
+                next_state_seq = agent._get_sequence(next_state_graph)
+                
                 agent.remember(
-                    state_graph,
+                    state_seq,
                     adj_node,
                     action,
                     reward,
-                    next_state_graph,
+                    next_state_seq,
                     next_adj_node,
                     done,
                 )
@@ -202,9 +214,10 @@ class AdaptFlowTrainer:
             node_metrics[nid] = metrics
             node_losses[nid] = loss
 
+            p_rews = info.get("pareto_rewards", {})
             wait_time = metrics.get("avg_waiting_time_per_vehicle", 0.0)
             print(
-                f"    {nid}: Reward={total_reward:.1f}, "
+                f"    {nid}: Reward={total_reward:.1f} (Q:{p_rews.get('queue',0):.2f}, W:{p_rews.get('wait',0):.2f}), "
                 f"AvgWait={wait_time:.2f}s, Loss={loss:.4f}"
             )
 
@@ -220,13 +233,15 @@ class AdaptFlowTrainer:
             for i in range(self.num_nodes):
                 assignments[f"node_{i}"] = i // nodes_per_cluster
             # Still record fingerprints for Round 2
-            self.cluster_manager.recluster(node_metrics, round_idx)
+            self.cluster_manager.recluster(node_metrics, round_idx, self.priority_tiers)
             # Override with static
             self.cluster_manager.cluster_history[-1] = assignments
         else:
-            # Dynamic re-clustering based on congestion fingerprints
-            print(f"\n  [Step 2] Dynamic Re-Clustering (Congestion Fingerprints)")
-            assignments = self.cluster_manager.recluster(node_metrics, round_idx)
+            # Dynamic re-clustering based on congestion fingerprints + POI Priority
+            print(f"\n  [Step 2] Dynamic Re-Clustering (Congestion + POI Priority)")
+            assignments = self.cluster_manager.recluster(
+                node_metrics, round_idx, self.priority_tiers
+            )
 
             transitions = self.cluster_manager.get_latest_transitions()
             if transitions["transitions"]:
@@ -431,7 +446,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AdaptFlow-TSC Training")
     parser.add_argument("--rounds", type=int, default=3, help="Number of rounds")
     parser.add_argument("--nodes", type=int, default=6, help="Number of nodes")
-    parser.add_argument("--clusters", type=int, default=2, help="Number of clusters")
+    parser.add_argument("--clusters", type=int, default=0, help="Number of clusters (0 for auto)")
     parser.add_argument(
         "--results-dir",
         type=str,
@@ -457,13 +472,19 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # Automatic cluster selection for performance optimization
+    num_clusters = args.clusters
+    if num_clusters <= 0:
+        num_clusters = max(1, args.nodes // 4)
+        print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} dummy servers for {args.nodes} nodes.")
+
     target_pois_list = None
     if args.target_pois:
         target_pois_list = [p.strip() for p in args.target_pois.split(",")]
 
     trainer = AdaptFlowTrainer(
         num_nodes=args.nodes,
-        num_clusters=args.clusters,
+        num_clusters=num_clusters,
         gui=args.gui,
         results_dir=args.results_dir,
         use_tomtom=args.use_tomtom,

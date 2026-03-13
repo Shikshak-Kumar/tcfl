@@ -82,3 +82,59 @@ class CoLightEncoder(nn.Module):
         x = F.dropout(x, self.dropout, training=self.training)
         x = self.out_att(x, adj)
         return x # [batch_size, num_nodes, nhid]
+
+class TemporalAttentionLayer(nn.Module):
+    """
+    Temporal Attention Layer to capture behavior patterns over time.
+    """
+    def __init__(self, in_features, out_features, dropout=0.1):
+        super(TemporalAttentionLayer, self).__init__()
+        self.W = nn.Linear(in_features, out_features)
+        self.q = nn.Parameter(torch.empty(size=(out_features, 1)))
+        nn.init.xavier_uniform_(self.q.data, gain=1.414)
+        self.dropout = dropout
+
+    def forward(self, x):
+        # x: [batch_size, time_steps, features]
+        weights = torch.matmul(torch.tanh(self.W(x)), self.q).squeeze(-1) # [batch_size, time_steps]
+        weights = F.softmax(weights, dim=1)
+        weights = F.dropout(weights, self.dropout, training=self.training)
+        
+        # Weighted sum over time dimension
+        out = torch.bmm(weights.unsqueeze(1), x).squeeze(1) # [batch_size, features]
+        return out
+
+class SpatioTemporalEncoder(nn.Module):
+    """
+    Unified Spatio-Temporal Encoder.
+    Combines Spatial GAT with Temporal Attention.
+    """
+    def __init__(self, nfeat, nhid, nheads, time_steps=4, dropout=0.1):
+        super(SpatioTemporalEncoder, self).__init__()
+        self.spatial_gat = CoLightEncoder(nfeat, nhid, nheads, dropout=dropout)
+        self.temporal_att = TemporalAttentionLayer(nhid, nhid, dropout=dropout)
+        self.time_steps = time_steps
+
+    def forward(self, x_seq, adj):
+        # x_seq: [batch_size, time_steps, num_nodes, nfeat]
+        # adj: [batch_size, num_nodes, num_nodes]
+        
+        batch_size, time_steps, num_nodes, nfeat = x_seq.size()
+        
+        # 1. Spatial encoding for each time step
+        spatial_out = []
+        for t in range(time_steps):
+            x_t = x_seq[:, t, :, :] # [batch_size, num_nodes, nfeat]
+            h_t = self.spatial_gat(x_t, adj) # [batch_size, num_nodes, nhid]
+            spatial_out.append(h_t)
+            
+        # 2. Reshape for temporal attention
+        # [batch_size, time_steps, num_nodes, nhid] -> [batch_size * num_nodes, time_steps, nhid]
+        spatial_out = torch.stack(spatial_out, dim=1)
+        spatial_out = spatial_out.transpose(1, 2).reshape(-1, time_steps, spatial_out.size(-1))
+        
+        # 3. Temporal encoding
+        temporal_out = self.temporal_att(spatial_out) # [batch_size * num_nodes, nhid]
+        
+        # 4. Final output
+        return temporal_out.view(batch_size, num_nodes, -1) # [batch_size, num_nodes, nhid]

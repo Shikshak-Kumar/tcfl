@@ -1,6 +1,6 @@
-import { Activity, Zap, ZapOff } from 'lucide-react';
+import { Activity, Zap, ZapOff, TrendingUp } from 'lucide-react';
 
-export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggleSimulation, cities, algorithms, poiResults }) {
+export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggleSimulation, cities, algorithms, poiResults, onCompare }) {
   const handleChange = (key, value) => {
     onConfigChange({ ...simConfig, [key]: value });
   };
@@ -71,6 +71,27 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
         </select>
       </div>
 
+      {/* Pareto Legend */}
+      {simConfig.algorithm === 'AdaptFlow' && (
+        <div className="glass-panel p-3 rounded-lg border border-indigo-500/20">
+          <h4 className="text-[10px] uppercase tracking-wider font-bold text-indigo-400 mb-2">Pareto Multi-Objective</h4>
+          <div className="grid grid-cols-1 gap-1 text-[10px] text-slate-300">
+            <div className="flex justify-between items-center">
+              <span className="text-rose-300 font-semibold">Flow:</span>
+              <span>Queue Length Penalty</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-emerald-300 font-semibold">Delay:</span>
+              <span>Wait Time Penalty</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-amber-300 font-semibold">Safe:</span>
+              <span>Collision Risk Penalty</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* POI Detection Results */}
       {poiResults && poiResults.length > 0 && (
         <div>
@@ -103,21 +124,40 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
         </div>
       )}
 
-      {/* Start / Stop */}
+      {/* Compare Algos Button */}
+      <button
+        onClick={onCompare}
+        className="w-full mt-auto mb-2 flex items-center justify-center gap-2 px-4 py-3 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded-xl transition-all font-bold text-indigo-300"
+      >
+        <TrendingUp className="w-4 h-4" />
+        Compare Algorithms
+      </button>
+
+      {/* Run Simulation Button */}
       <button
         onClick={onToggleSimulation}
         disabled={!isRunning && (!simConfig.intersections || simConfig.intersections.length === 0)}
-        className={`w-full py-3 rounded-xl font-bold text-sm tracking-wide transition-all uppercase
-          ${isRunning 
-            ? 'bg-rose-500/80 hover:bg-rose-500 text-white' 
-            : simConfig.intersections?.length > 0
-              ? 'bg-indigo-500/80 hover:bg-indigo-500 text-white'
-              : 'bg-white/10 text-slate-500 cursor-not-allowed'
+        className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all font-bold
+          ${isRunning
+            ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-lg shadow-rose-500/20'
+            : !simConfig.intersections || simConfig.intersections.length === 0
+              ? 'bg-white/10 text-slate-500 cursor-not-allowed'
+              : 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg shadow-emerald-500/20'
           }`}
       >
-        {isRunning ? '◼ Stop Simulation' : '▶ Start Simulation'}
+        {isRunning ? (
+          <>
+            <ZapOff className="w-5 h-5 animate-pulse" />
+            Stop Simulation
+          </>
+        ) : (
+          <>
+            <Zap className="w-5 h-5" />
+            Start Simulation
+          </>
+        )}
       </button>
-      
+
       {!isRunning && (!simConfig.intersections || simConfig.intersections.length === 0) && (
         <p className="text-xs text-center text-slate-500">
           Place at least 1 pin on the map to start

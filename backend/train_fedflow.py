@@ -343,7 +343,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="FedFlow-TSC Training")
     parser.add_argument("--rounds", type=int, default=3, help="Number of rounds")
     parser.add_argument("--nodes", type=int, default=6, help="Number of nodes")
-    parser.add_argument("--clusters", type=int, default=2, help="Number of clusters")
+    parser.add_argument("--clusters", type=int, default=0, help="Number of clusters (0 for auto)")
     parser.add_argument(
         "--results-dir", type=str, default="results_fedflow", help="Results directory"
     )
@@ -364,6 +364,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # Automatic cluster selection for performance optimization
+    num_clusters = args.clusters
+    if num_clusters <= 0:
+        num_clusters = max(1, args.nodes // 4)
+        print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} dummy servers for {args.nodes} nodes.")
+
     # Parse target_pois if provided
     target_pois_list = None
     if args.target_pois:
@@ -371,7 +377,7 @@ if __name__ == "__main__":
 
     trainer = FedFlowTrainer(
         num_nodes=args.nodes,
-        num_clusters=args.clusters,
+        num_clusters=num_clusters,
         gui=args.gui,
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,

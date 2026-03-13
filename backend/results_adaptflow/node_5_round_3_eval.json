@@ -1,24 +1,24 @@
 {
   "node_id": "node_5",
   "cluster_id": "cluster_1",
-  "total_reward": -131.59999999999994,
-  "avg_waiting_time": 5.576271186440678,
-  "loss": 0.3482750654220581,
+  "total_reward": -156.39999999999992,
+  "avg_waiting_time": 6.409836065573771,
+  "loss": 0.29705655574798584,
   "metrics": {
-    "total_waiting_time": 1316.0,
-    "total_vehicles": 236,
-    "average_queue_length": 6.58,
-    "max_queue_length": 18,
+    "total_waiting_time": 1564.0,
+    "total_vehicles": 244,
+    "average_queue_length": 7.82,
+    "max_queue_length": 24,
     "steps": 200,
-    "avg_waiting_time_per_vehicle": 5.576271186440678,
+    "avg_waiting_time_per_vehicle": 6.409836065573771,
     "green_signal_time": {
       "per_edge": {
-        "edge_n": 9.5,
+        "edge_n": 12.5,
         "edge_e": 5.0,
-        "edge_s": 11.0,
-        "edge_w": 5.0
+        "edge_s": 14.0,
+        "edge_w": 12.5
       },
-      "avg_gst": 7.625,
+      "avg_gst": 11.0,
       "num_lanes": 4,
       "min_green_time": 5.0,
       "max_green_time": 30.0
@@ -32,14 +32,14 @@
       "edge_n_0": {
         "edge_id": "edge_n",
         "lane_id": "edge_n_0",
-        "vehicle_count": 3,
-        "queue_length": 3,
-        "waiting_time": 20.0,
-        "average_speed": 2.7567075956164238,
-        "occupancy_percent": 15,
+        "vehicle_count": 5,
+        "queue_length": 5,
+        "waiting_time": 82.0,
+        "average_speed": 4.063628791804155,
+        "occupancy_percent": 25,
         "green_signal_time": 0,
         "vehicle_types": {
-          "car": 3
+          "car": 5
         },
         "lane_length": 100.0
       },
@@ -48,8 +48,8 @@
         "lane_id": "edge_e_0",
         "vehicle_count": 0,
         "queue_length": 0,
-        "waiting_time": 67.0,
-        "average_speed": 11.551725648190553,
+        "waiting_time": 54.0,
+        "average_speed": 5.829830200431584,
         "occupancy_percent": 0,
         "green_signal_time": 0,
         "vehicle_types": {
@@ -60,47 +60,47 @@
       "edge_s_0": {
         "edge_id": "edge_s",
         "lane_id": "edge_s_0",
-        "vehicle_count": 4,
-        "queue_length": 4,
-        "waiting_time": 78.0,
-        "average_speed": 0.6724572146346081,
-        "occupancy_percent": 20,
+        "vehicle_count": 6,
+        "queue_length": 6,
+        "waiting_time": 127.0,
+        "average_speed": 3.3066222875055806,
+        "occupancy_percent": 30,
         "green_signal_time": 0,
         "vehicle_types": {
-          "car": 4
+          "car": 6
         },
         "lane_length": 100.0
       },
       "edge_w_0": {
         "edge_id": "edge_w",
         "lane_id": "edge_w_0",
-        "vehicle_count": 0,
-        "queue_length": 0,
-        "waiting_time": 212.0,
-        "average_speed": 1.5220673406261542,
-        "occupancy_percent": 0,
+        "vehicle_count": 5,
+        "queue_length": 5,
+        "waiting_time": 277.0,
+        "average_speed": 4.4301984992793315,
+        "occupancy_percent": 25,
         "green_signal_time": 0,
         "vehicle_types": {
-          "car": 0
+          "car": 5
         },
         "lane_length": 100.0
       }
     },
     "lane_summary": {
-      "total_waiting_time": 1316.0,
-      "total_queue_length": 6.58,
-      "num_congested_lanes": 0.0,
+      "total_waiting_time": 1564.0,
+      "total_queue_length": 7.82,
+      "num_congested_lanes": 1.0,
       "total_lanes": 4.0,
       "average_gst": 0.0,
       "min_gst": 0.0,
       "max_gst": 0.0,
-      "max_queue_length": 18.0,
-      "max_waiting_time": 1316.0,
+      "max_queue_length": 24.0,
+      "max_waiting_time": 1564.0,
       "average_speed": 0.0,
-      "num_active_lanes": 2.0,
-      "total_occupancy": 32.9,
-      "total_vehicles": 236
+      "num_active_lanes": 3.0,
+      "total_occupancy": 39.1,
+      "total_vehicles": 244
     },
-    "total_reward": -131.59999999999994
+    "total_reward": -156.39999999999992
   }
 }

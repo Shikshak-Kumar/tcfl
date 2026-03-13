@@ -177,22 +177,33 @@ class MockTrafficEnvironment:
         self.total_waiting_time += step_total_wait
         self.queue_lengths.append(sum(self.lane_queues.values()))
 
-        # 4. Calculate Reward (Normalized for RL stability)
+        # 4. Calculate Pareto Reward Components
         total_queue = sum(self.lane_queues.values())
-        avg_wait = np.mean(list(self.lane_waiting_times.values()))
-
-        # Normalize reward components:
-        # total_queue / 20.0 -> scaled down
-        # step_total_wait / 20.0 -> scaled down (instantaneous wait)
-        reward = -(total_queue / 20.0 + step_total_wait / 20.0)
-
-        # Switching penalty (Practical stability)
-        if self.current_phase != action:
-            reward -= 0.5
-
-        # Safety penalty
+        
+        # Component 1: Queue length penalty
+        r_queue = -(total_queue / 20.0)
+        
+        # Component 2: Instantaneous waiting time penalty
+        r_wait = -(step_total_wait / 20.0)
+        
+        # Component 3: Safety (accidents/near misses)
+        r_safety = 0.0
         if current_step_accidents > 0:
-            reward -= 2.0
+            r_safety -= 2.0
+        if current_step_near_misses > 0:
+            r_safety -= 0.5
+
+        # Component 4: Stability (Switching penalty)
+        r_stability = -0.5 if self.current_phase != action else 0.0
+
+        # Pareto Scalarization (can be tuned or made dynamic)
+        weights = {"queue": 0.4, "wait": 0.4, "safety": 0.15, "stability": 0.05}
+        reward = (
+            weights["queue"] * r_queue +
+            weights["wait"] * r_wait +
+            weights["safety"] * r_safety +
+            weights["stability"] * r_stability
+        )
 
         reward = max(-10.0, min(1.0, reward))  # Tight clip for stability
 
@@ -213,6 +224,12 @@ class MockTrafficEnvironment:
                 "safety_score": max(
                     0, 100 - (self.total_accidents * 5 + self.near_misses)
                 ),
+            },
+            "pareto_rewards": {
+                "queue": float(r_queue),
+                "wait": float(r_wait),
+                "safety": float(r_safety),
+                "stability": float(r_stability)
             },
             "phase": {
                 "phase": self.current_phase,

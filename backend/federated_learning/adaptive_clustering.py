@@ -14,32 +14,33 @@ from typing import Dict, List, Tuple, Optional
 from collections import defaultdict
 
 
-# ── Congestion Fingerprint ───────────────────────────────────────────
+# ── Congestion & Priority Fingerprint ────────────────────────────────
 
-# The 5 dimensions of a congestion fingerprint
+# The 6 dimensions of a combined fingerprint
 FINGERPRINT_KEYS = [
     "avg_waiting_time_per_vehicle",
     "average_queue_length",
     "throughput_ratio",
     "max_queue_length",
     "num_congested_lanes",
+    "priority_score", # New POI-based dimension
 ]
 
 
-def extract_fingerprint(metrics: Dict) -> np.ndarray:
+def extract_fingerprint(metrics: Dict, priority_tier: int = 3) -> np.ndarray:
     """
-    Extract a 5-dimensional congestion fingerprint from node performance metrics.
+    Extract a 6-dimensional fingerprint from node performance and priority.
 
-    The fingerprint captures the traffic state at a node:
-      [avg_wait/veh, avg_queue_len, throughput_ratio, max_queue, congested_lanes]
-
-    Args:
-        metrics: Dict from env.get_performance_metrics()
-
-    Returns:
-        np.ndarray of shape (5,)
+    Dimensions:
+      [avg_wait, avg_queue, throughput, max_queue, congested_lanes, priority_score]
+      
+    Priority Score: Tier 1 (Hospitals) = 1.0, Tier 2 (Schools) = 0.5, Tier 3 = 0.0
     """
     lane_summary = metrics.get("lane_summary", {})
+    
+    # Map tier to numeric importance (reversed because Tier 1 is highest priority)
+    priority_map = {1: 1.0, 2: 0.5, 3: 0.0}
+    priority_score = priority_map.get(priority_tier, 0.0)
 
     vals = [
         float(metrics.get("avg_waiting_time_per_vehicle", 0.0)),
@@ -47,6 +48,7 @@ def extract_fingerprint(metrics: Dict) -> np.ndarray:
         float(metrics.get("throughput_ratio", 0.0)),
         float(metrics.get("max_queue_length", 0.0)),
         float(lane_summary.get("num_congested_lanes", 0.0)),
+        priority_score,
     ]
     return np.array(vals, dtype=np.float64)
 
@@ -55,23 +57,27 @@ def normalize_fingerprints(
     fingerprints: Dict[str, np.ndarray],
 ) -> Dict[str, np.ndarray]:
     """
-    Min-max normalize fingerprints across all nodes to [0, 1] per dimension.
-    Prevents scale dominance (e.g., waiting time in seconds vs queue in count).
+    Min-max normalize fingerprints. Priority dimension is kept as-is if already [0,1].
     """
     if not fingerprints:
         return {}
 
     node_ids = list(fingerprints.keys())
-    matrix = np.stack([fingerprints[nid] for nid in node_ids])  # (N, 5)
+    matrix = np.stack([fingerprints[nid] for nid in node_ids])  # (N, 6)
 
     mins = matrix.min(axis=0)
     maxs = matrix.max(axis=0)
     ranges = maxs - mins
 
-    # Avoid division by zero for constant features
+    # Avoid division by zero
     ranges[ranges < 1e-9] = 1.0
 
     normed_matrix = (matrix - mins) / ranges
+    
+    # Ensure PRIORITY dimension (index 5) is effectively weighted if needed
+    # We can multiply the priority column by a 'Novelty Factor' to ensure it 
+    # strongly influences cluster formation.
+    # normed_matrix[:, 5] *= 2.0 
 
     return {nid: normed_matrix[i] for i, nid in enumerate(node_ids)}
 
@@ -86,16 +92,7 @@ def kmeans_cluster(
     seed: Optional[int] = None,
 ) -> Dict[str, int]:
     """
-    K-means clustering on congestion fingerprints.
-
-    Args:
-        fingerprints: Normalized fingerprints {node_id: np.ndarray(5,)}
-        num_clusters: Number of clusters (K)
-        max_iter: Maximum iterations
-        seed: Random seed for reproducibility
-
-    Returns:
-        Dict mapping node_id -> cluster_index
+    K-means clustering on congestion + priority fingerprints.
     """
     if seed is not None:
         rng = np.random.RandomState(seed)
@@ -177,15 +174,8 @@ def cosine_similarity_matrix(
 
 class AdaptiveClusterManager:
     """
-    Manages dynamic cluster formation across training rounds.
-
-    Each round:
-      1. Receives per-node metrics
-      2. Extracts congestion fingerprints
-      3. Normalizes and clusters via K-means
-      4. Returns new cluster assignments
-
-    Tracks full history for analysis.
+    Manages dynamic cluster formation across training rounds,
+    now incorporating POI priority for "Elite Clustering".
     """
 
     def __init__(self, num_clusters: int = 2, seed: int = 42):
@@ -198,26 +188,37 @@ class AdaptiveClusterManager:
         self.transition_log: List[Dict] = []
 
     def recluster(
-        self, node_metrics: Dict[str, Dict], round_idx: int
+        self, 
+        node_metrics: Dict[str, Dict], 
+        round_idx: int,
+        priority_tiers: Optional[Dict[str, int]] = None
     ) -> Dict[str, int]:
         """
-        Perform dynamic re-clustering based on current node metrics.
+        Perform dynamic re-clustering based on current node metrics AND POI priority.
 
         Args:
-            node_metrics: {node_id: metrics_dict} from env.get_performance_metrics()
+            node_metrics: {node_id: metrics_dict}
             round_idx: Current training round
+            priority_tiers: Optional {node_id: tier_int} (1=Hospital, 2=School, 3=Normal)
 
         Returns:
-            {node_id: cluster_index} — new cluster assignments
+            {node_id: cluster_index}
         """
-        # 1. Extract fingerprints
-        fingerprints = {nid: extract_fingerprint(m) for nid, m in node_metrics.items()}
+        if priority_tiers is None:
+            priority_tiers = {nid: 3 for nid in node_metrics}
+
+        # 1. Extract fingerprints (including priority score)
+        fingerprints = {
+            nid: extract_fingerprint(m, priority_tiers.get(nid, 3)) 
+            for nid, m in node_metrics.items()
+        }
         self.fingerprint_history.append(fingerprints)
 
         # 2. Normalize
         normed = normalize_fingerprints(fingerprints)
 
-        # 3. Cluster
+        # 3. Cluster (Traffic Similarity + Priority Similarity)
+        # Higher-priority nodes will naturally pull together if their priority dimensions match
         assignments = kmeans_cluster(
             normed, self.num_clusters, seed=self.seed + round_idx
         )

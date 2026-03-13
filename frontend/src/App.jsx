@@ -1,22 +1,37 @@
 import { useState, useEffect, useRef } from 'react';
-import Sidebar from './components/Sidebar';
-import LiveCharts from './components/LiveCharts';
-import LocationInput from './components/LocationInput';
-import TimeSlotStats from './components/TimeSlotStats';
-import { Activity, Timer, Car, AlertTriangle } from 'lucide-react';
+import LandingPage from './components/LandingPage';
+import Dashboard from './components/Dashboard';
+import ComparisonView from './components/ComparisonView';
+import { TrendingUp } from 'lucide-react';
 import './App.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 const WS_BASE = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000';
 
 function App() {
-  const [systemConfig, setSystemConfig] = useState({ cities: {}, algorithms: [], poi_categories: [] });
-  const [simConfig, setSimConfig] = useState({
-    city: 'Delhi',
-    algorithm: 'Demo (No RL)',
-    use_tomtom: true,
-    intersections: [],
+  // --- View State (Hash-based routing for back button support) ---
+  const [view, setView] = useState(() => {
+    const hash = window.location.hash.replace('#', '');
+    return hash || localStorage.getItem('appView') || 'landing';
   });
+
+  // --- Simulation Config & Persistence ---
+  const [simConfig, setSimConfig] = useState(() => {
+    const saved = localStorage.getItem('simConfig');
+    return saved ? JSON.parse(saved) : {
+      city: 'Delhi',
+      algorithm: 'Demo (No RL)',
+      use_tomtom: true,
+      intersections: [],
+    };
+  });
+
+  const [systemConfig, setSystemConfig] = useState(() => {
+    const saved = localStorage.getItem('systemConfig');
+    return saved ? JSON.parse(saved) : { cities: {}, algorithms: [], poi_categories: [] };
+  });
+
+  // --- UI State (Not persisted) ---
   const [isRunning, setIsRunning] = useState(false);
   const [simData, setSimData] = useState([]);
   const [latestMetrics, setLatestMetrics] = useState(null);
@@ -24,38 +39,54 @@ function App() {
   const [statusMessage, setStatusMessage] = useState('');
   const wsRef = useRef(null);
 
+  // Persistence & Routing Effects
+  useEffect(() => {
+    localStorage.setItem('appView', view);
+    if (window.location.hash.replace('#', '') !== view) {
+      window.location.hash = view;
+    }
+  }, [view]);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['landing', 'dashboard', 'comparison'].includes(hash)) {
+        setView(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('simConfig', JSON.stringify(simConfig));
+  }, [simConfig]);
+
+  useEffect(() => {
+    localStorage.setItem('systemConfig', JSON.stringify(systemConfig));
+  }, [systemConfig]);
+
   // Fetch config on mount
   useEffect(() => {
     fetch(`${API_BASE}/api/config`)
       .then(r => r.json())
       .then(data => {
         setSystemConfig(data);
-        // Set default city
-        const cityNames = Object.keys(data.cities || {});
-        if (cityNames.length > 0) {
-          setSimConfig(prev => ({ ...prev, city: cityNames[0] }));
+        if (data.cities && (!simConfig.city || !data.cities[simConfig.city])) {
+          const firstCity = Object.keys(data.cities)[0];
+          setSimConfig(prev => ({ ...prev, city: firstCity }));
         }
       })
       .catch(err => console.error('Failed to fetch config:', err));
   }, []);
 
-  // Get city center for map
-  const getCityCenter = () => {
-    const cityData = systemConfig.cities?.[simConfig.city];
-    if (cityData) return [cityData.lat, cityData.lon];
-    return [28.6139, 77.2090]; // Default Delhi
-  };
-
-  // Handle intersection changes and clear POI results
   const handleIntersectionsChange = (newIntersections) => {
     setSimConfig(prev => ({ ...prev, intersections: newIntersections }));
-    setPoiResults(null); // Clear old POI results when pins change
+    setPoiResults(null);
   };
 
-  // POI Detection + Start Simulation
   const toggleSimulation = async () => {
     if (isRunning) {
-      // Stop
       if (wsRef.current) wsRef.current.close();
       setIsRunning(false);
       setStatusMessage('Simulation stopped.');
@@ -73,7 +104,6 @@ function App() {
     setStatusMessage('Detecting POIs...');
 
     try {
-      // Step 1: Detect POIs for each intersection
       const poiResponse = await fetch(`${API_BASE}/api/detect-pois`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -85,30 +115,23 @@ function App() {
       const poiData = await poiResponse.json();
       setPoiResults(poiData.intersections);
 
-      // Step 2: Merge POI tier data into intersections for WebSocket config
       const enrichedIntersections = simConfig.intersections.map((ix, i) => ({
         ...ix,
         ...(poiData.intersections[i] || {}),
       }));
 
       setStatusMessage('Starting simulation...');
-
-      // Step 3: Open WebSocket
       const ws = new WebSocket(`${WS_BASE}/api/simulate`);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        const wsConfig = {
-          ...simConfig,
-          intersections: enrichedIntersections,
-        };
+        const wsConfig = { ...simConfig, intersections: enrichedIntersections };
         ws.send(JSON.stringify(wsConfig));
         setStatusMessage('Simulation running...');
       };
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-
         if (data.status === 'complete') {
           setIsRunning(false);
           setStatusMessage('Simulation complete.');
@@ -119,155 +142,57 @@ function App() {
           setStatusMessage(`Error: ${data.message}`);
           return;
         }
-
         setLatestMetrics(data);
-        setSimData(prev => {
-          const updated = [...prev, data];
-          return updated.slice(-50); // Keep last 50 points
-        });
+        setSimData(prev => [...prev, data].slice(-50));
       };
 
-      ws.onclose = () => {
-        setIsRunning(false);
-      };
-
-      ws.onerror = (err) => {
-        console.error('WebSocket error:', err);
+      ws.onclose = () => setIsRunning(false);
+      ws.onerror = () => {
         setIsRunning(false);
         setStatusMessage('Connection error.');
       };
 
     } catch (err) {
-      console.error('Error starting simulation:', err);
       setIsRunning(false);
       setStatusMessage('Failed to start simulation.');
     }
   };
 
-  // Compute global metrics from latest data
-  const globalMetrics = latestMetrics?.global || {};
-  const intersectionData = latestMetrics?.intersections || {};
-  const numIntersections = Object.keys(intersectionData).length;
+  const dashboardProps = {
+    systemConfig,
+    simConfig,
+    setSimConfig,
+    isRunning,
+    toggleSimulation,
+    statusMessage,
+    latestMetrics,
+    numIntersections: Object.keys(latestMetrics?.intersections || {}).length,
+    intersectionData: latestMetrics?.intersections || {},
+    simData,
+    handleIntersectionsChange,
+    poiResults,
+    onCompare: () => setView('comparison')
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white">
-      <div className="flex flex-col lg:flex-row h-screen">
-
-        {/* Left Panel: Controls + Map */}
-        <div className="lg:w-[380px] flex-shrink-0 flex flex-col gap-4 p-4 overflow-y-auto custom-scrollbar">
-          <Sidebar
-            simConfig={simConfig}
-            onConfigChange={setSimConfig}
-            isRunning={isRunning}
-            onToggleSimulation={toggleSimulation}
-            cities={systemConfig.cities || {}}
-            algorithms={systemConfig.algorithms || []}
-            poiResults={poiResults}
-          />
-
-          {/* Location Input */}
-          <div className="glass-panel p-4">
-            <h3 className="text-sm font-semibold text-slate-300 mb-2">📍 Select Intersections</h3>
-            <LocationInput
-              intersections={simConfig.intersections}
-              onIntersectionsChange={handleIntersectionsChange}
-              city={simConfig.city}
-              disabled={isRunning}
-            />
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white selection:bg-indigo-500/30">
+      {view === 'landing' ? (
+        <LandingPage onGetStarted={() => setView('dashboard')} />
+      ) : view === 'comparison' ? (
+        <ComparisonView onBack={() => setView('dashboard')} />
+      ) : (
+        <div className="relative">
+          <div className="absolute top-4 right-4 z-50 flex gap-2">
+            <button
+              onClick={() => setView('landing')}
+              className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold hover:bg-white/10 transition-all"
+            >
+              ← Home
+            </button>
           </div>
+          <Dashboard {...dashboardProps} />
         </div>
-
-        {/* Right Panel: Metrics + Charts */}
-        <div className="flex-1 p-4 overflow-y-auto custom-scrollbar">
-          {/* Status Bar */}
-          {statusMessage && (
-            <div className="glass-panel px-4 py-2 mb-4 text-sm text-slate-300 flex items-center gap-2">
-              <Activity className="w-4 h-4 text-indigo-400 animate-pulse" />
-              {statusMessage}
-            </div>
-          )}
-
-          {/* Global Stats Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-            <StatCard
-              icon={<Car className="w-4 h-4" />}
-              label="Total Queue"
-              value={globalMetrics.total_queue ?? '—'}
-              color="text-rose-400"
-            />
-            <StatCard
-              icon={<Timer className="w-4 h-4" />}
-              label="Avg Reward"
-              value={globalMetrics.avg_reward ?? '—'}
-              color="text-emerald-400"
-            />
-            <StatCard
-              icon={<Activity className="w-4 h-4" />}
-              label="Intersections"
-              value={numIntersections || simConfig.intersections.length || '—'}
-              color="text-indigo-400"
-            />
-            <StatCard
-              icon={<AlertTriangle className="w-4 h-4" />}
-              label="Step"
-              value={latestMetrics?.step ?? '—'}
-              color="text-amber-400"
-            />
-          </div>
-
-          {/* Per-Intersection Cards */}
-          {numIntersections > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-              {Object.entries(intersectionData).map(([nid, data]) => (
-                <div key={nid} className="glass-panel p-3 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">{data.tier === 1 ? '🏥' : data.tier === 2 ? '🏫' : '📍'}</span>
-                    <span className="text-sm font-bold">{data.name}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ml-auto ${data.tier === 1 ? 'bg-red-500/20 text-red-300' :
-                        data.tier === 2 ? 'bg-amber-500/20 text-amber-300' :
-                          'bg-blue-500/20 text-blue-300'
-                      }`}>
-                      {data.tier_label}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 text-xs">
-                    <div>
-                      <p className="text-slate-500">Queue</p>
-                      <p className="text-rose-400 font-bold">{data.total_queue}</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-500">Reward</p>
-                      <p className="text-emerald-400 font-bold">{data.reward}</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-500">Congestion</p>
-                      <p className="text-amber-400 font-bold">{data.congestion}x</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Historical Time-Slot Data */}
-          {!isRunning && <TimeSlotStats city={simConfig.city} />}
-
-          {/* Charts */}
-          <LiveCharts simData={simData} intersections={simConfig.intersections} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function StatCard({ icon, label, value, color }) {
-  return (
-    <div className="glass-panel p-3 rounded-xl">
-      <div className="flex items-center gap-2 mb-1">
-        <span className={color}>{icon}</span>
-        <span className="text-xs text-slate-400">{label}</span>
-      </div>
-      <p className={`text-xl font-bold ${color}`}>{value}</p>
+      )}
     </div>
   );
 }
