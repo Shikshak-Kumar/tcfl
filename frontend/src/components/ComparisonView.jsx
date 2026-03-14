@@ -119,6 +119,51 @@ export default function ComparisonView({ onBack }) {
               </RadarChart>
             </ResponsiveContainer>
           </div>
+
+          {/* Metric Glossary */}
+          <div className="mt-5 pt-5 border-t border-white/5">
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-3">What each axis means</p>
+            <div className="grid grid-cols-1 gap-2.5">
+              {[
+                {
+                  label: 'Reward', color: '#818cf8',
+                  desc: 'RL agent score — overall intersection management efficiency',
+                  sig: 'Primary optimisation target; higher reward = fewer stops & smoother green-wave coordination'
+                },
+                {
+                  label: 'Throughput', color: '#34d399',
+                  desc: 'Traffic volume cleared — derived from queue length',
+                  sig: 'Critical for urban arteries; poor throughput causes cascading congestion across the network'
+                },
+                {
+                  label: 'Latency', color: '#fbbf24',
+                  desc: 'Vehicle delay — derived from cumulative wait time',
+                  sig: 'Directly impacts fuel consumption, emissions & driver experience; key SUMO performance metric'
+                },
+                {
+                  label: 'Safety', color: '#f87171',
+                  desc: 'Minimisation of sudden stops, tailbacks & collision risk',
+                  sig: 'Hard constraint for real-world deployment; accidents negate all efficiency gains'
+                },
+                {
+                  label: 'Stability', color: '#60a5fa',
+                  desc: 'Consistency of flow — penalises erratic phase switching',
+                  sig: 'Unstable control causes oscillating queues; reflects real-world deployability of the algorithm'
+                },
+              ].map(m => (
+                <div key={m.label} className="flex gap-2.5 text-[11px]">
+                  <div className="mt-1 w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: m.color }} />
+                  <div>
+                    <div className="flex flex-wrap items-baseline gap-x-2">
+                      <span className="text-slate-200 font-bold">{m.label}</span>
+                      <span className="text-slate-500">{m.desc}</span>
+                    </div>
+                    <p className="text-[10px] text-slate-600 mt-0.5 leading-snug italic">{m.sig}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Comparison Table / Heatmap Style */}

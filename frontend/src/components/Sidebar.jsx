@@ -74,20 +74,33 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
       {/* Pareto Legend */}
       {simConfig.algorithm === 'AdaptFlow' && (
         <div className="glass-panel p-3 rounded-lg border border-indigo-500/20">
-          <h4 className="text-[10px] uppercase tracking-wider font-bold text-indigo-400 mb-2">Pareto Multi-Objective</h4>
-          <div className="grid grid-cols-1 gap-1 text-[10px] text-slate-300">
-            <div className="flex justify-between items-center">
-              <span className="text-rose-300 font-semibold">Flow:</span>
-              <span>Queue Length Penalty</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-emerald-300 font-semibold">Delay:</span>
-              <span>Wait Time Penalty</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-amber-300 font-semibold">Safe:</span>
-              <span>Collision Risk Penalty</span>
-            </div>
+          <h4 className="text-[10px] uppercase tracking-wider font-bold text-indigo-400 mb-3">Pareto Multi-Objective</h4>
+          <div className="grid grid-cols-1 gap-3">
+            {[
+              {
+                label: 'Flow', color: 'text-rose-300',
+                def: 'Queue Length Penalty',
+                sig: 'Penalises vehicle build-up at the intersection; drives the agent to keep lanes clear'
+              },
+              {
+                label: 'Delay', color: 'text-emerald-300',
+                def: 'Wait Time Penalty',
+                sig: 'Penalises cumulative vehicle idling; minimising delay reduces emissions & fuel waste'
+              },
+              {
+                label: 'Safe', color: 'text-amber-300',
+                def: 'Collision Risk Penalty',
+                sig: 'Penalises unsafe phase transitions & near-miss events; hard constraint for real deployment'
+              },
+            ].map(m => (
+              <div key={m.label} className="flex gap-2 text-[10px]">
+                <span className={`${m.color} font-bold w-9 flex-shrink-0 mt-0.5`}>{m.label}:</span>
+                <div>
+                  <p className="text-slate-300 font-semibold leading-tight">{m.def}</p>
+                  <p className="text-slate-500 italic mt-0.5 leading-snug">{m.sig}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

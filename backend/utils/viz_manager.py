@@ -136,11 +136,11 @@ class SimulationVizManager:
         
         labels = ["Reward", "Throughput", "Latency", "Safety", "Stability"]
         
-        # Normalization helper
+        # Normalization helper (must match server.py scaling)
         def normalize(val, algo_name, metric_type):
-            if metric_type == "reward": return max(0, min(100, 50 + val * 5))
-            if metric_type == "waiting": return max(0, min(100, 100 - val * 2))
-            if metric_type == "queue": return max(0, min(100, 100 - val * 10))
+            if metric_type == "reward": return max(5, min(100, 100 + val * 6.33))
+            if metric_type == "waiting": return max(5, min(100, 100 - val * 0.0063))
+            if metric_type == "queue": return max(5, min(100, 100 - val * 0.19))
             return 80 # Default for others
             
         fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))

@@ -196,10 +196,13 @@ async def get_comparison_data():
             algo_metrics["waiting_time"] = sim_metrics.get("avg_waiting_time", 0)
             algo_metrics["queue"] = sim_metrics.get("avg_queue_length", 0)
 
-        # 3. Always Calculate Radar Data (Normalized 0-100)
-        r_norm = max(0, min(100, 50 + algo_metrics["reward"] / 10))
-        q_norm = max(0, min(100, 100 - algo_metrics["queue"] * 10))
-        w_norm = max(0, min(100, 100 - algo_metrics["waiting_time"] / 2))
+        # 3. Always Calculate Radar Data (Normalized 0-100) — Higher is Always Better
+        # Reward: typical range -15 to 0. Map linearly: -15 → 5, 0 → 100
+        r_norm = max(5, min(100, 100 + algo_metrics["reward"] * 6.33))
+        # Throughput (lower queue = better throughput): typical range 0–500. Map 0→100, 500→5
+        q_norm = max(5, min(100, 100 - algo_metrics["queue"] * 0.19))
+        # Latency (lower wait = better latency): typical range 0–15000. Map 0→100, 15000→5
+        w_norm = max(5, min(100, 100 - algo_metrics["waiting_time"] * 0.0063))
         
         algo_metrics["safety"] = 0.95 if algo_name == "AdaptFlow" else 0.8
         algo_metrics["stability"] = 0.92 if algo_name == "AdaptFlow" else 0.85
