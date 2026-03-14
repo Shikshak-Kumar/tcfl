@@ -30,7 +30,11 @@ class FedFlowCluster:
             
         # Calculate weights based on flow
         total_flow = sum(self.agent_flows.values())
-        norm_weights = {aid: self.agent_flows[aid] / total_flow for aid in self.agent_ids}
+        if total_flow < 1e-9:
+            # Fallback to uniform weights if no flow detected
+            norm_weights = {aid: 1.0 / len(self.agent_ids) for aid in self.agent_ids}
+        else:
+            norm_weights = {aid: self.agent_flows[aid] / total_flow for aid in self.agent_ids}
         
         # Initialize cluster weights with zeros
         cluster_weights = copy.deepcopy(agent_parameters[0])

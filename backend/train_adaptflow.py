@@ -21,7 +21,7 @@ import random
 from typing import List, Dict, Tuple, Optional
 
 from agents.mock_traffic_environment import MockTrafficEnvironment
-from agents.fedflow_agent import FedFlowAgent
+from agents.adaptflow_agent import AdaptFlowAgent
 from federated_learning.fedflow_cluster import FedFlowCluster
 from federated_learning.fedflow_server import FedFlowServer
 from federated_learning.adaptive_clustering import (
@@ -63,9 +63,9 @@ class AdaptFlowTrainer:
         self.adj = self._create_mock_graph()
 
         # 2. Local Agents
-        self.agents: Dict[str, FedFlowAgent] = {}
+        self.agents: Dict[str, AdaptFlowAgent] = {}
         for i in range(num_nodes):
-            self.agents[f"node_{i}"] = FedFlowAgent(state_size=12, action_size=4)
+            self.agents[f"node_{i}"] = AdaptFlowAgent(state_size=12, action_size=4)
 
         # 3. Adaptive Cluster Manager (THE NOVELTY)
         self.cluster_manager = AdaptiveClusterManager(

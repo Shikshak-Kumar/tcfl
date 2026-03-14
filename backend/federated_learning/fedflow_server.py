@@ -30,7 +30,10 @@ class FedFlowServer:
         # Note: We use softmax or normalized inverse-congestion or direct congestion
         # Here we use normalized congestion magnitude
         total_congestion = sum(self.cluster_congestion.values())
-        norm_weights = {cid: self.cluster_congestion[cid] / total_congestion for cid in self.cluster_ids}
+        if total_congestion < 1e-9:
+            norm_weights = {cid: 1.0 / len(self.cluster_ids) for cid in self.cluster_ids}
+        else:
+            norm_weights = {cid: self.cluster_congestion[cid] / total_congestion for cid in self.cluster_ids}
         
         # Initialize global weights
         global_weights = copy.deepcopy(cluster_parameters[0])

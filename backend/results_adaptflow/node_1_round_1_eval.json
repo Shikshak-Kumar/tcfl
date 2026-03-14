@@ -1,24 +1,24 @@
 {
   "node_id": "node_1",
   "cluster_id": "cluster_0",
-  "total_reward": -130.09999999999997,
-  "avg_waiting_time": 5.55982905982906,
-  "loss": 0.2722175419330597,
+  "total_reward": -42.35999999999993,
+  "avg_waiting_time": 4.506382978723404,
+  "loss": 0.016537079587578773,
   "metrics": {
-    "total_waiting_time": 1301.0,
-    "total_vehicles": 234,
-    "average_queue_length": 6.505,
-    "max_queue_length": 16,
+    "total_waiting_time": 1059.0,
+    "total_vehicles": 235,
+    "average_queue_length": 5.295,
+    "max_queue_length": 13,
     "steps": 200,
-    "avg_waiting_time_per_vehicle": 5.55982905982906,
+    "avg_waiting_time_per_vehicle": 4.506382978723404,
     "green_signal_time": {
       "per_edge": {
-        "edge_n": 11.0,
-        "edge_e": 6.5,
-        "edge_s": 6.5,
-        "edge_w": 6.5
+        "edge_n": 9.5,
+        "edge_e": 5.0,
+        "edge_s": 12.5,
+        "edge_w": 5.0
       },
-      "avg_gst": 7.625,
+      "avg_gst": 8.0,
       "num_lanes": 4,
       "min_green_time": 5.0,
       "max_green_time": 30.0
@@ -32,75 +32,75 @@
       "edge_n_0": {
         "edge_id": "edge_n",
         "lane_id": "edge_n_0",
-        "vehicle_count": 4,
-        "queue_length": 4,
-        "waiting_time": 86.0,
-        "average_speed": 4.424900792239573,
-        "occupancy_percent": 20,
+        "vehicle_count": 3,
+        "queue_length": 3,
+        "waiting_time": 34.0,
+        "average_speed": 3.54380146816575,
+        "occupancy_percent": 15,
         "green_signal_time": 0,
         "vehicle_types": {
-          "car": 4
+          "car": 3
         },
         "lane_length": 100.0
       },
       "edge_e_0": {
         "edge_id": "edge_e",
         "lane_id": "edge_e_0",
-        "vehicle_count": 1,
-        "queue_length": 1,
-        "waiting_time": 13.0,
-        "average_speed": 4.396773297584405,
-        "occupancy_percent": 5,
+        "vehicle_count": 0,
+        "queue_length": 0,
+        "waiting_time": 0.0,
+        "average_speed": 4.018042816748179,
+        "occupancy_percent": 0,
         "green_signal_time": 0,
         "vehicle_types": {
-          "car": 1
+          "car": 0
         },
         "lane_length": 100.0
       },
       "edge_s_0": {
         "edge_id": "edge_s",
         "lane_id": "edge_s_0",
-        "vehicle_count": 1,
-        "queue_length": 1,
-        "waiting_time": 2.0,
-        "average_speed": 2.481617202134787,
-        "occupancy_percent": 5,
+        "vehicle_count": 5,
+        "queue_length": 5,
+        "waiting_time": 28.0,
+        "average_speed": 1.756637924068611,
+        "occupancy_percent": 25,
         "green_signal_time": 0,
         "vehicle_types": {
-          "car": 1
+          "car": 5
         },
         "lane_length": 100.0
       },
       "edge_w_0": {
         "edge_id": "edge_w",
         "lane_id": "edge_w_0",
-        "vehicle_count": 1,
-        "queue_length": 1,
-        "waiting_time": 160.0,
-        "average_speed": 1.5686671109372292,
-        "occupancy_percent": 5,
+        "vehicle_count": 0,
+        "queue_length": 0,
+        "waiting_time": 2.0,
+        "average_speed": 1.4758112334747482,
+        "occupancy_percent": 0,
         "green_signal_time": 0,
         "vehicle_types": {
-          "car": 1
+          "car": 0
         },
         "lane_length": 100.0
       }
     },
     "lane_summary": {
-      "total_waiting_time": 1301.0,
-      "total_queue_length": 6.505,
+      "total_waiting_time": 1059.0,
+      "total_queue_length": 5.295,
       "num_congested_lanes": 0.0,
       "total_lanes": 4.0,
       "average_gst": 0.0,
       "min_gst": 0.0,
       "max_gst": 0.0,
-      "max_queue_length": 16.0,
-      "max_waiting_time": 1301.0,
+      "max_queue_length": 13.0,
+      "max_waiting_time": 1059.0,
       "average_speed": 0.0,
-      "num_active_lanes": 4.0,
-      "total_occupancy": 32.525,
-      "total_vehicles": 234
+      "num_active_lanes": 2.0,
+      "total_occupancy": 26.475,
+      "total_vehicles": 235
     },
-    "total_reward": -130.09999999999997
+    "total_reward": -42.35999999999993
   }
 }

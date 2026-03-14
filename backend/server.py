@@ -15,6 +15,7 @@ from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
 from agents.mock_traffic_environment import MockTrafficEnvironment
 from utils.traffic_db import insert_record, get_time_slot_aggregations, TIME_SLOTS, cleanup_old_records
 import datetime
+from utils.viz_manager import viz_manager
 
 # Note: Algorithm and ML imports (FedFlowTrainer, FL clients, etc.) 
 # have been moved inside the simulation functions (lazy loading)
@@ -153,63 +154,64 @@ async def get_comparison_data():
             "reward": 0,
             "waiting_time": 0,
             "queue": 0,
-            "safety": 1.0, # 1.0 is max safety
+            "safety": 1.0, 
             "stability": 0.9,
             "rounds": []
         }
         
-        if not os.path.exists(dir_name):
-            algo_metrics["radar"] = [{"subject": s, "A": 50} for s in ["Reward", "Throughput", "Latency", "Safety", "Stability"]]
-            results[algo_name] = algo_metrics
-            continue
-            
-        eval_files = glob.glob(os.path.join(dir_name, "*_eval.json"))
-        if eval_files:
-            max_round = 0
-            for f in eval_files:
-                parts = os.path.basename(f).split('_round_')
-                if len(parts) == 2:
-                    try:
-                        r = int(parts[1].split('_')[0])
-                        max_round = max(max_round, r)
-                    except: pass
-            
-            rewards, waits, queues = [], [], []
-            for f in eval_files:
-                if f"round_{max_round}_eval.json" in f:
-                    try:
-                        with open(f, 'r') as fp:
-                            data = json.load(fp)
-                            rewards.append(data.get("total_reward", 0))
-                            waits.append(data.get("avg_waiting_time", 0))
-                            metrics = data.get("metrics", {})
-                            queues.append(metrics.get("average_queue_length", metrics.get("queue", 0)))
-                    except: pass
+        # 1. Default to Training Results if they exist
+        if os.path.exists(dir_name):
+            eval_files = glob.glob(os.path.join(dir_name, "*_eval.json"))
+            if eval_files:
+                max_round = 0
+                for f in eval_files:
+                    parts = os.path.basename(f).split('_round_')
+                    if len(parts) == 2:
+                        try:
+                            r = int(parts[1].split('_')[0])
+                            max_round = max(max_round, r)
+                        except: pass
+                
+                rewards, waits, queues = [], [], []
+                for f in eval_files:
+                    if f"round_{max_round}_eval.json" in f:
+                        try:
+                            with open(f, 'r') as fp:
+                                data = json.load(fp)
+                                rewards.append(data.get("total_reward", 0))
+                                waits.append(data.get("avg_waiting_time", 0))
+                                metrics = data.get("metrics", {})
+                                queues.append(metrics.get("average_queue_length", metrics.get("queue", 0)))
+                        except: pass
 
-            if rewards:
-                algo_metrics["reward"] = sum(rewards) / len(rewards)
-                algo_metrics["waiting_time"] = sum(waits) / len(waits)
-                algo_metrics["queue"] = sum(queues) / len(queues)
-                
-                # Normalize for Radar (0-100)
-                r_norm = max(0, min(100, 50 + algo_metrics["reward"] / 10))
-                q_norm = max(0, min(100, 100 - algo_metrics["queue"] * 10))
-                w_norm = max(0, min(100, 100 - algo_metrics["waiting_time"] / 2))
-                algo_metrics["safety"] = 0.95 if algo_name == "AdaptFlow" else 0.8
-                algo_metrics["stability"] = 0.92 if algo_name == "AdaptFlow" else 0.85
-                
-                algo_metrics["radar"] = [
-                    {"subject": "Reward", "A": r_norm},
-                    {"subject": "Throughput", "A": q_norm},
-                    {"subject": "Latency", "A": w_norm},
-                    {"subject": "Safety", "A": algo_metrics["safety"] * 100},
-                    {"subject": "Stability", "A": algo_metrics["stability"] * 100},
-                ]
-            else:
-                algo_metrics["radar"] = [{"subject": s, "A": 50} for s in ["Reward", "Throughput", "Latency", "Safety", "Stability"]]
-        else:
-            algo_metrics["radar"] = [{"subject": s, "A": 50} for s in ["Reward", "Throughput", "Latency", "Safety", "Stability"]]
-            
+                if rewards:
+                    algo_metrics["reward"] = sum(rewards) / len(rewards)
+                    algo_metrics["waiting_time"] = sum(waits) / len(waits)
+                    algo_metrics["queue"] = sum(queues) / len(queues)
+
+        # 2. Prioritize Latest Simulation Results (if any)
+        sim_metrics = viz_manager.get_latest_sim_metrics(algo_name)
+        if sim_metrics:
+            algo_metrics["reward"] = sim_metrics.get("avg_reward", 0)
+            algo_metrics["waiting_time"] = sim_metrics.get("avg_waiting_time", 0)
+            algo_metrics["queue"] = sim_metrics.get("avg_queue_length", 0)
+
+        # 3. Always Calculate Radar Data (Normalized 0-100)
+        r_norm = max(0, min(100, 50 + algo_metrics["reward"] / 10))
+        q_norm = max(0, min(100, 100 - algo_metrics["queue"] * 10))
+        w_norm = max(0, min(100, 100 - algo_metrics["waiting_time"] / 2))
+        
+        algo_metrics["safety"] = 0.95 if algo_name == "AdaptFlow" else 0.8
+        algo_metrics["stability"] = 0.92 if algo_name == "AdaptFlow" else 0.85
+        
+        algo_metrics["radar"] = [
+            {"subject": "Reward", "A": r_norm},
+            {"subject": "Throughput", "A": q_norm},
+            {"subject": "Latency", "A": w_norm},
+            {"subject": "Safety", "A": algo_metrics["safety"] * 100},
+            {"subject": "Stability", "A": algo_metrics["stability"] * 100},
+        ]
+        
         results[algo_name] = algo_metrics
         
     return results
@@ -344,6 +346,9 @@ async def run_demo_simulation(websocket, config):
     for nid, env in envs.items():
         env.reset()
 
+    session_history = []
+    session_dir = viz_manager.create_session_folder()
+
     for step in range(200):
         action = 0 if step % 30 < 15 else 2
 
@@ -381,8 +386,14 @@ async def run_demo_simulation(websocket, config):
                 "total_queue": total_queue_all,
             },
         }
+        session_history.append(payload)
         await websocket.send_json(payload)
         await asyncio.sleep(0.1)
+
+    # After simulation, save and generate plots
+    viz_manager.save_session_data(session_dir, config, session_history)
+    summary = viz_manager._compute_summary(session_history)
+    viz_manager.generate_plots(session_dir, "Demo", summary)
 
 
 async def run_multi_inference(websocket, envs_agents, intersections, max_steps=200):
@@ -393,6 +404,9 @@ async def run_multi_inference(websocket, envs_agents, intersections, max_steps=2
     states = {}
     for nid, (env, agent) in envs_agents.items():
         states[nid] = env.reset()
+
+    session_history = []
+    session_dir = viz_manager.create_session_folder()
 
     for step in range(max_steps):
         node_data = {}
@@ -438,12 +452,19 @@ async def run_multi_inference(websocket, envs_agents, intersections, max_steps=2
             },
         }
 
+        session_history.append(payload)
         try:
             await websocket.send_json(payload)
         except Exception as e:
             print(f"[MultiInference] WebSocket send failed: {e}")
             break
         await asyncio.sleep(0.1)
+    
+    # After simulation, save and generate plots
+    algo_name = config.get("algorithm", "Unknown")
+    viz_manager.save_session_data(session_dir, config, session_history)
+    summary = viz_manager._compute_summary(session_history)
+    viz_manager.generate_plots(session_dir, algo_name, summary)
 
 
 def _create_envs_for_intersections(intersections, use_tomtom):
@@ -532,11 +553,13 @@ async def run_fedflow_simulation(websocket, config):
                 pass
         print(f"[WS] Loaded FedFlow model from {model_path}")
 
-    # Reset all
     states = {}
     for nid in trainer.agents:
         if nid in envs:
             states[nid] = envs[nid].reset()
+
+    session_history = []
+    session_dir = viz_manager.create_session_folder()
 
     for step in range(200):
         node_data = {}
@@ -587,8 +610,14 @@ async def run_fedflow_simulation(websocket, config):
                 "total_queue": total_queue_all,
             },
         }
+        session_history.append(payload)
         await websocket.send_json(payload)
         await asyncio.sleep(0.1)
+    
+    # Save and Plot
+    viz_manager.save_session_data(session_dir, config, session_history)
+    summary = viz_manager._compute_summary(session_history)
+    viz_manager.generate_plots(session_dir, "FedFlow", summary)
 
 
 async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
@@ -625,11 +654,13 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
                 pass
         print(f"[WS] Loaded AdaptFlow model from {model_path}")
 
-    # Reset all
     states = {}
     for nid in trainer.agents:
         if nid in envs:
             states[nid] = envs[nid].reset()
+
+    session_history = []
+    session_dir = viz_manager.create_session_folder()
 
     # Simulation loop
     for step in range(200):
@@ -691,8 +722,14 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
                 "total_queue": total_queue_all,
             },
         }
+        session_history.append(payload)
         await websocket.send_json(payload)
         await asyncio.sleep(0.1)
+
+    # Save and Plot
+    viz_manager.save_session_data(session_dir, config, session_history)
+    summary = viz_manager._compute_summary(session_history)
+    viz_manager.generate_plots(session_dir, "AdaptFlow", summary)
 
 
 @app.websocket("/api/simulate")

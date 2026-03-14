@@ -2,6 +2,7 @@ import torch
 import numpy as np
 from federated_learning.gat_module import CoLightEncoder
 from agents.fedflow_agent import FedFlowAgent
+from agents.adaptflow_agent import AdaptFlowAgent
 from federated_learning.fedflow_cluster import FedFlowCluster
 
 def test_gat_shapes():
@@ -18,8 +19,8 @@ def test_gat_shapes():
     assert output.shape == (batch_size, num_nodes, 32), f"Expected (4,3,32), got {output.shape}"
     print("  GAT Shapes: OK")
 
-def test_agent_replay():
-    print("Testing Agent Replay Logic...")
+def test_fedflow_replay():
+    print("Testing FedFlowAgent (Standard) Replay Logic...")
     agent = FedFlowAgent(state_size=12, action_size=4)
     
     # Fill memory
@@ -30,7 +31,29 @@ def test_agent_replay():
         
     loss = agent.replay()
     assert loss > 0, "Loss should be positive after replay"
-    print(f"  Agent Replay: OK (Initial Loss: {loss:.4f})")
+    print(f"  FedFlow Replay: OK (Initial Loss: {loss:.4f})")
+
+def test_adaptflow_replay():
+    print("Testing AdaptFlowAgent (Elite PER) Replay Logic...")
+    agent = AdaptFlowAgent(state_size=12, action_size=4)
+    
+    # Fill memory with sequences
+    for i in range(70):
+        # Shape: [time, nodes, feat]
+        s_seq = np.random.rand(4, 3, 12)
+        a_mat = np.eye(3)
+        # Store high reward occasionally to see if priority updates handle it
+        reward = 10.0 if i % 10 == 0 else 1.0
+        agent.remember(s_seq, a_mat, 1, reward, s_seq, a_mat, False)
+        
+    loss = agent.replay()
+    assert loss > 0, "Loss should be positive after replay"
+    assert len(agent.memory) == 70
+    # Check if priority exists
+    _, idx, _ = agent.memory.sample(1)
+    priority = agent.memory.tree.tree[idx[0]]
+    assert priority > 0
+    print(f"  AdaptFlow Replay: OK (Initial Loss: {loss:.4f})")
 
 def test_cluster_aggregation():
     print("Testing Cluster Aggregation Logic...")
@@ -56,8 +79,11 @@ def test_cluster_aggregation():
 if __name__ == "__main__":
     try:
         test_gat_shapes()
-        test_agent_replay()
+        test_fedflow_replay()
+        test_adaptflow_replay()
         test_cluster_aggregation()
-        print("\nALL FEDFLOW COMPONENTS VERIFIED SUCCESSFULLY.")
+        print("\nALL FEDFLOW & ADAPTFLOW COMPONENTS VERIFIED SUCCESSFULLY.")
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(f"\nTEST FAILED: {str(e)}")

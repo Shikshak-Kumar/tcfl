@@ -72,8 +72,8 @@ export default function ComparisonView({ onBack }) {
                 prev.includes(algo) ? prev.filter(a => a !== algo) : [...prev, algo]
               )}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${selectedAlgos.includes(algo)
-                  ? 'bg-white/10 text-white'
-                  : 'text-slate-500 hover:text-slate-300'
+                ? 'bg-white/10 text-white'
+                : 'text-slate-500 hover:text-slate-300'
                 }`}
             >
               <div className="flex items-center gap-2">
