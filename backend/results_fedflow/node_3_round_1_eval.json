@@ -2,18 +2,18 @@
   "node_id": "node_3",
   "cluster_id": "cluster_1",
   "round": 1,
-  "total_reward": 199.95488251367863,
+  "total_reward": 200.0,
   "avg_waiting_time": 0.0,
   "total_vehicles": 0.096,
-  "loss": 0.5823812484741211,
+  "loss": 0.5804380178451538,
   "mode": "SUMO",
   "metrics": {
     "total_waiting_time": 0.0,
     "throughput": 12,
     "total_departed": 125,
     "throughput_ratio": 0.096,
-    "avg_waiting_time_per_vehicle": 1.488,
-    "average_queue_length": 0.04,
+    "avg_waiting_time_per_vehicle": 1.52,
+    "average_queue_length": 0.035,
     "max_queue_length": 1,
     "steps": 200,
     "per_lane_metrics": {
@@ -123,7 +123,7 @@
       "max_green_time": 30.0
     },
     "green_signal_time_avg_per_edge": {
-      "203598795#3": 0.15384615384615385,
+      "203598795#3": 0.1346153846153846,
       "608989233#2": 0.0,
       "39452784#4": 0.0
     },
@@ -1930,11 +1930,11 @@
       },
       {
         "per_edge": {
-          "203598795#3": 4.0,
+          "203598795#3": 0.0,
           "608989233#2": 0.0,
           "39452784#4": 0.0
         },
-        "avg_gst": 1.3333333333333333,
+        "avg_gst": 0.0,
         "num_lanes": 3,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
@@ -2529,6 +2529,6 @@
         "time": 200.0
       }
     ],
-    "total_reward": 199.95488251367863
+    "total_reward": 200.0
   }
 }

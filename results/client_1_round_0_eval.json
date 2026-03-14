@@ -1,0 +1,27 @@
+[
+  {
+    "round": 0,
+    "metrics": {
+      "total_reward": -4.0,
+      "average_reward": -0.5714285714285714,
+      "total_steps": 7,
+      "waiting_time": 0.0,
+      "queue_length": 0.0,
+      "max_queue_length": 0,
+      "avg_waiting_time_per_vehicle": 0.0,
+      "green_signal_time": {
+        "per_edge": {
+          "203598795#3": 0.0,
+          "608989233#2": 0.0,
+          "39452784#4": 0.0
+        },
+        "avg_gst": 0.0,
+        "num_lanes": 3,
+        "min_green_time": 5.0,
+        "max_green_time": 30.0
+      },
+      "per_lane_metrics": {},
+      "lane_summary": {}
+    }
+  }
+]

@@ -5,7 +5,7 @@
   "total_reward": 200.0,
   "avg_waiting_time": 0.0,
   "total_vehicles": 0.096,
-  "loss": 0.5247100591659546,
+  "loss": 0.5207027196884155,
   "mode": "SUMO",
   "metrics": {
     "total_waiting_time": 0.0,
@@ -123,7 +123,7 @@
       "max_green_time": 30.0
     },
     "green_signal_time_avg_per_edge": {
-      "203598795#3": 0.2692307692307692,
+      "203598795#3": 0.36538461538461536,
       "608989233#2": 0.0,
       "39452784#4": 0.0
     },

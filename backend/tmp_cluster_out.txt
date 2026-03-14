@@ -1,0 +1,12 @@
+﻿
+Round 1 cluster_congestion: {'cluster_0': 2.4490174029451137, 'cluster_1': 2.0401820615796518}
+  cluster_0: avg_flow=0.1083  agents=['node_0', 'node_1', 'node_2']
+  cluster_1: avg_flow=0.1028  agents=['node_3', 'node_4', 'node_5']
+
+Round 2 cluster_congestion: {'cluster_0': 2.49863453815261, 'cluster_1': 2.009317269076305}
+  cluster_0: avg_flow=0.1096  agents=['node_0', 'node_1', 'node_2']
+  cluster_1: avg_flow=0.1028  agents=['node_3', 'node_4', 'node_5']
+
+Round 3 cluster_congestion: {'cluster_0': 2.49863453815261, 'cluster_1': 2.009317269076305}
+  cluster_0: avg_flow=0.1096  agents=['node_0', 'node_1', 'node_2']
+  cluster_1: avg_flow=0.1028  agents=['node_3', 'node_4', 'node_5']

@@ -318,6 +318,11 @@ class FedFlowTrainer:
         self.all_round_results.append(round_results)
         print(f"  Results saved to {self.results_dir}/")
 
+    def train(self, num_rounds: int = 3):
+        """Run num_rounds of hierarchical federated training."""
+        for r in range(1, num_rounds + 1):
+            self.run_round(r)
+
 
 def convert_to_json_serializable(obj):
     """Convert numpy/torch types to Python native types for JSON serialization."""
