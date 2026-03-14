@@ -95,9 +95,9 @@ class MockTrafficEnvironment:
             # [Queue density, Waiting density, Vehicle density]
             state.extend(
                 [
-                    min(q / 20.0, 1.0),
-                    min(w / 300.0, 1.0),
-                    min((q + random.randint(0, 2)) / 20.0, 1.0),
+                    min(q / 100.0, 1.0),
+                    min(w / 1000.0, 1.0),
+                    min((q + random.randint(0, 2)) / 100.0, 1.0),
                 ]
             )
         return np.array(state)
@@ -134,9 +134,12 @@ class MockTrafficEnvironment:
             flux = random.randint(1, 3)
             actual_flux = min(flux, self.lane_queues[edge])
             self.lane_queues[edge] -= actual_flux
-            self.lane_waiting_times[edge] = max(
-                0, self.lane_waiting_times[edge] - 5.0 * actual_flux
-            )
+            
+            # Fix: Properly reduce wait time based on actual average wait per vehicle in that lane
+            if actual_flux > 0:
+                avg_wait_per_veh = self.lane_waiting_times[edge] / max(1, self.lane_queues[edge] + actual_flux)
+                removed_wait = avg_wait_per_veh * actual_flux
+                self.lane_waiting_times[edge] = max(0, self.lane_waiting_times[edge] - removed_wait)
 
             # 2.1 Transition to neighbors (Graph Coupling)
             # This makes the graph attention meaningful

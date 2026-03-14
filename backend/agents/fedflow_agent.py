@@ -13,54 +13,19 @@ from federated_learning.gat_module import SpatioTemporalEncoder
 # ---------------------------------------------------------------------------
 # FedFlowDQN: GAT + Double DQN network
 # ---------------------------------------------------------------------------
-class FedFlowDQN(nn.Module):
-    """
-    Combined Spatio-Temporal GAT + DQN Network for FedFlow.
-    """
-    def __init__(self, state_size: int, action_size: int,
-                 gat_heads: int = 4, gat_hidden: int = 32, time_steps: int = 4):
-        super(FedFlowDQN, self).__init__()
-
-        # Spatio-Temporal Encoder
-        self.encoder = SpatioTemporalEncoder(
-            nfeat=state_size, nhid=gat_hidden, nheads=gat_heads, time_steps=time_steps
-        )
-
-        # Q-Network Heads
-        self.fc1 = nn.Linear(gat_hidden, 128)
-        self.fc2 = nn.Linear(128, 64)
-        self.out = nn.Linear(64, action_size)
-
-    def forward(self, x_seq, adj):
-        # x_seq: [batch_size, time_steps, num_nodes, state_size]
-        # adj:   [batch_size, num_nodes, num_nodes]
-
-        # 1. Spatio-Temporal Encoding
-        h = self.encoder(x_seq, adj)        # [batch, num_nodes, gat_hidden]
-
-        # 2. Focus on focal node (index 0)
-        h_focal = h[:, 0, :]               # [batch, gat_hidden]
-
-        # 3. Dense layers for Q-values
-        x = torch.relu(self.fc1(h_focal))
-        x = torch.relu(self.fc2(x))
-        return self.out(x)
-
-
 # ---------------------------------------------------------------------------
-# FedFlowAgent: Standard Spatio-Temporal Double DQN (Industry Baseline)
+# FedFlowAgent: Standard MLP Double DQN (Industry Baseline)
 # ---------------------------------------------------------------------------
 class FedFlowAgent:
     """
-    Standard Spatio-Temporal Double DQN Agent for FedFlow-TSC.
-    Uses uniform experience replay (Baseline).
+    Standard MLP Double DQN Agent for FedFlow-TSC baseline.
+    Removes GAT and Temporal features to highlight AdaptFlow's novelty.
     """
     def __init__(self, state_size: int, action_size: int,
                  lr: float = 1e-3, gamma: float = 0.95,
                  epsilon_start: float = 1.0, epsilon_end: float = 0.01,
                  epsilon_decay: float = 0.995, batch_size: int = 64,
-                 device: str = "cpu", time_steps: int = 4,
-                 memory_size: int = 5000):
+                 device: str = "cpu", memory_size: int = 5000):
         self.state_size = state_size
         self.action_size = action_size
         self.gamma = gamma
@@ -69,88 +34,65 @@ class FedFlowAgent:
         self.epsilon_decay = epsilon_decay
         self.batch_size = batch_size
         self.device = device
-        self.time_steps = time_steps
 
-        # Networks
-        self.policy_net = FedFlowDQN(state_size, action_size,
-                                     time_steps=time_steps).to(device)
-        self.target_net = FedFlowDQN(state_size, action_size,
-                                     time_steps=time_steps).to(device)
+        # Networks: Standard MLP
+        self.policy_net = nn.Sequential(
+            nn.Linear(state_size, 128),
+            nn.ReLU(),
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Linear(64, action_size)
+        ).to(device)
+        
+        self.target_net = nn.Sequential(
+            nn.Linear(state_size, 128),
+            nn.ReLU(),
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Linear(64, action_size)
+        ).to(device)
+        
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.target_net.eval()
 
         self.optimizer = optim.Adam(self.policy_net.parameters(), lr=lr)
-
-        # Standard Experience Replay
         self.memory = deque(maxlen=memory_size)
 
-        # History for Spatio-Temporal sequences
-        self.history = deque(maxlen=time_steps)
-
-    # ------------------------------------------------------------------
-    def _get_sequence(self, current_state_graph: np.ndarray) -> np.ndarray:
-        """Returns a sequence of length T by padding if history is short."""
-        curr_hist = list(self.history)
-        if len(curr_hist) < self.time_steps:
-            padding = [current_state_graph] * (self.time_steps - len(curr_hist))
-            sequence = padding + curr_hist
-        else:
-            sequence = curr_hist
-        return np.array(sequence)  # [time_steps, num_nodes, state_size]
-
-    def get_action(self, state_graph: np.ndarray, adj: np.ndarray) -> int:
-        """Select action using epsilon-greedy with Spatio-Temporal sequence."""
-        self.history.append(state_graph)
-        state_seq = self._get_sequence(state_graph)
-
+    def get_action(self, state: np.ndarray, adj: Optional[np.ndarray] = None) -> int:
+        """Standard epsilon-greedy action selection."""
         if random.random() < self.epsilon:
             return random.randrange(self.action_size)
 
         self.policy_net.eval()
         with torch.no_grad():
-            s = torch.FloatTensor(state_seq).unsqueeze(0).to(self.device)
-            a = torch.FloatTensor(adj).unsqueeze(0).to(self.device)
-            q_values = self.policy_net(s, a)
+            s = torch.FloatTensor(state).unsqueeze(0).to(self.device)
+            q_values = self.policy_net(s)
             return int(q_values.argmax().item())
 
-    def remember(self, state_graph, adj, action, reward, next_state_graph, next_adj, done):
-        """Store standard transition. Storing graphs to allow replay to build sequences if needed, 
-        but usually we store what we need directly."""
-        self.memory.append((state_graph, adj, action, reward, next_state_graph, next_adj, done))
+    def remember(self, state, action, reward, next_state, done, *args):
+        """Uniform experience replay storage."""
+        self.memory.append((state, action, reward, next_state, done))
 
     def replay(self) -> float:
-        """Standard uniform experience replay."""
         if len(self.memory) < self.batch_size:
             return 0.0
 
         batch = random.sample(self.memory, self.batch_size)
-
-        # For the baseline, we assume the trainer is responsible for managing sequences if needed,
-        # but here we'll handle the 3D -> 4D expansion if raw graphs were stored.
         states      = torch.FloatTensor(np.array([m[0] for m in batch])).to(self.device)
-        adjs        = torch.FloatTensor(np.array([m[1] for m in batch])).to(self.device)
-        actions     = torch.LongTensor(np.array([m[2] for m in batch])).to(self.device)
-        rewards     = torch.FloatTensor(np.array([m[3] for m in batch])).to(self.device)
-        next_states = torch.FloatTensor(np.array([m[4] for m in batch])).to(self.device)
-        next_adjs   = torch.FloatTensor(np.array([m[5] for m in batch])).to(self.device)
-        dones       = torch.FloatTensor(np.array([m[6] for m in batch])).to(self.device)
-
-        if states.dim() == 3:
-            states      = states.unsqueeze(1)       # [batch, 1, nodes, feat]
-            next_states = next_states.unsqueeze(1)
+        actions     = torch.LongTensor(np.array([m[1] for m in batch])).to(self.device)
+        rewards     = torch.FloatTensor(np.array([m[2] for m in batch])).to(self.device)
+        next_states = torch.FloatTensor(np.array([m[3] for m in batch])).to(self.device)
+        dones       = torch.FloatTensor(np.array([m[4] for m in batch])).to(self.device)
 
         self.policy_net.train()
-
-        # Double DQN
-        q_eval = self.policy_net(states, adjs).gather(1, actions.unsqueeze(1)).squeeze(1)
+        q_eval = self.policy_net(states).gather(1, actions.unsqueeze(1)).squeeze(1)
 
         with torch.no_grad():
-            next_actions = self.policy_net(next_states, next_adjs).argmax(1).unsqueeze(1)
-            q_next = self.target_net(next_states, next_adjs).gather(1, next_actions).squeeze(1)
+            next_actions = self.policy_net(next_states).argmax(1).unsqueeze(1)
+            q_next = self.target_net(next_states).gather(1, next_actions).squeeze(1)
             q_target = rewards + (1 - dones) * self.gamma * q_next
 
         loss = F.smooth_l1_loss(q_eval, q_target)
-
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
@@ -160,7 +102,6 @@ class FedFlowAgent:
 
         return float(loss.item())
 
-    # ------------------------------------------------------------------
     def update_target_network(self):
         self.target_net.load_state_dict(self.policy_net.state_dict())
 

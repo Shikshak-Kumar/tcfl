@@ -47,7 +47,8 @@ export default function ComparisonView({ onBack }) {
     AdaptFlow: '#818cf8',
     FedFlow: '#34d399',
     FedCM: '#fbbf24',
-    FedAvg: '#f87171'
+    FedAvg: '#f87171',
+    FedKD: '#60a5fa'
   };
 
   return (
@@ -181,10 +182,12 @@ export default function ComparisonView({ onBack }) {
                 <div key={algo} className={`p-4 rounded-xl border transition-all ${isSelected ? 'bg-indigo-500/5 border-indigo-500/20' : 'bg-white/5 border-white/10 opacity-60'
                   }`}>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-bold" style={{ color: colors[algo] }}>{algo}</span>
-                    <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Latest Eval</span>
+                    <span className="font-bold" style={{ color: colors[algo] || '#94a3b8' }}>{algo}</span>
+                    <span className={`text-[10px] uppercase tracking-widest font-bold ${m.simulated ? 'text-indigo-400' : 'text-slate-500'}`}>
+                      {m.simulated ? 'Latest Simulation' : 'No Simulation Data'}
+                    </span>
                   </div>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className={`grid grid-cols-3 gap-4 ${!m.simulated ? 'grayscale opacity-30' : ''}`}>
                     <div className="text-center">
                       <p className="text-[10px] text-slate-500 mb-1">Avg Reward</p>
                       <p className="text-sm font-bold text-slate-200">{m.reward.toFixed(1)}</p>

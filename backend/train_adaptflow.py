@@ -29,6 +29,7 @@ from federated_learning.adaptive_clustering import (
     extract_fingerprint,
     cosine_similarity_matrix,
 )
+from federated_learning.message_broker import broker
 
 
 class AdaptFlowTrainer:
@@ -421,6 +422,51 @@ class AdaptFlowTrainer:
         print(f"  All results saved to {self.results_dir}/")
         print(f"{'=' * 70}")
 
+    async def train_pubsub_demo(self, num_rounds: int = 2):
+        """
+        Special demo mode to specifically show the 2-Server PUB-SUB architecture
+        requested for the dummy server requirement.
+        """
+        print("\n" + "!" * 70)
+        print("  ADAPTFLOW-TSC: 2-SERVER PUB-SUB DUMMY DEMO")
+        print("!" * 70)
+
+        # 1. Define Dummy Servers
+        server_alpha = FedFlowServer(cluster_ids=["node_0", "node_1"])
+        server_beta = FedFlowServer(cluster_ids=["node_2", "node_3", "node_4", "node_5"])
+
+        # 2. Setup Callbacks
+        async def make_server_cb(server_obj, name):
+            async def cb(message):
+                print(f"    [PUB-SUB] {name} received update from {message['id']} (Congestion: {message['congestion']:.1f})")
+                await server_obj.handle_update_topic(message)
+            return cb
+
+        broker.subscribe("cluster_alpha/updates", await make_server_cb(server_alpha, "Server-Alpha (Edge 1)"))
+        broker.subscribe("cluster_beta/updates", await make_server_cb(server_beta, "Server-Beta (Edge 2)"))
+
+        for r in range(1, num_rounds + 1):
+            print(f"\n[Round {r}] Starting PUB-SUB Message Flow...")
+            
+            # Simulated Node Activity
+            for i in range(self.num_nodes):
+                nid = f"node_{i}"
+                topic = "cluster_alpha/updates" if i < 2 else "cluster_beta/updates"
+                
+                payload = {
+                    "id": nid,
+                    "weights": self.agents[nid].get_weights(),
+                    "congestion": random.uniform(10, 40)
+                }
+                await broker.publish(topic, payload)
+            
+            # Servers aggregate (simulated)
+            print(f"  [Global] Servers Alpha & Beta aggregated their respective clusters via PUB-SUB.")
+            
+        print("\n" + "!" * 70)
+        print("  PUB-SUB DUMMY SERVER DEMO FINISHED")
+        print("!" * 70)
+
 
 def convert_to_json_serializable(obj):
     """Convert numpy/torch types to Python native types for JSON."""
@@ -490,4 +536,10 @@ if __name__ == "__main__":
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
     )
-    trainer.train(num_rounds=args.rounds)
+    if args.gui or args.use_tomtom:
+        trainer.train(num_rounds=args.rounds)
+    else:
+        # Run the standard train AND the PUB-SUB demo to show the dummy server work
+        trainer.train(num_rounds=args.rounds)
+        import asyncio
+        asyncio.run(trainer.train_pubsub_demo(num_rounds=1))
