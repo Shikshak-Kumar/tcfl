@@ -216,11 +216,11 @@ class AdaptFlowAgent:
             sequence = curr_hist
         return np.array(sequence)
 
-    def get_action(self, state_graph: np.ndarray, adj: np.ndarray) -> int:
+    def get_action(self, state_graph: np.ndarray, adj: np.ndarray, training: bool = True) -> int:
         self.history.append(state_graph)
         state_seq = self._get_sequence(state_graph)
 
-        if random.random() < self.epsilon:
+        if training and random.random() < self.epsilon:
             return random.randrange(self.action_size)
 
         self.policy_net.eval()

@@ -716,7 +716,7 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
             state_seq = agent._get_sequence(state_graph)
             
             # 2. Get Action
-            action = agent.get_action(state_graph, adj_node)
+            action = agent.get_action(state_graph, adj_node, training=False)
 
             # --- ADAPTIVE HYBRID GUARDRAIL ---
             # Eliminates "Mode Collapse" from under-trained neural networks.
