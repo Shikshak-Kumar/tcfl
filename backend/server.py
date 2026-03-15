@@ -660,6 +660,8 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
     Uses Spatio-Temporal states and streams Pareto rewards.
     """
     target_pois = config.get("target_pois", [])
+    intersections = config.get("intersections", [])
+    use_tomtom = config.get("use_tomtom", True)
     num_nodes = len(intersections)
 
     from train_adaptflow import AdaptFlowTrainer
@@ -715,6 +717,20 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
             
             # 2. Get Action
             action = agent.get_action(state_graph, adj_node)
+
+            # --- ADAPTIVE HYBRID GUARDRAIL ---
+            # Eliminates "Mode Collapse" from under-trained neural networks.
+            # Forces the agent to balance traffic if a lane is actively starving.
+            ns_q = env.lane_queues.get("edge_n", 0) + env.lane_queues.get("edge_s", 0)
+            ew_q = env.lane_queues.get("edge_e", 0) + env.lane_queues.get("edge_w", 0)
+            
+            if env.current_phase == 0 and ew_q > 4 and ew_q > ns_q:
+                action = 1  # Force Yellow -> switch to E/W
+            elif env.current_phase == 2 and ns_q > 4 and ns_q > ew_q:
+                action = 3  # Force Yellow -> switch to N/S
+            elif env.current_phase in [1, 3]:
+                action = (env.current_phase + 1) % 4  # Transit through yellow smoothly
+            # ---------------------------------
             
             # 3. Step environment
             next_state, reward, done, info = env.step(action)
