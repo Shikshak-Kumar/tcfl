@@ -1,0 +1,69 @@
+﻿ADAPTFLOW RESULTS ANALYSIS
+Total Rounds: 3
+Mode: SUMO
+
+PER-NODE METRICS PER ROUND
+Node, Round, Cluster, Reward, AvgWait_s, Throughput, TP_Ratio, Loss
+node_0, 1, cluster_0, 188.31, 2.8715, 29, 0.11647, 0.52442
+node_1, 1, cluster_0, 200.00, 1.5200, 12, 0.09600, 0.58264
+node_2, 1, cluster_0, 195.41, 2.5020, 29, 0.11647, 0.52063
+node_3, 1, cluster_1, 199.79, 1.4960, 12, 0.09600, 0.60222
+node_4, 1, cluster_1, 191.34, 2.7711, 29, 0.11647, 0.52722
+node_5, 1, cluster_1, 199.86, 1.5120, 12, 0.09600, 0.58558
+node_0, 2, cluster_0, 194.57, 2.9880, 29, 0.11647, 0.48197
+node_1, 2, cluster_1, 200.00, 1.5200, 12, 0.09600, 0.51699
+node_2, 2, cluster_0, 194.57, 2.9880, 29, 0.11647, 0.50199
+node_3, 2, cluster_1, 200.00, 1.5200, 12, 0.09600, 0.49742
+node_4, 2, cluster_0, 194.57, 2.9880, 29, 0.11647, 0.47096
+node_5, 2, cluster_1, 200.00, 1.5200, 12, 0.09600, 0.51857
+node_0, 3, cluster_1, 194.57, 2.9880, 29, 0.11647, 0.47362
+node_1, 3, cluster_0, 200.00, 1.5200, 12, 0.09600, 0.52666
+node_2, 3, cluster_1, 194.57, 2.9880, 29, 0.11647, 0.46269
+node_3, 3, cluster_0, 200.00, 1.5200, 12, 0.09600, 0.51313
+node_4, 3, cluster_1, 194.57, 2.9880, 29, 0.11647, 0.45783
+node_5, 3, cluster_0, 200.00, 1.5200, 12, 0.09600, 0.51577
+
+ROUND-LEVEL SUMMARY
+Round 1: AvgReward=195.78 MinReward=188.31 MaxReward=200.00
+Round 1: AvgWait=2.1121s MinWait=1.4960 MaxWait=2.8715
+Round 1: AvgLoss=0.55712 TotalTP=123 AvgTPRatio=0.10623
+
+Round 2: AvgReward=197.29 MinReward=194.57 MaxReward=200.00
+Round 2: AvgWait=2.2540s MinWait=1.5200 MaxWait=2.9880
+Round 2: AvgLoss=0.49798 TotalTP=123 AvgTPRatio=0.10623
+
+Round 3: AvgReward=197.29 MinReward=194.57 MaxReward=200.00
+Round 3: AvgWait=2.2540s MinWait=1.5200 MaxWait=2.9880
+Round 3: AvgLoss=0.49161 TotalTP=123 AvgTPRatio=0.10623
+
+CLUSTER INFO PER ROUND
+Round 1:
+  cluster_0: members=['node_0', 'node_1', 'node_2'] avg_flow=0.10964 congestion=2.2978s
+  cluster_1: members=['node_3', 'node_4', 'node_5'] avg_flow=0.10282 congestion=1.9264s
+
+Round 2:
+  cluster_0: members=['node_0', 'node_2', 'node_4'] avg_flow=0.11647 congestion=2.9880s
+  cluster_1: members=['node_1', 'node_3', 'node_5'] avg_flow=0.09600 congestion=1.5200s
+
+Round 3:
+  cluster_0: members=['node_1', 'node_3', 'node_5'] avg_flow=0.09600 congestion=1.5200s
+  cluster_1: members=['node_0', 'node_2', 'node_4'] avg_flow=0.11647 congestion=2.9880s
+
+CLUSTER TRANSITIONS
+Round 1: No transitions (stable)
+Round 2: {'node_1': {'from': 0, 'to': 1}, 'node_4': {'from': 1, 'to': 0}}
+Round 3: {'node_0': {'from': 0, 'to': 1}, 'node_1': {'from': 1, 'to': 0}, 'node_2': {'from': 0, 'to': 1}, 'node_3': {'from': 1, 'to': 0}, 'node_4': {'from': 0, 'to': 1}, 'node_5': {'from': 1, 'to': 0}}
+
+FINGERPRINTS node_0 all rounds
+  Round 1: [2.8715, 0.47, 0.1165, 3.0, 0.0, 0.0]
+  Round 2: [2.988, 0.36, 0.1165, 2.0, 0.0, 0.0]
+  Round 3: [2.988, 0.36, 0.1165, 2.0, 0.0, 0.0]
+
+SIMILARITY MATRIX Round 3
+Nodes: node_0 | node_1 | node_2 | node_3 | node_4 | node_5
+node_0: 1.0000  0.9965  1.0000  0.9965  1.0000  0.9965
+node_1: 0.9965  1.0000  0.9965  1.0000  0.9965  1.0000
+node_2: 1.0000  0.9965  1.0000  0.9965  1.0000  0.9965
+node_3: 0.9965  1.0000  0.9965  1.0000  0.9965  1.0000
+node_4: 1.0000  0.9965  1.0000  0.9965  1.0000  0.9965
+node_5: 0.9965  1.0000  0.9965  1.0000  0.9965  1.0000

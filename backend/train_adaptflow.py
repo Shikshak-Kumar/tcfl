@@ -92,9 +92,12 @@ class AdaptFlowTrainer:
                 nid = f"node_{i}"
                 # Assign mock priority tiers (Tier 1 for node_0, Tier 2 for node_1, etc.)
                 # In real use, this comes from the environment config
-                if i == 0: self.priority_tiers[nid] = 1 # Hospital
-                elif i == 1: self.priority_tiers[nid] = 2 # School
-                else: self.priority_tiers[nid] = 3 # Normal
+                if i == 0:
+                    self.priority_tiers[nid] = 1  # Hospital
+                elif i == 1:
+                    self.priority_tiers[nid] = 2  # School
+                else:
+                    self.priority_tiers[nid] = 3  # Normal
 
                 for j in range(num_nodes):
                     if i != j and self.adj[i, j] > 0:
@@ -110,6 +113,7 @@ class AdaptFlowTrainer:
                 print("AdaptFlow-TSC: CLI Mode (TomTom Real-Time Traffic)")
                 cities = list(CITY_COORDINATES.keys())
                 from utils.tomtom_api import get_api_key
+
                 api_key = get_api_key()
                 for i in range(self.num_nodes):
                     config = self.sumo_configs[i % len(self.sumo_configs)]
@@ -183,7 +187,7 @@ class AdaptFlowTrainer:
 
             for _ in range(200):
                 state_graph, adj_node = self._get_node_graph_state(nid, state)
-                
+
                 # Internal agent history is updated, and sequence is used for action
                 state_seq = agent._get_sequence(state_graph)
                 action = agent.get_action(state_graph, adj_node)
@@ -193,7 +197,7 @@ class AdaptFlowTrainer:
                     nid, next_state
                 )
                 next_state_seq = agent._get_sequence(next_state_graph)
-                
+
                 agent.remember(
                     state_seq,
                     adj_node,
@@ -218,7 +222,7 @@ class AdaptFlowTrainer:
             p_rews = info.get("pareto_rewards", {})
             wait_time = metrics.get("avg_waiting_time_per_vehicle", 0.0)
             print(
-                f"    {nid}: Reward={total_reward:.1f} (Q:{p_rews.get('queue',0):.2f}, W:{p_rews.get('wait',0):.2f}), "
+                f"    {nid}: Reward={total_reward:.1f} (Q:{p_rews.get('queue', 0):.2f}, W:{p_rews.get('wait', 0):.2f}), "
                 f"AvgWait={wait_time:.2f}s, Loss={loss:.4f}"
             )
 
@@ -382,6 +386,13 @@ class AdaptFlowTrainer:
                     indent=2,
                 )
 
+            # Save per-node model weights
+            mode_label = "sumo" if self.gui else "mock"
+            model_file = os.path.join(
+                self.results_dir, f"{nid}_round_{round_idx}_{mode_label}.pt"
+            )
+            self.agents[nid].save_model(model_file)
+
         print(f"  {'-' * 80}")
 
         # Save round summary
@@ -417,6 +428,18 @@ class AdaptFlowTrainer:
         with open(final_file, "w") as f:
             json.dump(convert_to_json_serializable(self.all_round_results), f, indent=2)
 
+        # Save final globally-aggregated model weights.
+        # After the last round all agents hold identical weights (global broadcast in step 3d),
+        # so saving node_0 is equivalent to saving any node.
+        mode_label = "sumo" if self.gui else "mock"
+        global_model_path = os.path.join(
+            self.results_dir, f"adaptflow_global_{mode_label}.pt"
+        )
+        self.agents["node_0"].save_model(global_model_path)
+        print(
+            f"  [{mode_label.upper()} Model] Global weights saved to {global_model_path}"
+        )
+
         print(f"\n{'=' * 70}")
         print(f"  ADAPTFLOW TRAINING COMPLETE")
         print(f"  All results saved to {self.results_dir}/")
@@ -433,36 +456,49 @@ class AdaptFlowTrainer:
 
         # 1. Define Dummy Servers
         server_alpha = FedFlowServer(cluster_ids=["node_0", "node_1"])
-        server_beta = FedFlowServer(cluster_ids=["node_2", "node_3", "node_4", "node_5"])
+        server_beta = FedFlowServer(
+            cluster_ids=["node_2", "node_3", "node_4", "node_5"]
+        )
 
         # 2. Setup Callbacks
         async def make_server_cb(server_obj, name):
             async def cb(message):
-                print(f"    [PUB-SUB] {name} received update from {message['id']} (Congestion: {message['congestion']:.1f})")
+                print(
+                    f"    [PUB-SUB] {name} received update from {message['id']} (Congestion: {message['congestion']:.1f})"
+                )
                 await server_obj.handle_update_topic(message)
+
             return cb
 
-        broker.subscribe("cluster_alpha/updates", await make_server_cb(server_alpha, "Server-Alpha (Edge 1)"))
-        broker.subscribe("cluster_beta/updates", await make_server_cb(server_beta, "Server-Beta (Edge 2)"))
+        broker.subscribe(
+            "cluster_alpha/updates",
+            await make_server_cb(server_alpha, "Server-Alpha (Edge 1)"),
+        )
+        broker.subscribe(
+            "cluster_beta/updates",
+            await make_server_cb(server_beta, "Server-Beta (Edge 2)"),
+        )
 
         for r in range(1, num_rounds + 1):
             print(f"\n[Round {r}] Starting PUB-SUB Message Flow...")
-            
+
             # Simulated Node Activity
             for i in range(self.num_nodes):
                 nid = f"node_{i}"
                 topic = "cluster_alpha/updates" if i < 2 else "cluster_beta/updates"
-                
+
                 payload = {
                     "id": nid,
                     "weights": self.agents[nid].get_weights(),
-                    "congestion": random.uniform(10, 40)
+                    "congestion": random.uniform(10, 40),
                 }
                 await broker.publish(topic, payload)
-            
+
             # Servers aggregate (simulated)
-            print(f"  [Global] Servers Alpha & Beta aggregated their respective clusters via PUB-SUB.")
-            
+            print(
+                f"  [Global] Servers Alpha & Beta aggregated their respective clusters via PUB-SUB."
+            )
+
         print("\n" + "!" * 70)
         print("  PUB-SUB DUMMY SERVER DEMO FINISHED")
         print("!" * 70)
@@ -492,7 +528,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AdaptFlow-TSC Training")
     parser.add_argument("--rounds", type=int, default=3, help="Number of rounds")
     parser.add_argument("--nodes", type=int, default=6, help="Number of nodes")
-    parser.add_argument("--clusters", type=int, default=0, help="Number of clusters (0 for auto)")
+    parser.add_argument(
+        "--clusters", type=int, default=2, help="Number of clusters (0 for auto)"
+    )
     parser.add_argument(
         "--results-dir",
         type=str,
@@ -522,7 +560,9 @@ if __name__ == "__main__":
     num_clusters = args.clusters
     if num_clusters <= 0:
         num_clusters = max(1, args.nodes // 4)
-        print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} dummy servers for {args.nodes} nodes.")
+        print(
+            f"\n[AUTO] Optimizing performance: Selected {num_clusters} dummy servers for {args.nodes} nodes."
+        )
 
     target_pois_list = None
     if args.target_pois:
@@ -542,4 +582,5 @@ if __name__ == "__main__":
         # Run the standard train AND the PUB-SUB demo to show the dummy server work
         trainer.train(num_rounds=args.rounds)
         import asyncio
+
         asyncio.run(trainer.train_pubsub_demo(num_rounds=1))

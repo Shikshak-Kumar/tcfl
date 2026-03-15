@@ -1,0 +1,47 @@
+﻿=== Per-Round Summary (all nodes across all eval files) ===
+
+Round 1 (SUMO, 26 nodes):
+  Avg Reward:     -81.15  (min=-312.00, max=199.86)
+  Avg Wait (s):   5.794  (min=1.512, max=12.450)
+  Total Thruput:  4937
+  Avg Loss:       0.4078
+
+Round 2 (SUMO, 26 nodes):
+  Avg Reward:     -68.47  (min=-264.10, max=200.00)
+  Avg Wait (s):   5.235  (min=1.520, max=10.238)
+  Total Thruput:  4921
+  Avg Loss:       0.4031
+
+Round 3 (SUMO, 26 nodes):
+  Avg Reward:     -77.70  (min=-304.60, max=200.00)
+  Avg Wait (s):   5.625  (min=1.520, max=11.806)
+  Total Thruput:  4928
+  Avg Loss:       0.4000
+
+Round 4 (Mock, 26 nodes):
+  Avg Reward:     -150.60  (min=-319.00, max=-83.60)
+  Avg Wait (s):   6.326  (min=3.588, max=13.843)
+  Total Thruput:  6170
+  Avg Loss:       0.3650
+
+Round 5 (Mock, 26 nodes):
+  Avg Reward:     -164.05  (min=-352.90, max=-116.90)
+  Avg Wait (s):   6.694  (min=4.614, max=13.521)
+  Total Thruput:  6346
+  Avg Loss:       0.3791
+
+=== SUMO Nodes Detail (node_0 to node_5) ===
+Node       R1_reward  R1_wait  R2_reward  R2_wait  R3_reward  R3_wait
+node_0         191.37   3.008s      194.57   2.988s      194.57   2.988s  
+node_1         199.86   1.512s      200.00   1.520s      200.00   1.520s  
+node_2         191.79   3.008s      194.57   2.988s      194.57   2.988s  
+node_3         199.55   1.536s      200.00   1.520s      200.00   1.520s  
+node_4         195.44   3.361s      194.57   2.988s      194.57   2.988s  
+node_5         198.92   1.584s      200.00   1.520s      200.00   1.520s  
+
+=== Mock Nodes Summary (node_6 to node_25, all rounds) ===
+  Round 1: avg_reward=-164.33, min=-312.00, max=-98.50, n=20
+  Round 2: avg_reward=-148.19, min=-264.10, max=-88.50, n=20
+  Round 3: avg_reward=-160.19, min=-304.60, max=-109.50, n=20
+  Round 4: avg_reward=-152.36, min=-319.00, max=-86.00, n=20
+  Round 5: avg_reward=-168.78, min=-352.90, max=-116.90, n=20

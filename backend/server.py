@@ -681,7 +681,17 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
     priority_tiers = {f"node_{i}": ix.get("tier", 3) for i, ix in enumerate(intersections)}
     trainer.priority_tiers = priority_tiers
 
-    model_path = get_latest_model("results_adaptflow")
+    # Prefer SUMO-trained weights over mock — more realistic traffic dynamics.
+    # Falls back: sumo global → mock global → any .pt file (most recently modified)
+    _sumo_path = os.path.join("results_adaptflow", "adaptflow_global_sumo.pt")
+    _mock_path = os.path.join("results_adaptflow", "adaptflow_global_mock.pt")
+    if os.path.exists(_sumo_path):
+        model_path = _sumo_path
+    elif os.path.exists(_mock_path):
+        model_path = _mock_path
+    else:
+        model_path = get_latest_model("results_adaptflow")
+
     if model_path:
         for nid in trainer.agents:
             try:
