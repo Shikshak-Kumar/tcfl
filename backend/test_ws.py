@@ -10,7 +10,7 @@ async def test_ws():
             print("Connected.")
             req = {
                 "city": "Delhi",
-                "algorithm": "FedKD",
+                "algorithm": "AdaptFlow",
                 "use_tomtom": True,
                 "target_pois": ["healthcare"]
             }

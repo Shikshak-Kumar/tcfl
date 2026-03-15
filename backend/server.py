@@ -157,12 +157,16 @@ async def get_comparison_data():
         }
         
         # Pull ONLY from latest simulation results
-        sim_metrics = viz_manager.get_latest_sim_metrics(algo_name)
-        if sim_metrics:
+        sim_data = viz_manager.get_latest_sim_metrics(algo_name)
+        if sim_data:
+            sim_metrics = sim_data["summary"]
             algo_metrics["reward"] = sim_metrics.get("avg_reward", 0.0)
             algo_metrics["waiting_time"] = sim_metrics.get("avg_waiting_time", 0.0)
             algo_metrics["queue"] = sim_metrics.get("avg_queue_length", 0.0)
             algo_metrics["simulated"] = True
+            algo_metrics["last_timestamp"] = sim_data.get("timestamp")
+            algo_metrics["last_city"] = sim_data.get("config", {}).get("city", "Unknown")
+            algo_metrics["last_pois"] = sim_data.get("config", {}).get("target_pois", [])
             
             # Extract real safety metric if available (e.g. accidents)
             accidents = sim_metrics.get("total_accidents", 0)
@@ -447,7 +451,7 @@ async def run_multi_inference(websocket, envs_agents, intersections, config, max
     viz_manager.generate_plots(session_dir, algo_name, summary)
 
 
-def _create_envs_for_intersections(intersections, use_tomtom):
+def _create_envs_for_intersections(intersections, use_tomtom, target_pois=None):
     """Helper: create one environment per intersection."""
     envs = {}
     sumo_configs = [
@@ -470,6 +474,7 @@ def _create_envs_for_intersections(intersections, use_tomtom):
                 traffic_pattern="real_time",
                 priority_tier=ix.get("tier", 3),
                 tl_id=f"{ix.get('name', nid)}",
+                target_pois=target_pois,
             )
         else:
             envs[nid] = MockTrafficEnvironment(
@@ -493,7 +498,7 @@ async def run_fedavg_simulation(websocket, config):
             gui=False,
             use_tomtom=use_tomtom,
             tomtom_city=config.get("city", "Delhi"),
-            target_pois=[],
+            target_pois=config.get("target_pois", []),
         )
         model_path = get_latest_model("results_federated")
         if model_path:
@@ -512,16 +517,20 @@ async def run_fedcm_simulation(websocket, config):
     print("[WS] FedCM simulation (Standard MLP) starting...")
     intersections = config.get("intersections", [])
     use_tomtom = config.get("use_tomtom", True)
+    target_pois = config.get("target_pois", [])
     
-    envs = _create_envs_for_intersections(intersections, use_tomtom)
+    envs = _create_envs_for_intersections(intersections, use_tomtom, target_pois=target_pois)
     envs_agents = {}
     from agents.dqn_agent import DQNAgent # Baseline architecture
     
     for nid, env in envs.items():
-        agent = DQNAgent(state_size=12, action_size=4)
+        agent = DQNAgent(state_size=12, action_size=4, hidden_dims=[128, 128, 64])
         model_path = get_latest_model("results_fedcm_sumo")
         if model_path:
-            agent.load_model(model_path)
+            try:
+                agent.load_model(model_path)
+            except Exception as e:
+                print(f"[WS] Warning: Could not load FedCM model: {e}")
         envs_agents[nid] = (env, agent)
         
     await run_multi_inference(websocket, envs_agents, intersections, config)
@@ -532,16 +541,20 @@ async def run_fedkd_simulation(websocket, config):
     print("[WS] FedKD simulation (Standard MLP) starting...")
     intersections = config.get("intersections", [])
     use_tomtom = config.get("use_tomtom", True)
+    target_pois = config.get("target_pois", [])
     
-    envs = _create_envs_for_intersections(intersections, use_tomtom)
+    envs = _create_envs_for_intersections(intersections, use_tomtom, target_pois=target_pois)
     envs_agents = {}
     from agents.dqn_agent import DQNAgent # Baseline architecture
     
     for nid, env in envs.items():
-        agent = DQNAgent(state_size=12, action_size=4)
+        agent = DQNAgent(state_size=12, action_size=4, hidden_dims=[128, 128, 64])
         model_path = get_latest_model("results_fedkd_sumo")
         if model_path:
-            agent.load_model(model_path)
+            try:
+                agent.load_model(model_path)
+            except Exception as e:
+                print(f"[WS] Warning: Could not load FedKD model: {e}")
         envs_agents[nid] = (env, agent)
         
     await run_multi_inference(websocket, envs_agents, intersections, config)
@@ -550,6 +563,7 @@ async def run_fedkd_simulation(websocket, config):
 async def run_fedflow_simulation(websocket, config):
     intersections = config.get("intersections", [])
     use_tomtom = config.get("use_tomtom", True)
+    target_pois = config.get("target_pois", [])
     num_nodes = len(intersections)
 
     from train_fedflow import FedFlowTrainer
@@ -561,7 +575,7 @@ async def run_fedflow_simulation(websocket, config):
     )
 
     # Override the environments with intersection-specific ones
-    envs = _create_envs_for_intersections(intersections, use_tomtom)
+    envs = _create_envs_for_intersections(intersections, use_tomtom, target_pois=target_pois)
     trainer.envs = envs
 
     model_path = get_latest_model("results_fedflow")
@@ -645,8 +659,7 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
     Real-time simulation for AdaptFlow Algorithm.
     Uses Spatio-Temporal states and streams Pareto rewards.
     """
-    intersections = config.get("intersections", [])
-    use_tomtom = config.get("use_tomtom", True)
+    target_pois = config.get("target_pois", [])
     num_nodes = len(intersections)
 
     from train_adaptflow import AdaptFlowTrainer
@@ -655,10 +668,11 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
         num_clusters=max(1, num_nodes // 4),
         gui=False,
         use_tomtom=use_tomtom,
+        target_pois=target_pois,
     )
 
     # Override the environments with intersection-specific ones
-    envs = _create_envs_for_intersections(intersections, use_tomtom)
+    envs = _create_envs_for_intersections(intersections, use_tomtom, target_pois=target_pois)
     trainer.envs = envs
 
     # Assign priority tiers from frontend pins

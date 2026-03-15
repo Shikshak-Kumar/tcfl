@@ -138,7 +138,16 @@ class DQNAgent:
         torch.save(self.policy_net.state_dict(), filepath)
     
     def load_model(self, filepath: str):
-        self.policy_net.load_state_dict(torch.load(filepath, map_location=self.device))
+        try:
+            self.policy_net.load_state_dict(torch.load(filepath, map_location=self.device))
+        except RuntimeError as e:
+            if "size mismatch" in str(e):
+                raise RuntimeError(
+                    f"Architecture mismatch while loading model from {filepath}. "
+                    f"The saved model has a different architecture than the current agent's DQNNetwork. "
+                    f"Details: {e}"
+                ) from e
+            raise e
         self.update_target_model()
     
     def get_weights(self) -> List[np.ndarray]:

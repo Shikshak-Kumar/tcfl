@@ -89,7 +89,20 @@ class SimulationVizManager:
                     with open(raw_data_path, 'r') as f:
                         data = json.load(f)
                         if data.get("config", {}).get("algorithm") == algo_name:
-                            return data.get("summary")
+                            # Extract timestamp from folder name (run_YYYYMMDD_HHMMSS)
+                            folder_name = os.path.basename(run_dir)
+                            timestamp_raw = folder_name.replace("run_", "")
+                            try:
+                                dt = datetime.strptime(timestamp_raw, "%Y%m%d_%H%M%S")
+                                timestamp = dt.strftime("%Y-%m-%d %H:%M:%S")
+                            except:
+                                timestamp = timestamp_raw
+                                
+                            return {
+                                "summary": data.get("summary"),
+                                "timestamp": timestamp,
+                                "config": data.get("config")
+                            }
                 except: continue
         return None
 

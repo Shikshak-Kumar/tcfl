@@ -1,9 +1,0 @@
-{
-  "average_reward": -1118.9500000000012,
-  "total_steps": 400,
-  "average_loss": 0.012613202476305083,
-  "waiting_time": 11398.0,
-  "queue_length": 56.989999999999995,
-  "num_congested_lanes": 2.0,
-  "total_lanes": 4.0
-}

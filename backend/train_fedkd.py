@@ -43,8 +43,8 @@ def run_fedkd_simulation(
         "sumo_configs2/osm_client2.sumocfg",
     ]
 
-    # Architecture templates: [Large, Small]
-    arch_templates = [{"hidden": [256, 256, 128]}, {"hidden": [64, 32]}]
+    # Standardized architecture template
+    arch_templates = [{"hidden": [128, 128, 64]}, {"hidden": [128, 128, 64]}]
 
     from utils.tomtom_api import CITY_COORDINATES
     cities = list(CITY_COORDINATES.keys())

@@ -148,7 +148,8 @@ class AdaptFlowDQN(nn.Module):
             nfeat=state_size, nhid=gat_hidden, nheads=gat_heads, time_steps=time_steps
         )
         self.fc1 = nn.Linear(gat_hidden, 128)
-        self.fc2 = nn.Linear(128, 64)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, 64)
         self.out = nn.Linear(64, action_size)
 
     def forward(self, x_seq, adj):
@@ -156,6 +157,7 @@ class AdaptFlowDQN(nn.Module):
         h_focal = h[:, 0, :]               # focal node
         x = torch.relu(self.fc1(h_focal))
         x = torch.relu(self.fc2(x))
+        x = torch.relu(self.fc3(x))
         return self.out(x)
 
 
@@ -168,9 +170,9 @@ class AdaptFlowAgent:
     Novelties: Robust PER, SpatioTemporal Sequence Replay, Priority Hyper-tuning.
     """
     def __init__(self, state_size: int, action_size: int,
-                 lr: float = 1e-3, gamma: float = 0.95,
+                 lr: float = 1e-3, gamma: float = 0.99,
                  epsilon_start: float = 1.0, epsilon_end: float = 0.01,
-                 epsilon_decay: float = 0.995, batch_size: int = 64,
+                 epsilon_decay: float = 0.997, batch_size: int = 64,
                  device: str = "cpu", time_steps: int = 4,
                  per_alpha: float = 0.6,
                  per_beta: float = 0.4,

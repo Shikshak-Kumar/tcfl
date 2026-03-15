@@ -15,6 +15,15 @@ def get_api_key() -> str:
     """Retrieves the TomTom API key from the environment variable."""
     api_key = os.environ.get("TOMTOM_API_KEY")
     if not api_key:
+        # Try loading .env if not found in environment
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+            api_key = os.environ.get("TOMTOM_API_KEY")
+        except ImportError:
+            pass
+            
+    if not api_key:
         raise ValueError("TOMTOM_API_KEY environment variable is missing. Please set it in your .env file or deployment settings.")
     return api_key
 

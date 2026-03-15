@@ -7,25 +7,20 @@ import random
 from typing import List, Dict, Optional, Tuple
 from collections import deque
 
-from federated_learning.gat_module import SpatioTemporalEncoder
+from agents.dqn_agent import DQNNetwork
 
-
-# ---------------------------------------------------------------------------
-# FedFlowDQN: GAT + Double DQN network
-# ---------------------------------------------------------------------------
-# ---------------------------------------------------------------------------
 # FedFlowAgent: Standard MLP Double DQN (Industry Baseline)
-# ---------------------------------------------------------------------------
 class FedFlowAgent:
     """
     Standard MLP Double DQN Agent for FedFlow-TSC baseline.
     Removes GAT and Temporal features to highlight AdaptFlow's novelty.
     """
     def __init__(self, state_size: int, action_size: int,
-                 lr: float = 1e-3, gamma: float = 0.95,
+                 lr: float = 1e-3, gamma: float = 0.99,
                  epsilon_start: float = 1.0, epsilon_end: float = 0.01,
-                 epsilon_decay: float = 0.995, batch_size: int = 64,
-                 device: str = "cpu", memory_size: int = 5000):
+                 epsilon_decay: float = 0.997, batch_size: int = 64,
+                 device: str = "cpu", memory_size: int = 5000,
+                 hidden_dims: List[int] = [128, 128, 64]):
         self.state_size = state_size
         self.action_size = action_size
         self.gamma = gamma
@@ -35,22 +30,9 @@ class FedFlowAgent:
         self.batch_size = batch_size
         self.device = device
 
-        # Networks: Standard MLP
-        self.policy_net = nn.Sequential(
-            nn.Linear(state_size, 128),
-            nn.ReLU(),
-            nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Linear(64, action_size)
-        ).to(device)
-        
-        self.target_net = nn.Sequential(
-            nn.Linear(state_size, 128),
-            nn.ReLU(),
-            nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Linear(64, action_size)
-        ).to(device)
+        # Networks: Standard MLP using DQNNetwork for modularity
+        self.policy_net = DQNNetwork(state_size, action_size, hidden_dims=hidden_dims).to(device)
+        self.target_net = DQNNetwork(state_size, action_size, hidden_dims=hidden_dims).to(device)
         
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.target_net.eval()

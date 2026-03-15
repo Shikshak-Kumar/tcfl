@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell } from 'recharts';
-import { Info, TrendingUp, Shield, Zap, Activity, Filter, ArrowLeft } from 'lucide-react';
+import { Info, TrendingUp, Shield, Zap, Activity, Filter, ArrowLeft, Clock, MapPin, Search } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -201,6 +201,42 @@ export default function ComparisonView({ onBack }) {
                       <p className="text-sm font-bold text-slate-200">{m.queue.toFixed(0)}</p>
                     </div>
                   </div>
+
+                  {m.simulated && (
+                    <div className="mt-4 pt-3 border-t border-white/5 flex flex-wrap gap-x-6 gap-y-2">
+                      <div className="flex items-center gap-1.5 min-w-[120px]">
+                        <Clock className="w-3 h-3 text-indigo-400/70" />
+                        <div className="flex flex-col">
+                          <span className="text-[9px] text-slate-500 font-bold uppercase transition-all group-hover:block leading-none mb-0.5">Last Run</span>
+                          <span className="text-[11px] text-slate-300 font-medium leading-none">{m.last_timestamp}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 min-w-[80px]">
+                        <MapPin className="w-3 h-3 text-emerald-400/70" />
+                        <div className="flex flex-col">
+                          <span className="text-[9px] text-slate-500 font-bold uppercase leading-none mb-0.5">City</span>
+                          <span className="text-[11px] text-slate-300 font-medium leading-none">{m.last_city}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 flex-1 min-w-[150px]">
+                        <Search className="w-3 h-3 text-amber-400/70" />
+                        <div className="flex flex-col">
+                          <span className="text-[9px] text-slate-500 font-bold uppercase leading-none mb-0.5">Focus POIs</span>
+                          <div className="flex flex-wrap gap-1">
+                            {m.last_pois && m.last_pois.length > 0 ? (
+                              m.last_pois.map(p => (
+                                <span key={p} className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-slate-400 capitalize border border-white/5">
+                                  {p}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-[10px] text-slate-600 italic">Standard Traffic</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
