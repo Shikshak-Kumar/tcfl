@@ -59,10 +59,7 @@ export default function LocationInput({ intersections, onIntersectionsChange, ci
   }, [inputValue, city]);
 
   const selectSuggestion = (suggestion) => {
-    if (intersections.length >= 3) {
-      setError('Maximum 3 locations allowed');
-      return;
-    }
+    // Limit removed as per user request
     const newPin = {
       lat: suggestion.lat,
       lon: suggestion.lon,
@@ -89,8 +86,8 @@ export default function LocationInput({ intersections, onIntersectionsChange, ci
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
-          disabled={disabled || intersections.length >= 3}
-          placeholder={intersections.length >= 3 ? 'Max 3 locations reached' : `Search a place in ${city}...`}
+          disabled={disabled}
+          placeholder={`Search a place in ${city}...`}
           style={{
             width: '100%', padding: '10px 14px', borderRadius: '8px', fontSize: '13px',
             background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
@@ -162,7 +159,7 @@ export default function LocationInput({ intersections, onIntersectionsChange, ci
       </div>
 
       <p style={{ color: '#64748b', fontSize: '11px', marginTop: '6px' }}>
-        {intersections.length}/3 locations • Type an intersection name, area, or landmark
+        {intersections.length} locations • Type an intersection name, area, or landmark
       </p>
     </div>
   );

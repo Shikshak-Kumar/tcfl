@@ -67,7 +67,7 @@ export default function MapPicker({ intersections, onIntersectionsChange, cityCe
   const mapCenter = cityCenter || [28.6139, 77.2090]; // Default: Delhi
 
   const handleMapClick = (latlng) => {
-    if (intersections.length >= 3) return; // Max 3
+    // Limit removed as per user request
     const newPin = {
       lat: parseFloat(latlng.lat.toFixed(6)),
       lon: parseFloat(latlng.lng.toFixed(6)),
@@ -95,9 +95,9 @@ export default function MapPicker({ intersections, onIntersectionsChange, cityCe
   return (
     <div className="map-picker-container">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-        <span style={{ fontSize: '13px', color: '#94a3b8' }}>
-          Click map to place pins ({intersections.length}/3)
-        </span>
+          <span style={{ fontSize: '13px', color: '#94a3b8' }}>
+            Click map to place pins ({intersections.length})
+          </span>
         {intersections.length > 0 && !disabled && (
           <button
             onClick={() => onIntersectionsChange([])}
@@ -124,7 +124,7 @@ export default function MapPicker({ intersections, onIntersectionsChange, cityCe
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           />
           <CityRecenter center={mapCenter} />
-          <MapClickHandler onMapClick={handleMapClick} disabled={disabled || intersections.length >= 3} />
+          <MapClickHandler onMapClick={handleMapClick} disabled={disabled} />
           
           {intersections.map((pin, index) => {
             const poiData = getMarkerData(index);

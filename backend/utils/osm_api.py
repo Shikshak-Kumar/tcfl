@@ -1,8 +1,12 @@
-import requests
+import httpx
 import json
+import asyncio
+
+# Semaphore to strictly limit concurrent requests to Overpass API (rate limit protection)
+overpass_semaphore = asyncio.Semaphore(1)
 
 
-def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
+async def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
     """
     Fetches Points of Interest (POIs) from OpenStreetMap via the Overpass API
     within a bounding box defined by (lat, lon) and radius_deg.
@@ -18,8 +22,6 @@ def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
     overpass_url = "https://overpass-api.de/api/interpreter"
 
     # Query for standard traffic generators/attractors
-    # using nwr (node/way/relation) so large buildings mapped as
-    # polygons (e.g. AIIMS, IIT) are also detected
     query = f"""
     [out:json][timeout:25];
     (
@@ -32,9 +34,24 @@ def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
     """
 
     try:
-        response = requests.post(overpass_url, data={"data": query}, timeout=30)
-        response.raise_for_status()
-        data = response.json()
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            # Retry logic for 429 and other transient errors
+            max_retries = 3
+            for attempt in range(max_retries):
+                response = await client.post(overpass_url, data={"data": query})
+                
+                if response.status_code == 429:
+                    wait_time = (attempt * 2) + 2  # 2, 4, 6 seconds
+                    print(f"[OSM API] Rate limited (429). Retrying in {wait_time}s...")
+                    await asyncio.sleep(wait_time)
+                    continue
+                
+                response.raise_for_status()
+                data = response.json()
+                break
+            else:
+                print(f"[OSM API] Failed after {max_retries} retries.")
+                return {}
 
         # Categorize the results and store coordinates
         poi_summary = {
@@ -49,14 +66,9 @@ def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
 
         for element in data.get("elements", []):
             tags = element.get("tags", {})
-
-            # Extract coordinates:
-            # - Nodes have top-level lat/lon
-            # - Ways/Relations have center.lat/center.lon (from 'out center')
             poi_lat = element.get("lat", 0.0)
             poi_lon = element.get("lon", 0.0)
 
-            # Fallback to center coordinates for way/relation elements
             if poi_lat == 0.0 and poi_lon == 0.0:
                 center = element.get("center", {})
                 poi_lat = center.get("lat", 0.0)
@@ -80,34 +92,15 @@ def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
                 poi_summary["healthcare"].append(poi_data)
             elif amenity in ["school", "university", "college", "kindergarten"]:
                 poi_summary["education"].append(poi_data)
-            elif amenity in [
-                "restaurant",
-                "cafe",
-                "fast_food",
-                "bar",
-                "pub",
-                "food_court",
-            ]:
+            elif amenity in ["restaurant", "cafe", "fast_food", "bar", "pub", "food_court"]:
                 poi_summary["food_dining"].append(poi_data)
-            elif amenity in [
-                "police",
-                "fire_station",
-                "courthouse",
-                "townhall",
-                "library",
-            ]:
+            elif amenity in ["police", "fire_station", "courthouse", "townhall", "library"]:
                 poi_summary["public_service"].append(poi_data)
             elif shop:
                 poi_summary["commercial"].append(poi_data)
             elif office:
                 poi_summary["office"].append(poi_data)
-            elif leisure or amenity in [
-                "cinema",
-                "theatre",
-                "stadium",
-                "sports_centre",
-                "park",
-            ]:
+            elif leisure or amenity in ["cinema", "theatre", "stadium", "sports_centre", "park"]:
                 poi_summary["leisure"].append(poi_data)
 
         return poi_summary
@@ -117,18 +110,14 @@ def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
         return {}
 
 
-def detect_priority_for_intersection(
+async def detect_priority_for_intersection(
     lat: float, lon: float, radius_km: float = 1.0
 ) -> dict:
     """
     Query OSM within radius_km of (lat, lon) and assign a priority tier.
-    Tier 1 (Critical): Hospital/Clinic detected
-    Tier 2 (High): School/University detected
-    Tier 3 (Normal): No critical POIs
     """
-    # Convert km to degrees (1 degree ≈ 111km at equator)
     radius_deg = radius_km / 111.0
-    pois = get_osm_pois(lat, lon, radius_deg=radius_deg)
+    pois = await get_osm_pois(lat, lon, radius_deg=radius_deg)
 
     # Check for Tier 1 — Healthcare
     healthcare = pois.get("healthcare", [])
@@ -165,14 +154,22 @@ def detect_priority_for_intersection(
     }
 
 
-def detect_pois_for_intersections(intersections: list, radius_km: float = 1.0) -> list:
+async def detect_pois_for_intersections(intersections: list, radius_km: float = 1.0) -> list:
     """
-    For a list of intersections [{'lat', 'lon', 'name'}, ...], detect POI priority for each.
-    Returns the same list enriched with priority tier info.
+    For a list of intersections, detect POI priority for each in parallel.
     """
-    results = []
+    tasks = []
     for ix in intersections:
-        priority = detect_priority_for_intersection(ix["lat"], ix["lon"], radius_km)
+        async def wrapped_detect(lat, lon, r):
+            async with overpass_semaphore:
+                return await detect_priority_for_intersection(lat, lon, r)
+        
+        tasks.append(wrapped_detect(ix["lat"], ix["lon"], radius_km))
+    
+    priorities = await asyncio.gather(*tasks)
+    
+    results = []
+    for ix, priority in zip(intersections, priorities):
         results.append({**ix, **priority})
         print(
             f"[OSM] {ix.get('name', 'Pin')}: Tier {priority['tier']} ({priority['tier_label']}) — "

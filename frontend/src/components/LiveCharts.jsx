@@ -1,10 +1,11 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
-// Tier-based colors for up to 3 intersections
-const NODE_COLORS = {
-  node_0: '#f43f5e',  // Rose
-  node_1: '#f59e0b',  // Amber
-  node_2: '#3b82f6',  // Blue
+// Dynamic color generator for intersections
+const getIntersectionColor = (index, total = 8) => {
+  // Use HSL to rotate through the hue spectrum
+  const count = Math.max(total, 8);
+  const hue = (index * (360 / count)) % 360;
+  return `hsl(${hue}, 70%, 60%)`;
 };
 
 const GLOBAL_COLOR = '#a78bfa'; // Purple for global average
@@ -59,13 +60,13 @@ export default function LiveCharts({ simData, intersections }) {
               labelStyle={{ color: '#94a3b8' }}
             />
             <Legend wrapperStyle={{ fontSize: '12px' }} />
-            {nodeIds.map((nid) => (
+            {nodeIds.map((nid, index) => (
               <Line
                 key={nid}
                 type="monotone"
                 dataKey={`${nid}_queue`}
                 name={latestIntersections[nid]?.name || nid}
-                stroke={NODE_COLORS[nid] || '#8b5cf6'}
+                stroke={getIntersectionColor(index, nodeIds.length)}
                 strokeWidth={2}
                 dot={false}
                 isAnimationActive={false}
@@ -98,13 +99,13 @@ export default function LiveCharts({ simData, intersections }) {
               labelStyle={{ color: '#94a3b8' }}
             />
             <Legend wrapperStyle={{ fontSize: '12px' }} />
-            {nodeIds.map((nid) => (
+            {nodeIds.map((nid, index) => (
               <Line
                 key={nid}
                 type="stepAfter"
                 dataKey={`${nid}_reward`}
                 name={latestIntersections[nid]?.name || nid}
-                stroke={NODE_COLORS[nid] || '#8b5cf6'}
+                stroke={getIntersectionColor(index, nodeIds.length)}
                 strokeWidth={2}
                 dot={false}
                 isAnimationActive={false}

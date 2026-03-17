@@ -90,9 +90,10 @@ def kmeans_cluster(
     num_clusters: int,
     max_iter: int = 50,
     seed: Optional[int] = None,
+    max_capacity: Optional[int] = 4, # Strict limit requested by user
 ) -> Dict[str, int]:
     """
-    K-means clustering on congestion + priority fingerprints.
+    K-means clustering on congestion + priority fingerprints with optional capacity balancing.
     """
     if seed is not None:
         rng = np.random.RandomState(seed)
@@ -128,7 +129,72 @@ def kmeans_cluster(
             if len(members) > 0:
                 centroids[k] = members.mean(axis=0)
 
-    return {nid: int(labels[i]) for i, nid in enumerate(node_ids)}
+    assignments = {nid: int(labels[i]) for i, nid in enumerate(node_ids)}
+
+    # --- Capacity Balancing (Post-Processing) ---
+    if max_capacity is not None:
+        assignments = _balance_cluster_capacities(data, node_ids, centroids, assignments, max_capacity)
+
+    return assignments
+
+
+def _balance_cluster_capacities(
+    data: np.ndarray,
+    node_ids: List[str],
+    centroids: np.ndarray,
+    assignments: Dict[str, int],
+    max_capacity: int
+) -> Dict[str, int]:
+    """
+    Strictly enforce a maximum number of nodes per cluster.
+    Moves 'excess' nodes from overflowing clusters to the nearest cluster with space.
+    """
+    import copy
+    current_assignments = copy.deepcopy(assignments)
+    
+    # 1. Map cluster to node indices
+    cluster_to_nodes: Dict[int, List[int]] = defaultdict(list)
+    for i, nid in enumerate(node_ids):
+        cluster_to_nodes[current_assignments[nid]].append(i)
+        
+    num_clusters = centroids.shape[0]
+    
+    while any(len(nodes) > max_capacity for nodes in cluster_to_nodes.values()):
+        # Find the most overflowing cluster
+        cid_over = max(cluster_to_nodes.keys(), key=lambda k: len(cluster_to_nodes[k]))
+        if len(cluster_to_nodes[cid_over]) <= max_capacity:
+            break
+            
+        # For each node in the overflowing cluster, calculate distance to all other clusters
+        nodes_in_over = cluster_to_nodes[cid_over]
+        
+        # We want to move the node that has the smallest distance to SOME OTHER cluster that has space
+        best_move = None # (node_idx, from_cid, to_cid, dist)
+        
+        for idx in nodes_in_over:
+            node_vec = data[idx]
+            # Calculate distance to all centroids
+            dists = np.linalg.norm(centroids - node_vec, axis=1)
+            
+            # Look for clusters with space
+            for cid_target in range(num_clusters):
+                if cid_target == cid_over: continue
+                if len(cluster_to_nodes[cid_target]) < max_capacity:
+                    d = dists[cid_target]
+                    if best_move is None or d < best_move[3]:
+                        best_move = (idx, cid_over, cid_target, d)
+        
+        if best_move:
+            idx, f_cid, t_cid, _ = best_move
+            # Move the node
+            cluster_to_nodes[f_cid].remove(idx)
+            cluster_to_nodes[t_cid].append(idx)
+            current_assignments[node_ids[idx]] = t_cid
+        else:
+            # No clusters have space! (Should not happen if num_clusters is calculated correctly)
+            break
+            
+    return current_assignments
 
 
 def _kmeans_pp_init(data: np.ndarray, k: int, rng: np.random.RandomState) -> np.ndarray:

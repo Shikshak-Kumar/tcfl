@@ -16,6 +16,7 @@ from agents.mock_traffic_environment import MockTrafficEnvironment
 from utils.traffic_db import insert_record, get_time_slot_aggregations, TIME_SLOTS, cleanup_old_records
 import datetime
 from utils.viz_manager import viz_manager
+from utils.logger import logger
 
 # Note: Algorithm and ML imports (FedFlowTrainer, FL clients, etc.) 
 # have been moved inside the simulation functions (lazy loading)
@@ -205,7 +206,7 @@ async def detect_pois(request: DetectPoisRequest):
     """Detect POIs within radius_km of each intersection and assign priority tiers."""
     print(f"[API] POST /api/detect-pois for {len(request.intersections)} intersections")
     intersections = [ix.model_dump() for ix in request.intersections]
-    results = detect_pois_for_intersections(intersections, radius_km=request.radius_km)
+    results = await detect_pois_for_intersections(intersections, radius_km=request.radius_km)
     # Strip full POI data for the response (only send summaries)
     clean_results = []
     for r in results:
@@ -569,7 +570,7 @@ async def run_fedflow_simulation(websocket, config):
     from train_fedflow import FedFlowTrainer
     trainer = FedFlowTrainer(
         num_nodes=num_nodes,
-        num_clusters=max(1, num_nodes // 4),
+        num_clusters=max(1, (num_nodes + 3) // 4),
         gui=False,
         use_tomtom=use_tomtom,
     )
@@ -578,6 +579,15 @@ async def run_fedflow_simulation(websocket, config):
     envs = _create_envs_for_intersections(intersections, use_tomtom, target_pois=target_pois)
     trainer.envs = envs
 
+    # Display Cluster Table
+    table_headers = ["Cluster ID", "Members"]
+    table_rows = []
+    for cluster in trainer.clusters:
+        table_rows.append([cluster.cluster_id, ", ".join(cluster.agent_ids)])
+    logger.section("FedFlow: Network & Cluster Mapping")
+    logger.table(table_headers, table_rows)
+
+    states = {}
     model_path = get_latest_model("results_fedflow")
     if model_path:
         for nid in trainer.agents:
@@ -646,6 +656,10 @@ async def run_fedflow_simulation(websocket, config):
         }
         session_history.append(payload)
         await websocket.send_json(payload)
+        
+        if step % 50 == 0:
+            logger.info(f"Step {step}/200: Global Avg Reward: {payload['global']['avg_reward']}", prefix="PROGRESS")
+            
         await asyncio.sleep(0.1)
     
     # Save and Plot
@@ -667,7 +681,7 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
     from train_adaptflow import AdaptFlowTrainer
     trainer = AdaptFlowTrainer(
         num_nodes=num_nodes,
-        num_clusters=max(1, num_nodes // 4),
+        num_clusters=max(1, (num_nodes + 3) // 4),
         gui=False,
         use_tomtom=use_tomtom,
         target_pois=target_pois,
@@ -700,10 +714,23 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
                 pass
         print(f"[WS] Loaded AdaptFlow model from {model_path}")
 
+    # Initial Cluster Mapping (Initial Static)
+    logger.section("AdaptFlow: Initial Network Mapping")
+    table_headers = ["Cluster ID", "Members"]
+    table_rows = []
+    num_clusters_final = max(1, (num_nodes + 3) // 4)
+    nodes_per_cluster = (num_nodes + num_clusters_final - 1) // num_clusters_final
+    for c in range(num_clusters_final):
+        members = [f"node_{i}" for i in range(c * nodes_per_cluster, min((c + 1) * nodes_per_cluster, num_nodes))]
+        table_rows.append([f"cluster_{c}", ", ".join(members)])
+    logger.table(table_headers, table_rows)
+
     states = {}
-    for nid in trainer.agents:
-        if nid in envs:
-            states[nid] = envs[nid].reset()
+    for nid, env in envs.items():
+        states[nid] = env.reset()
+
+    # Track window metrics for dynamic re-clustering
+    window_metrics = {nid: {"rewards": [], "wait_times": [], "throughput": []} for nid in trainer.agents}
 
     session_history = []
     session_dir = viz_manager.create_session_folder()
@@ -774,6 +801,11 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
             total_reward += reward
             total_queue_all += total_queue
 
+            # Track metrics for re-clustering window
+            window_metrics[nid]["rewards"].append(reward)
+            window_metrics[nid]["wait_times"].append(avg_wait)
+            window_metrics[nid]["throughput"].append(info.get("throughput_ratio", 0.5))
+
         payload = {
             "step": step,
             "intersections": node_data,
@@ -784,6 +816,51 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
         }
         session_history.append(payload)
         await websocket.send_json(payload)
+        
+        if step % 50 == 0:
+            logger.info(f"Step {step}/200: Global Avg Reward: {payload['global']['avg_reward']}", prefix="PROGRESS")
+            # --- DYNAMIC RE-CLUSTERING (The Novelty) ---
+            if step > 0:
+                logger.section(f"Step {step}: Dynamic Re-Clustering Analysis")
+                
+                # 1. Aggregate window metrics
+                node_metrics_window = {}
+                for mnid in trainer.agents:
+                    node_metrics_window[mnid] = {
+                        "total_reward": sum(window_metrics[mnid]["rewards"]),
+                        "avg_waiting_time_per_vehicle": float(np.mean(window_metrics[mnid]["wait_times"])) if window_metrics[mnid]["wait_times"] else 0.0,
+                        "throughput_ratio": float(np.mean(window_metrics[mnid]["throughput"])) if window_metrics[mnid]["throughput"] else 0.5
+                    }
+                
+                # 2. Re-cluster
+                assignments = trainer.cluster_manager.recluster(
+                    node_metrics_window, round_idx=(step // 50) + 1, priority_tiers=trainer.priority_tiers
+                )
+                
+                # 3. Log transitions
+                transitions = trainer.cluster_manager.get_latest_transitions()
+                if transitions["transitions"]:
+                    for tnid, change in transitions["transitions"].items():
+                        logger.warning(
+                            f"Dynamic Transition: {tnid} moved from cluster_{change['from']} to cluster_{change['to']}",
+                            prefix="REFRESH"
+                        )
+                
+                # 4. Display Updated Table
+                cluster_groups = trainer.cluster_manager.get_cluster_groups(assignments)
+                table_headers = ["Cluster ID", "Members", "Avg Reward (Window)", "Avg Wait (s)"]
+                table_rows = []
+                for cid, members in sorted(cluster_groups.items()):
+                    avg_rew = np.mean([node_metrics_window[m]["total_reward"] for m in members])
+                    avg_wait_w = np.mean([node_metrics_window[m]["avg_waiting_time_per_vehicle"] for m in members])
+                    table_rows.append([f"cluster_{cid}", ", ".join(members), f"{avg_rew:.1f}", f"{avg_wait_w:.2f}"])
+                
+                logger.table(table_headers, table_rows)
+
+                # Reset window metrics
+                for rnid in window_metrics:
+                    window_metrics[rnid] = {"rewards": [], "wait_times": [], "throughput": []}
+            
         await asyncio.sleep(0.1)
 
     # Save and Plot
@@ -802,9 +879,23 @@ async def websocket_simulate(websocket: WebSocket):
         algorithm = config.get("algorithm", "Demo (No RL)")
         intersections = config.get("intersections", [])
 
-        print(
-            f"[WS] Starting {algorithm} simulation with {len(intersections)} intersections"
-        )
+        # --- Professional Startup Logging ---
+        logger.header(f"SIMULATION START: {algorithm}")
+        logger.info(f"City: {config.get('city', 'Unknown')}")
+        logger.info(f"Source: {'Real-Time' if config.get('use_tomtom') else 'Mock'}")
+        
+        target_pois = config.get('target_pois') or ['Standard Traffic']
+        if not isinstance(target_pois, list):
+            target_pois = [str(target_pois)]
+        logger.info(f"Target POIs: {', '.join(target_pois)}")
+        
+        logger.section(f"Selected Intersections ({len(intersections)})")
+        table_rows = [
+            [i, ix.get('name', 'Pin'), f"{ix.get('lat')}, {ix.get('lon')}", ix.get('tier_label', 'Normal')]
+            for i, ix in enumerate(intersections)
+        ]
+        logger.table(["ID", "Name", "Coordinates", "Priority"], table_rows)
+        # ------------------------------------
 
         if algorithm == "FedAvg":
             await run_fedavg_simulation(websocket, config)

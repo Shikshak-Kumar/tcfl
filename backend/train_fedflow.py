@@ -9,6 +9,7 @@ from agents.mock_traffic_environment import MockTrafficEnvironment
 from agents.fedflow_agent import FedFlowAgent
 from federated_learning.fedflow_cluster import FedFlowCluster
 from federated_learning.fedflow_server import FedFlowServer
+from utils.logger import logger
 
 
 class FedFlowTrainer:
@@ -46,12 +47,20 @@ class FedFlowTrainer:
         # 3. Level 1: Clusters
         self.clusters = []
         nodes_per_cluster = num_nodes // num_clusters
+        
+        logger.section("Static Cluster Formation")
+        table_headers = ["Cluster ID", "Members"]
+        table_rows = []
+        
         for c in range(num_clusters):
             c_nodes = [
                 f"node_{i}"
                 for i in range(c * nodes_per_cluster, (c + 1) * nodes_per_cluster)
             ]
             self.clusters.append(FedFlowCluster(f"cluster_{c}", c_nodes))
+            table_rows.append([f"cluster_{c}", ", ".join(c_nodes)])
+        
+        logger.table(table_headers, table_rows)
 
         # 4. Level 2: Server
         self.server = FedFlowServer([c.cluster_id for c in self.clusters])
@@ -137,10 +146,8 @@ class FedFlowTrainer:
                     local_state + np.random.normal(0, 0.1, local_state.shape)
                 )
 
-        # Pad or truncate to fixed size for batching if needed
-        # For simplicity, we assume fixed neighbors in this mock step
-        # Let's say max 3 nodes total (focal + 2 neighbors)
-        state_graph = np.stack(node_states[:3])
+        # Focal node + all neighbors
+        state_graph = np.stack(node_states)
         adj_node = np.eye(len(state_graph))
         for i in range(len(state_graph)):
             for j in range(len(state_graph)):
@@ -149,7 +156,7 @@ class FedFlowTrainer:
         return state_graph, adj_node
 
     def run_round(self, round_idx: int):
-        print(f"\n--- FedFlow Round {round_idx} ---")
+        logger.header(f"FedFlow Round {round_idx}")
 
         # 1. Local Training (Nodes)
         node_metrics = {}
@@ -249,12 +256,10 @@ class FedFlowTrainer:
 
         # 5. Standardized Performance Table
         mode_str = "SUMO" if self.gui else "Mock"
-        print(f"\nRound {round_idx} Client Performance Summary:")
-        print(f"{'-' * 90}")
-        print(
-            f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'TP Ratio':<10} | {'Mode':<6}"
-        )
-        print(f"{'-' * 90}")
+        logger.section(f"Round {round_idx} Client Performance Summary")
+        
+        table_headers = ["Client ID", "Cluster", "Reward", "Avg Wait (s)", "TP Ratio"]
+        table_rows = []
 
         round_results = {
             "round": round_idx,
@@ -279,9 +284,7 @@ class FedFlowTrainer:
                     cid = c.cluster_id
                     break
 
-            print(
-                f"{nid:<12} | {cid:<16} | {m.get('total_reward', 0):>12.1f} | {wt:>14.2f} | {tp:>10} | {mode_str:<6}"
-            )
+            table_rows.append([nid, cid, f"{m.get('total_reward', 0):.1f}", f"{wt:.2f}", tp])
 
             # Save per-node results
             node_result = {
@@ -307,6 +310,11 @@ class FedFlowTrainer:
             # Save the local model for this round
             model_path = os.path.join(self.results_dir, f"{nid}_round_{round_idx}_model.pt")
             self.agents[nid].save_model(model_path)
+
+        # Also save the GLOBAL aggregated model for this round
+        global_model_path = os.path.join(self.results_dir, f"global_round_{round_idx}_model.pt")
+        # Just use node_0 since all nodes have global weights now
+        self.agents["node_0"].save_model(global_model_path)
 
         print(f"{'-' * 90}")
 
@@ -372,7 +380,7 @@ if __name__ == "__main__":
     # Automatic cluster selection for performance optimization
     num_clusters = args.clusters
     if num_clusters <= 0:
-        num_clusters = max(1, args.nodes // 4)
+        num_clusters = max(1, (args.nodes + 3) // 4)
         print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} dummy servers for {args.nodes} nodes.")
 
     # Parse target_pois if provided
