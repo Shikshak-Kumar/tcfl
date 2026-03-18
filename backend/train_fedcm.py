@@ -22,7 +22,7 @@ from federated_learning.fedcm_server import FedCMServer
 
 def run_fedcm_simulation(
     num_rounds: int = 5,
-    results_dir: str = "results_fedcm",
+    results_dir: str = "results_fedcm_sumo",
     gui: bool = False,
     num_clients: int = 2,
     proxy_size: int = 1000,
@@ -32,29 +32,26 @@ def run_fedcm_simulation(
 ):
     """
     Run FedCM-RL simulation.
-
-    6-Phase Training Loop:
-    1. Local RL training
-    2. Proxy dataset construction
-    3. Client logit collection
-    4. Ensemble teacher aggregation
-    5. Cross-model distillation
-    6. Evaluation
-
-    Args:
-        num_rounds: Number of federated rounds
-        results_dir: Directory to save results
-        gui: Whether to use SUMO GUI
-        proxy_size: Proxy dataset size
-        weighting_method: "uniform" or "performance"
+    ... [rest of docstring]
     """
 
     # Create results directory
     os.makedirs(results_dir, exist_ok=True)
-
-    print("=" * 70)
-    print("STARTING FedCM-RL SIMULATION")
-    print("Federated Cross-Model Reinforcement Learning")
+    ...
+    # [After the loop ends]
+    # ============================================
+    # Final Summary & Global Model Save
+    # ============================================
+    print("\n" + "=" * 70)
+    print("FedCM-RL SIMULATION COMPLETED")
+    
+    # Save a representative global model (from client_1)
+    mode_label = "sumo" if gui else "mock"
+    global_model_path = os.path.join(results_dir, f"fedcm_global_{mode_label}.pt")
+    clients[0].save_model(global_model_path)
+    print(f"Final representative model saved to {global_model_path}")
+    
+    print(f"Results saved to {results_dir}")
     print("=" * 70)
 
     # Client configurations (heterogeneous architectures)

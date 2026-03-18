@@ -167,20 +167,15 @@ class FedFlowTrainer:
             total_reward = 0
 
             for _ in range(200):  # Steps per episode
-                state_graph, adj_node = self._get_node_graph_state(nid, state)
-                action = agent.get_action(state_graph, adj_node)
+                # FedFlow baseline uses local state (non-graph)
+                action = agent.get_action(state)
                 next_state, reward, done, info = env.step(action)
 
-                next_state_graph, next_adj_node = self._get_node_graph_state(
-                    nid, next_state
-                )
                 agent.remember(
-                    state_graph,
-                    adj_node,
+                    state,
                     action,
                     reward,
-                    next_state_graph,
-                    next_adj_node,
+                    next_state,
                     done,
                 )
 
@@ -330,6 +325,15 @@ class FedFlowTrainer:
         """Run num_rounds of hierarchical federated training."""
         for r in range(1, num_rounds + 1):
             self.run_round(r)
+
+        # Save final global model weights
+        mode_label = "sumo" if self.gui else "mock"
+        global_model_path = os.path.join(
+            self.results_dir, f"fedflow_global_{mode_label}.pt"
+        )
+        # All agents share global weights after broadcast in run_round
+        self.agents["node_0"].save_model(global_model_path)
+        print(f"\n[Final] Global model saved to {global_model_path}")
 
 
 def convert_to_json_serializable(obj):

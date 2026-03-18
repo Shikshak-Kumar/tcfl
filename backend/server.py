@@ -288,10 +288,37 @@ async def get_time_slots(location_id: Optional[str] = None, date: Optional[str] 
         print(f"[API] Error in time-slot-stats: {e}")
         return {"status": "error", "message": str(e)}
 
-def get_latest_model(directory: str):
-    """Find the most recently modified .pt model file in the given directory."""
+def get_algo_model_path(algo_name: str, results_dir: str):
+    """
+    Standardized helper to find the best model for an algorithm.
+    Priority:
+    1. {algo}_global_sumo.pt (Real traffic dynamics)
+    2. {algo}_global_mock.pt (Fallback)
+    3. Most recent .pt file in the directory (Safety Fallback)
+    """
     import glob
 
+    # 1. Check for SUMO-trained global model
+    sumo_path = os.path.join(results_dir, f"{algo_name.lower()}_global_sumo.pt")
+    if os.path.exists(sumo_path):
+        return sumo_path
+
+    # 2. Check for Mock-trained global model
+    mock_path = os.path.join(results_dir, f"{algo_name.lower()}_global_mock.pt")
+    if os.path.exists(mock_path):
+        return mock_path
+
+    # 3. Fallback to most recent modification
+    pattern = os.path.join(results_dir, "*.pt")
+    files = glob.glob(pattern)
+    if not files:
+        return None
+    return max(files, key=os.path.getmtime)
+
+
+def get_latest_model(directory: str):
+    """Deprecated: Use get_algo_model_path instead."""
+    import glob
     pattern = os.path.join(directory, "*.pt")
     files = glob.glob(pattern)
     if not files:
@@ -501,7 +528,7 @@ async def run_fedavg_simulation(websocket, config):
             tomtom_city=config.get("city", "Delhi"),
             target_pois=config.get("target_pois", []),
         )
-        model_path = get_latest_model("results_federated")
+        model_path = get_algo_model_path("federated", "results_federated")
         if model_path:
             try:
                 client.load_model(model_path)
@@ -526,7 +553,7 @@ async def run_fedcm_simulation(websocket, config):
     
     for nid, env in envs.items():
         agent = DQNAgent(state_size=12, action_size=4, hidden_dims=[128, 128, 64])
-        model_path = get_latest_model("results_fedcm_sumo")
+        model_path = get_algo_model_path("fedcm", "results_fedcm_sumo")
         if model_path:
             try:
                 agent.load_model(model_path)
@@ -550,7 +577,7 @@ async def run_fedkd_simulation(websocket, config):
     
     for nid, env in envs.items():
         agent = DQNAgent(state_size=12, action_size=4, hidden_dims=[128, 128, 64])
-        model_path = get_latest_model("results_fedkd_sumo")
+        model_path = get_algo_model_path("fedkd", "results_fedkd_sumo")
         if model_path:
             try:
                 agent.load_model(model_path)
@@ -588,7 +615,7 @@ async def run_fedflow_simulation(websocket, config):
     logger.table(table_headers, table_rows)
 
     states = {}
-    model_path = get_latest_model("results_fedflow")
+    model_path = get_algo_model_path("fedflow", "results_fedflow")
     if model_path:
         for nid in trainer.agents:
             try:
@@ -695,16 +722,7 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
     priority_tiers = {f"node_{i}": ix.get("tier", 3) for i, ix in enumerate(intersections)}
     trainer.priority_tiers = priority_tiers
 
-    # Prefer SUMO-trained weights over mock — more realistic traffic dynamics.
-    # Falls back: sumo global → mock global → any .pt file (most recently modified)
-    _sumo_path = os.path.join("results_adaptflow", "adaptflow_global_sumo.pt")
-    _mock_path = os.path.join("results_adaptflow", "adaptflow_global_mock.pt")
-    if os.path.exists(_sumo_path):
-        model_path = _sumo_path
-    elif os.path.exists(_mock_path):
-        model_path = _mock_path
-    else:
-        model_path = get_latest_model("results_adaptflow")
+    model_path = get_algo_model_path("adaptflow", "results_adaptflow")
 
     if model_path:
         for nid in trainer.agents:

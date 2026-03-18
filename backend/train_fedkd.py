@@ -165,8 +165,18 @@ def run_fedkd_simulation(
         print(f"{'-' * 90}")
         print(f"Round Summary: Avg Waiting Time = {avg_wait:.2f}s")
 
+    # ============================================
+    # Final Summary & Global Model Save
+    # ============================================
     print("\n" + "=" * 60)
     print("FedKD SIMULATION COMPLETED")
+    
+    # Save a representative global model (from client_1)
+    mode_label = "sumo" if gui else "mock"
+    global_model_path = os.path.join(results_dir, f"fedkd_global_{mode_label}.pt")
+    clients[0].save_model(global_model_path)
+    print(f"Final representative model saved to {global_model_path}")
+    
     print(f"Results saved to {results_dir}")
     print("=" * 60)
 

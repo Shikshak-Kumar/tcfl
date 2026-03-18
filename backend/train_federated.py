@@ -415,7 +415,23 @@ def run_multi_client_simulation(
         clients[0].set_parameters(global_params)
         clients[0].save_model(global_model_path)
 
+    # ============================================
+    # Final Summary & Global Model Save
+    # ============================================
+    print("\n" + "=" * 60)
     print("FEDERATED LEARNING SIMULATION COMPLETED")
+    
+    # Save the final global model
+    mode_label = "sumo" if gui else "mock"
+    global_model_path = os.path.join(results_dir, f"federated_global_{mode_label}.pt")
+    
+    # All clients hold the latest global params
+    clients[0].set_parameters(global_params)
+    clients[0].save_model(global_model_path)
+    
+    print(f"Final global model saved to {global_model_path}")
+    print(f"Results saved to {results_dir}")
+    print("=" * 60)
 
 
 def main():

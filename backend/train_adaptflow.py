@@ -382,6 +382,13 @@ class AdaptFlowTrainer:
             # Save the local model for this node as a .pt file (Federated Knowledge)
             model_path = os.path.join(self.results_dir, f"{nid}_round_{round_idx}_model.pt")
             self.agents[nid].save_model(model_path)
+
+            # Save per-node model weights (with mode label)
+            mode_label = "sumo" if self.gui else "mock"
+            mode_model_file = os.path.join(
+                self.results_dir, f"{nid}_round_{round_idx}_{mode_label}.pt"
+            )
+            self.agents[nid].save_model(mode_model_file)
             
         # Also save the GLOBAL aggregated model for this round
         global_model_path = os.path.join(self.results_dir, f"global_round_{round_idx}_model.pt")
@@ -389,13 +396,6 @@ class AdaptFlowTrainer:
         self.agents["node_0"].save_model(global_model_path)
         
         logger.table(table_headers, table_rows)
-
-            # Save per-node model weights
-            mode_label = "sumo" if self.gui else "mock"
-            model_file = os.path.join(
-                self.results_dir, f"{nid}_round_{round_idx}_{mode_label}.pt"
-            )
-            self.agents[nid].save_model(model_file)
 
         print(f"  {'-' * 80}")
 
