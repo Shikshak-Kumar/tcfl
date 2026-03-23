@@ -115,31 +115,32 @@ class DetectPoisRequest(BaseModel):
 
 
 @app.get("/api/adaptflow/analytics")
-async def get_adaptflow_analytics():
+async def get_adaptflow_analytics(source: str = "sim"):
     """
-    Returns the latest clustering history, fingerprints, and similarity matrices
-    for AdaptFlow. Priority:
-    1. Latest cluster_history.json in results_adaptflow/
-    2. Current trainer instance in memory (if simulation is running)
+    Returns clustering history, fingerprints, and similarities for AdaptFlow.
+    Query param 'source' can be 'sim' or 'train'.
     """
-    history_path = os.path.join("results_adaptflow", "cluster_history.json")
+    if source == "train":
+        history_path = os.path.join("results_adaptflow", "training_cluster_history.json")
+    else:
+        history_path = os.path.join("results_adaptflow", "sim_cluster_history.json")
     
-    # 1. Try to load from file (last training/simulation run)
+    # 1. Try to load from requested file
     if os.path.exists(history_path):
         try:
             with open(history_path, "r") as f:
                 return json.load(f)
         except Exception as e:
-            print(f"Error loading cluster history file: {e}")
+            print(f"Error loading {source} cluster history: {e}")
 
-    # 2. Fallback: Mock/Empty structure if no data exists
+    # Fallback/Default if no data exists
     return {
         "num_rounds": 0,
         "cluster_history": [],
         "transitions": [],
         "fingerprints": [],
         "similarity_matrices": [],
-        "message": "No clustering history found. Run a simulation or training session first."
+        "message": f"No {source} history found. Run a session first."
     }
 
 
@@ -943,7 +944,7 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
     try:
         from train_adaptflow import convert_to_json_serializable
         history = trainer.cluster_manager.get_history_summary()
-        history_file = os.path.join("results_adaptflow", "cluster_history.json")
+        history_file = os.path.join("results_adaptflow", "sim_cluster_history.json")
         os.makedirs("results_adaptflow", exist_ok=True)
         with open(history_file, "w") as f:
             json.dump(convert_to_json_serializable(history), f, indent=2)

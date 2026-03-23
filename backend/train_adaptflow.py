@@ -258,6 +258,14 @@ class AdaptFlowTrainer:
         print(f"    - Average Pairwise Similarity Index: {avg_sim:.4f}")
         print(f"    - Mean Fingerprint Magnitude: {mean_fp_mag:.4f}")
 
+        # Similarity Matrix Table
+        sim_headers = ["Similarity"] + [f"n_{nid.split('_')[1]}" for nid in node_ids_sim]
+        sim_rows = []
+        for i, nid in enumerate(node_ids_sim):
+            row = [nid] + [f"{sim_matrix[i][j]:.2f}" for j in range(len(node_ids_sim))]
+            sim_rows.append(row)
+        logger.table(sim_headers, sim_rows)
+
         # ── Step 3: Build Clusters & Aggregate ──────────────────────
         print(f"\n  [Step 3] Hierarchical Aggregation")
         clusters = []
@@ -406,6 +414,17 @@ class AdaptFlowTrainer:
         print(f"\n{'=' * 70}")
         print(f"  ADAPTFLOW TRAINING COMPLETE")
         print(f"  All results saved to {self.results_dir}/")
+        
+        # Save training-specific clustering history for UI Partitioning
+        try:
+            history = self.cluster_manager.get_history_summary()
+            history_file = os.path.join(self.results_dir, "training_cluster_history.json")
+            with open(history_file, "w") as f:
+                json.dump(convert_to_json_serializable(history), f, indent=2)
+            print(f"  [UI] Training analytics history saved to {history_file}")
+        except Exception as e:
+            print(f"  [UI] Warning: Failed to save training analytics: {e}")
+            
         print(f"{'=' * 70}")
 
 

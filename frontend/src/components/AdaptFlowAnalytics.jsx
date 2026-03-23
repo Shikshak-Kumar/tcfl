@@ -14,18 +14,21 @@ export default function AdaptFlowAnalytics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedRound, setSelectedRound] = useState(0);
+  const [source, setSource] = useState('sim');
 
   useEffect(() => {
-    fetchAnalytics();
-    const interval = setInterval(fetchAnalytics, 10000); // Refresh every 10s
+    fetchAnalytics(source);
+    const interval = setInterval(() => fetchAnalytics(source), 10000); // Refresh every 10s
     return () => clearInterval(interval);
-  }, []);
+  }, [source]);
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = async (currentSource) => {
     try {
-      const resp = await axios.get(`${API_BASE}/api/adaptflow/analytics`);
+      const resp = await axios.get(`${API_BASE}/api/adaptflow/analytics?source=${currentSource}`);
       setData(resp.data);
-      if (resp.data.num_rounds > 0 && selectedRound === 0) {
+      if (resp.data.num_rounds > 0 && selectedRound >= resp.data.num_rounds) {
+        setSelectedRound(resp.data.num_rounds - 1);
+      } else if (resp.data.num_rounds > 0 && selectedRound === 0) {
         setSelectedRound(resp.data.num_rounds - 1);
       }
       setLoading(false);
@@ -38,15 +41,29 @@ export default function AdaptFlowAnalytics() {
 
   if (loading) return <div className="p-8 text-center text-slate-400">Loading AdaptFlow Analytics...</div>;
   if (error) return <div className="p-8 text-center text-rose-400">{error}</div>;
-  if (!data || data.num_rounds === 0) {
     return (
-      <div className="glass-panel p-8 text-center text-slate-400 m-4">
-        <Cpu className="w-12 h-12 mx-auto mb-4 opacity-20" />
-        <h3 className="text-lg font-semibold mb-2">No AdaptFlow Data Found</h3>
-        <p className="text-sm">Please run an AdaptFlow simulation or training session to generate clustering analytics.</p>
+      <div className="flex flex-col gap-6 p-4">
+        <div className="flex items-center justify-center gap-4 glass-panel p-4">
+            <button 
+                onClick={() => {setSource('sim'); setLoading(true);}}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${source === 'sim' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+                Simulation Analytics
+            </button>
+            <button 
+                onClick={() => {setSource('train'); setLoading(true);}}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${source === 'train' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+                Training Analytics
+            </button>
+        </div>
+        <div className="glass-panel p-8 text-center text-slate-400">
+          <Cpu className="w-12 h-12 mx-auto mb-4 opacity-20" />
+          <h3 className="text-lg font-semibold mb-2">No {source === 'sim' ? 'Simulation' : 'Training'} Data Found</h3>
+          <p className="text-sm">Please run a {source === 'sim' ? 'simulation' : 'training session'} to generate clustering analytics.</p>
+        </div>
       </div>
     );
-  }
 
   const currentFingerprints = data.fingerprints[selectedRound] || {};
   const currentSimilarity = data.similarity_matrices[selectedRound] || [];
@@ -77,8 +94,23 @@ export default function AdaptFlowAnalytics() {
           </div>
           <div>
             <h2 className="text-lg font-bold text-white">AdaptFlow: Dynamic Clustering Analytics</h2>
-            <p className="text-xs text-slate-400">Pairwise similarity & multi-dim fingerprints across training rounds</p>
+            <p className="text-xs text-slate-400">Pairwise similarity & multi-dim fingerprints ({source === 'sim' ? 'Real-time Simulation' : 'Offline Training'})</p>
           </div>
+        </div>
+
+        <div className="flex items-center gap-2 p-1 bg-slate-900/50 rounded-lg border border-slate-800">
+            <button 
+                onClick={() => {setSource('sim'); setLoading(true);}}
+                className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all ${source === 'sim' ? 'bg-indigo-500 text-white' : 'text-slate-400 hover:text-slate-300'}`}
+            >
+                Simulation
+            </button>
+            <button 
+                onClick={() => {setSource('train'); setLoading(true);}}
+                className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all ${source === 'train' ? 'bg-indigo-500 text-white' : 'text-slate-400 hover:text-slate-300'}`}
+            >
+                Training
+            </button>
         </div>
         
         <div className="flex items-center gap-2">

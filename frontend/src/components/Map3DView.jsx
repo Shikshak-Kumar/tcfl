@@ -38,15 +38,26 @@ function IntersectionBar({ position, height, name, tier }) {
       
       {/* Label */}
       <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-        <Text
-            position={[0, targetHeight + 1, 0]}
-            fontSize={0.3}
-            color="white"
-            anchorX="center"
-            anchorY="middle"
-        >
-            {name}
-        </Text>
+        <group position={[0, targetHeight + 1.2, 0]}>
+            <Text
+                fontSize={0.4}
+                color="white"
+                anchorX="center"
+                anchorY="middle"
+                fontWeight="bold"
+            >
+                {name}
+            </Text>
+            <Text
+                position={[0, -0.4, 0]}
+                fontSize={0.3}
+                color="#94a3b8"
+                anchorX="center"
+                anchorY="middle"
+            >
+                {height.toFixed(2)}
+            </Text>
+        </group>
       </Float>
 
       {/* Ground Circle */}
