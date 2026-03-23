@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import ComparisonView from './components/ComparisonView';
-import { TrendingUp } from 'lucide-react';
+import AdaptFlowAnalytics from './components/AdaptFlowAnalytics';
+import { TrendingUp, BarChart2 } from 'lucide-react';
 import './App.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -50,7 +51,7 @@ function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      if (['landing', 'dashboard', 'comparison'].includes(hash)) {
+      if (['landing', 'dashboard', 'comparison', 'analytics'].includes(hash)) {
         setView(hash);
       }
     };
@@ -171,7 +172,8 @@ function App() {
     simData,
     handleIntersectionsChange,
     poiResults,
-    onCompare: () => setView('comparison')
+    onCompare: () => setView('comparison'),
+    onShowAnalytics: () => setView('analytics')
   };
 
   return (
@@ -180,9 +182,30 @@ function App() {
         <LandingPage onGetStarted={() => setView('dashboard')} />
       ) : view === 'comparison' ? (
         <ComparisonView onBack={() => setView('dashboard')} />
+      ) : view === 'analytics' ? (
+        <div className="relative">
+           <div className="absolute top-4 right-4 z-50 flex gap-2">
+            <button
+              onClick={() => setView('dashboard')}
+              className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold hover:bg-white/10 transition-all flex items-center gap-2"
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+          <AdaptFlowAnalytics />
+        </div>
       ) : (
         <div className="relative">
           <div className="absolute top-4 right-4 z-50 flex gap-2">
+            {simConfig.algorithm === 'AdaptFlow' && (
+              <button
+                onClick={() => setView('analytics')}
+                className="px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-xs font-semibold hover:bg-indigo-500/20 transition-all text-indigo-300 flex items-center gap-2"
+              >
+                <BarChart2 className="w-3.5 h-3.5" />
+                AdaptFlow Analytics
+              </button>
+            )}
             <button
               onClick={() => setView('landing')}
               className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold hover:bg-white/10 transition-all"

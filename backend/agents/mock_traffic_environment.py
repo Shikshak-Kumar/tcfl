@@ -240,6 +240,9 @@ class MockTrafficEnvironment:
                 "duration_s": 30.0,
                 "num_phases": self.num_phases,
             },
+            "lane_summary": self._compute_lane_summary(),
+            "throughput_ratio": float(actual_flux / 3.0) if 'actual_flux' in locals() else 0.5,
+            "max_queue_length": float(max(self.queue_lengths)) if self.queue_lengths else 0.0,
             "gst": self._compute_green_signal_times(),
         }
 

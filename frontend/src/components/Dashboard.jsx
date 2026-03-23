@@ -1,8 +1,10 @@
-import { Activity, Timer, Car, AlertTriangle } from 'lucide-react';
+import { Activity, Timer, Car, AlertTriangle, Box, BarChart3 } from 'lucide-react';
+import { useState } from 'react';
 import Sidebar from './Sidebar';
 import LocationInput from './LocationInput';
 import TimeSlotStats from './TimeSlotStats';
 import LiveCharts from './LiveCharts';
+import Map3DView from './Map3DView';
 
 function StatCard({ icon, label, value, color }) {
   return (
@@ -29,8 +31,10 @@ export default function Dashboard({
   simData, 
   handleIntersectionsChange,
   poiResults,
-  onCompare
+  onCompare,
+  onShowAnalytics
 }) {
+  const [activeTab, setActiveTab] = useState('charts'); // 'charts' or '3d'
   const globalMetrics = latestMetrics?.global || {};
 
   return (
@@ -46,6 +50,7 @@ export default function Dashboard({
           algorithms={systemConfig.algorithms || []}
           poiResults={poiResults}
           onCompare={onCompare}
+          onShowAnalytics={onShowAnalytics}
         />
 
         {/* Location Input */}
@@ -98,54 +103,83 @@ export default function Dashboard({
           />
         </div>
 
-        {/* Per-Intersection Cards */}
-        {numIntersections > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-4">
-            {Object.entries(intersectionData).map(([nid, data]) => (
-              <div key={nid} className="glass-panel p-3 rounded-xl">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">{data.tier === 1 ? '🏥' : data.tier === 2 ? '🏫' : '📍'}</span>
-                  <span className="text-sm font-bold">{data.name}</span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ml-auto ${data.tier === 1 ? 'bg-red-500/20 text-red-300' :
-                      data.tier === 2 ? 'bg-amber-500/20 text-amber-300' :
-                        'bg-blue-500/20 text-blue-300'
-                    }`}>
-                    {data.tier_label}
-                  </span>
-                </div>
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                    <div>
-                    <p className="text-slate-500">Queue</p>
-                    <p className="text-rose-400 font-bold">{data.total_queue}</p>
-                    {data.pareto_rewards && simConfig.algorithm === 'AdaptFlow' && (
-                      <p className="text-[10px] text-rose-300/60">Flow: {data.pareto_rewards.queue.toFixed(1)}</p>
-                    )}
+        {/* View Toggles */}
+        <div className="flex gap-2 mb-4">
+           <button 
+             onClick={() => setActiveTab('charts')}
+             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === 'charts' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
+           >
+             <BarChart3 className="w-4 h-4" />
+             Live Metrics
+           </button>
+           <button 
+             onClick={() => setActiveTab('3d')}
+             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === '3d' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
+           >
+             <Box className="w-4 h-4" />
+             3D Density View
+           </button>
+        </div>
+
+        {activeTab === '3d' ? (
+           <div className="mb-4 h-[600px]">
+              <Map3DView 
+                intersections={simConfig.intersections} 
+                latestMetrics={latestMetrics} 
+              />
+           </div>
+        ) : (
+          <>
+            {/* Per-Intersection Cards */}
+            {numIntersections > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-4">
+                {Object.entries(intersectionData).map(([nid, data]) => (
+                  <div key={nid} className="glass-panel p-3 rounded-xl">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-lg">{data.tier === 1 ? '🏥' : data.tier === 2 ? '🏫' : '📍'}</span>
+                      <span className="text-sm font-bold">{data.name}</span>
+                      <span className={`text-xs px-2 py-0.5 rounded-full ml-auto ${data.tier === 1 ? 'bg-red-500/20 text-red-300' :
+                          data.tier === 2 ? 'bg-amber-500/20 text-amber-300' :
+                            'bg-blue-500/20 text-blue-300'
+                        }`}>
+                        {data.tier_label}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                        <p className="text-slate-500">Queue</p>
+                        <p className="text-rose-400 font-bold">{data.total_queue}</p>
+                        {data.pareto_rewards && simConfig.algorithm === 'AdaptFlow' && (
+                          <p className="text-[10px] text-rose-300/60">Flow: {data.pareto_rewards.queue.toFixed(1)}</p>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-slate-500">Reward</p>
+                        <p className="text-emerald-400 font-bold">{data.reward}</p>
+                        {data.pareto_rewards && simConfig.algorithm === 'AdaptFlow' && (
+                          <p className="text-[10px] text-emerald-300/60">Delay: {data.pareto_rewards.wait.toFixed(1)}</p>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-slate-500">Congestion</p>
+                        <p className="text-amber-400 font-bold">{data.congestion}x</p>
+                        {data.pareto_rewards && simConfig.algorithm === 'AdaptFlow' && (
+                           <p className="text-[10px] text-amber-300/60">Safe: {data.pareto_rewards.safety.toFixed(1)}</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-slate-500">Reward</p>
-                    <p className="text-emerald-400 font-bold">{data.reward}</p>
-                    {data.pareto_rewards && simConfig.algorithm === 'AdaptFlow' && (
-                      <p className="text-[10px] text-emerald-300/60">Delay: {data.pareto_rewards.wait.toFixed(1)}</p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-slate-500">Congestion</p>
-                    <p className="text-amber-400 font-bold">{data.congestion}x</p>
-                    {data.pareto_rewards && simConfig.algorithm === 'AdaptFlow' && (
-                       <p className="text-[10px] text-amber-300/60">Safe: {data.pareto_rewards.safety.toFixed(1)}</p>
-                    )}
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+
+            {/* Historical Time-Slot Data */}
+            {!isRunning && <TimeSlotStats city={simConfig.city} />}
+
+            {/* Charts */}
+            <LiveCharts simData={simData} intersections={simConfig.intersections} />
+          </>
         )}
-
-        {/* Historical Time-Slot Data */}
-        {!isRunning && <TimeSlotStats city={simConfig.city} />}
-
-        {/* Charts */}
-        <LiveCharts simData={simData} intersections={simConfig.intersections} />
       </div>
     </div>
   );

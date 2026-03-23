@@ -114,6 +114,35 @@ class DetectPoisRequest(BaseModel):
     radius_km: float = 1.0
 
 
+@app.get("/api/adaptflow/analytics")
+async def get_adaptflow_analytics():
+    """
+    Returns the latest clustering history, fingerprints, and similarity matrices
+    for AdaptFlow. Priority:
+    1. Latest cluster_history.json in results_adaptflow/
+    2. Current trainer instance in memory (if simulation is running)
+    """
+    history_path = os.path.join("results_adaptflow", "cluster_history.json")
+    
+    # 1. Try to load from file (last training/simulation run)
+    if os.path.exists(history_path):
+        try:
+            with open(history_path, "r") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error loading cluster history file: {e}")
+
+    # 2. Fallback: Mock/Empty structure if no data exists
+    return {
+        "num_rounds": 0,
+        "cluster_history": [],
+        "transitions": [],
+        "fingerprints": [],
+        "similarity_matrices": [],
+        "message": "No clustering history found. Run a simulation or training session first."
+    }
+
+
 @app.get("/api/config")
 async def get_config():
     print("[API] GET /api/config requested by frontend")
@@ -292,23 +321,30 @@ def get_algo_model_path(algo_name: str, results_dir: str):
     """
     Standardized helper to find the best model for an algorithm.
     Priority:
-    1. {algo}_global_sumo.pt (Real traffic dynamics)
-    2. {algo}_global_mock.pt (Fallback)
-    3. Most recent .pt file in the directory (Safety Fallback)
+    1. saved_models/{algo}/model.pt (Optimized TorchScript for Production)
+    2. {algo}_global_sumo.pt (Real traffic dynamics)
+    3. {algo}_global_mock.pt (Fallback)
+    4. Most recent .pt file in the directory (Safety Fallback)
     """
     import glob
 
-    # 1. Check for SUMO-trained global model
+    # 1. NEW: Check for optimized production model
+    prod_path = os.path.join("saved_models", algo_name.lower(), "model.pt")
+    if os.path.exists(prod_path):
+        print(f"[Model] Prioritizing optimized production model: {prod_path}")
+        return prod_path
+
+    # 2. Check for SUMO-trained global model
     sumo_path = os.path.join(results_dir, f"{algo_name.lower()}_global_sumo.pt")
     if os.path.exists(sumo_path):
         return sumo_path
 
-    # 2. Check for Mock-trained global model
+    # 3. Check for Mock-trained global model
     mock_path = os.path.join(results_dir, f"{algo_name.lower()}_global_mock.pt")
     if os.path.exists(mock_path):
         return mock_path
 
-    # 3. Fallback to most recent modification
+    # 4. Fallback to most recent modification
     pattern = os.path.join(results_dir, "*.pt")
     files = glob.glob(pattern)
     if not files:
@@ -748,7 +784,7 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
         states[nid] = env.reset()
 
     # Track window metrics for dynamic re-clustering
-    window_metrics = {nid: {"rewards": [], "wait_times": [], "throughput": []} for nid in trainer.agents}
+    window_metrics = {nid: {"rewards": [], "wait_times": [], "throughput": [], "queues": [], "max_queues": [], "congested": []} for nid in trainer.agents}
 
     session_history = []
     session_dir = viz_manager.create_session_folder()
@@ -823,6 +859,9 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
             window_metrics[nid]["rewards"].append(reward)
             window_metrics[nid]["wait_times"].append(avg_wait)
             window_metrics[nid]["throughput"].append(info.get("throughput_ratio", 0.5))
+            window_metrics[nid]["queues"].append(total_queue)
+            window_metrics[nid]["max_queues"].append(info.get("max_queue_length", 0))
+            window_metrics[nid]["congested"].append(info.get("lane_summary", {}).get("num_congested_lanes", 0))
 
         payload = {
             "step": step,
@@ -847,7 +886,10 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
                     node_metrics_window[mnid] = {
                         "total_reward": sum(window_metrics[mnid]["rewards"]),
                         "avg_waiting_time_per_vehicle": float(np.mean(window_metrics[mnid]["wait_times"])) if window_metrics[mnid]["wait_times"] else 0.0,
-                        "throughput_ratio": float(np.mean(window_metrics[mnid]["throughput"])) if window_metrics[mnid]["throughput"] else 0.5
+                        "average_queue_length": float(np.mean(window_metrics[mnid]["queues"])) if window_metrics[mnid]["queues"] else 0.0,
+                        "throughput_ratio": float(np.mean(window_metrics[mnid]["throughput"])) if window_metrics[mnid]["throughput"] else 0.5,
+                        "max_queue_length": float(np.max(window_metrics[mnid]["max_queues"])) if window_metrics[mnid]["max_queues"] else 0.0,
+                        "lane_summary": {"num_congested_lanes": float(np.mean(window_metrics[mnid]["congested"])) if window_metrics[mnid]["congested"] else 0.0}
                     }
                 
                 # 2. Re-cluster
@@ -877,7 +919,18 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
 
                 # Reset window metrics
                 for rnid in window_metrics:
-                    window_metrics[rnid] = {"rewards": [], "wait_times": [], "throughput": []}
+                    window_metrics[rnid] = {"rewards": [], "wait_times": [], "throughput": [], "queues": [], "max_queues": [], "congested": []}
+                
+                # NEW: Save cluster history for real-time analytics view
+                try:
+                    from train_adaptflow import convert_to_json_serializable
+                    history = trainer.cluster_manager.get_history_summary()
+                    history_file = os.path.join("results_adaptflow", "cluster_history.json")
+                    os.makedirs("results_adaptflow", exist_ok=True)
+                    with open(history_file, "w") as f:
+                        json.dump(convert_to_json_serializable(history), f, indent=2)
+                except Exception as e:
+                    print(f"[AdaptFlow] Warning: Failed to save periodic history: {e}")
             
         await asyncio.sleep(0.1)
 
@@ -885,6 +938,18 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
     viz_manager.save_session_data(session_dir, config, session_history)
     summary = viz_manager._compute_summary(session_history)
     viz_manager.generate_plots(session_dir, "AdaptFlow", summary)
+
+    # NEW: Save cluster history for analytics view
+    try:
+        from train_adaptflow import convert_to_json_serializable
+        history = trainer.cluster_manager.get_history_summary()
+        history_file = os.path.join("results_adaptflow", "cluster_history.json")
+        os.makedirs("results_adaptflow", exist_ok=True)
+        with open(history_file, "w") as f:
+            json.dump(convert_to_json_serializable(history), f, indent=2)
+        print(f"[AdaptFlow] Clustering analytics history saved to {history_file}")
+    except Exception as e:
+        print(f"[AdaptFlow] Warning: Failed to save clustering history: {e}")
 
 
 @app.websocket("/api/simulate")

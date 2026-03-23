@@ -3,6 +3,7 @@ import json
 import torch
 import numpy as np
 import random
+from utils.model_exporter import ModelExporter, get_deployment_metadata
 from typing import List, Dict, Tuple, Optional
 
 from agents.mock_traffic_environment import MockTrafficEnvironment
@@ -253,7 +254,7 @@ class FedFlowTrainer:
         mode_str = "SUMO" if self.gui else "Mock"
         logger.section(f"Round {round_idx} Client Performance Summary")
         
-        table_headers = ["Client ID", "Cluster", "Reward", "Avg Wait (s)", "TP Ratio"]
+        table_headers = ["Client ID", "Cluster", "Reward", "Wait", "Queue", "TP Ratio"]
         table_rows = []
 
         round_results = {
@@ -266,12 +267,10 @@ class FedFlowTrainer:
 
         for nid in sorted(self.agents.keys()):
             m = node_metrics[nid]
-            wt = m.get("avg_waiting_time_per_vehicle", 0.0)
-            if self.gui:
-                wt = m.get("total_waiting_time", 0.0) / max(
-                    1, m.get("total_vehicles", 1)
-                )
-            tp = m.get("throughput_ratio", 0)
+            wt = f"{m.get('avg_waiting_time_per_vehicle', 0):.2f}s"
+            tp = f"{m.get('throughput_ratio', 0):.2f}"
+            rw = f"{m.get('total_reward', 0):.1f}"
+            aq = f"{m.get('average_queue_length', 0):.1f}"
 
             cid = "Unknown"
             for c in self.clusters:
@@ -279,7 +278,7 @@ class FedFlowTrainer:
                     cid = c.cluster_id
                     break
 
-            table_rows.append([nid, cid, f"{m.get('total_reward', 0):.1f}", f"{wt:.2f}", tp])
+            table_rows.append([nid, cid, rw, wt, aq, tp])
 
             # Save per-node results
             node_result = {
@@ -335,6 +334,19 @@ class FedFlowTrainer:
         self.agents["node_0"].save_model(global_model_path)
         print(f"\n[Final] Global model saved to {global_model_path}")
 
+        # 4. EXPORT TO Production (saved_models/)
+        try:
+            print(f"\n[Production] Exporting optimized model for deployment...")
+            agent = self.agents["node_0"]
+            metadata = get_deployment_metadata("fedflow", agent)
+            metadata["mode"] = mode_label
+            metadata["source_weights"] = global_model_path
+            
+            save_path = os.path.join("saved_models", "fedflow")
+            ModelExporter.export(agent.policy_net, metadata, save_path)
+        except Exception as e:
+            print(f"[Production] Warning: Export failed: {e}")
+
 
 def convert_to_json_serializable(obj):
     """Convert numpy/torch types to Python native types for JSON serialization."""
@@ -382,10 +394,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Automatic cluster selection for performance optimization
-    num_clusters = args.clusters
     if num_clusters <= 0:
         num_clusters = max(1, (args.nodes + 3) // 4)
-        print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} dummy servers for {args.nodes} nodes.")
+        print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} aggregation servers for {args.nodes} nodes.")
 
     # Parse target_pois if provided
     target_pois_list = None

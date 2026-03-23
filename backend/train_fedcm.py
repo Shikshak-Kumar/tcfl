@@ -13,8 +13,10 @@ Based on:
 import argparse
 import os
 import json
+from utils.model_exporter import ModelExporter, get_deployment_metadata
 import numpy as np
-from typing import List, Dict
+from typing import List, Dict, Optional
+from utils.logger import logger
 
 from federated_learning.fedcm_client import FedCMClient
 from federated_learning.fedcm_server import FedCMServer
@@ -284,25 +286,24 @@ def run_fedcm_simulation(
         # ============================================
         # 7. Standardized Performance Table
         mode_str = "SUMO" if gui else "Mock"
-        print(f"\nRound {round_num} Client Performance Summary:")
-        print(f"{'-' * 90}")
-        print(
-            f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'Throughput':<10} | {'TP Ratio':<9} | {'Mode':<6}"
-        )
-        print(f"{'-' * 90}")
+        logger.section(f"Round {round_num} End-to-End Performance Summary")
+        
+        table_headers = ["Client ID", "Architecture", "Reward", "Wait", "Queue", "TP Ratio"]
+        table_rows = []
+
         for i, client in enumerate(clients):
             e = eval_results[i]
             t = training_metrics[i]
-            # Use data from configs list
             arch_str = f"{client_configs[i]['hidden_dims']}"
-            tp = e.get("throughput", 0)
-            ratio = e.get("throughput_ratio", 0.0)
+            
+            wt = f"{e.get('waiting_time', 0):.2f}s"
+            aq = f"{e.get('queue_length', 0):.1f}"
+            tp_ratio = f"{e.get('throughput_ratio', 0.0):.2f}"
+            reward = f"{t.get('average_reward', 0):.1f}"
 
-            print(
-                f"{client.client_id:<12} | {arch_str:<16} | {t['average_reward']:>12.1f} | "
-                f"{e.get('waiting_time', 0):>14.2f} | {tp:>10} | {ratio:>9.2f} | {mode_str:<6}"
-            )
-        print(f"{'-' * 90}")
+            table_rows.append([client.client_id, arch_str, reward, wt, aq, tp_ratio])
+        
+        logger.table(table_headers, table_rows)
 
         # Communication cost analysis
         comm_cost = server.get_communication_cost(len(clients))
@@ -321,6 +322,24 @@ def run_fedcm_simulation(
     # ============================================
     print("\n" + "=" * 70)
     print("FedCM-RL SIMULATION COMPLETED")
+    
+    # 4. EXPORT TO Production (saved_models/)
+    try:
+        # Use representative weights from client 0
+        global_model_path = os.path.join(results_dir, f"fedcm_global_{mode_label}.pt")
+        clients[0].save_model(global_model_path)
+        
+        print(f"\n[Production] Exporting optimized model for deployment...")
+        agent = clients[0].agent
+        metadata = get_deployment_metadata("fedcm", agent)
+        metadata["mode"] = mode_label
+        metadata["source_weights"] = global_model_path
+        
+        save_path = os.path.join("saved_models", "fedcm")
+        ModelExporter.export(agent.policy_net, metadata, save_path)
+    except Exception as e:
+        print(f"[Production] Warning: Export failed: {e}")
+
     print(f"Results saved to {results_dir}")
     print("=" * 70)
 

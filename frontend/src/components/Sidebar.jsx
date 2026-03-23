@@ -1,6 +1,6 @@
-import { Activity, Zap, ZapOff, TrendingUp } from 'lucide-react';
+import { Activity, Zap, ZapOff, TrendingUp, BarChart2 } from 'lucide-react';
 
-export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggleSimulation, cities, algorithms, poiResults, onCompare }) {
+export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggleSimulation, cities, algorithms, poiResults, onCompare, onShowAnalytics }) {
   const handleChange = (key, value) => {
     onConfigChange({ ...simConfig, [key]: value });
   };
@@ -145,6 +145,17 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
         <TrendingUp className="w-4 h-4" />
         Compare Algorithms
       </button>
+
+      {/* Deep Analytics Button (AdaptFlow Only) */}
+      {simConfig.algorithm === 'AdaptFlow' && (
+        <button
+            onClick={onShowAnalytics}
+            className="w-full mb-2 flex items-center justify-center gap-2 px-4 py-3 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-xl transition-all font-bold text-amber-300"
+        >
+            <BarChart2 className="w-4 h-4" />
+            Clustering Analytics
+        </button>
+      )}
 
       {/* Run Simulation Button */}
       <button

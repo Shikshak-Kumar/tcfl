@@ -38,6 +38,11 @@ results/
 *.pt
 *.pb
 
+# Keep production models
+!saved_models/
+!saved_models/**/*.pt
+!saved_models/**/*.json
+
 # SUMO output
 trafficCongestionControlUsingFederatedLearning/results/
 

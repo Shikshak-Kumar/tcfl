@@ -139,7 +139,17 @@ class DQNAgent:
     
     def load_model(self, filepath: str):
         try:
-            self.policy_net.load_state_dict(torch.load(filepath, map_location=self.device))
+            # Check if it's a TorchScript model or a state_dict
+            # TorchScript models are usually loaded with torch.jit.load
+            if filepath.endswith(".pt") and "saved_models" in filepath:
+                try:
+                    self.policy_net = torch.jit.load(filepath, map_location=self.device)
+                    print(f"Loaded optimized TorchScript model from {filepath}")
+                except Exception:
+                    # Fallback to standard loading if JIT load fails
+                    self.policy_net.load_state_dict(torch.load(filepath, map_location=self.device))
+            else:
+                self.policy_net.load_state_dict(torch.load(filepath, map_location=self.device))
         except RuntimeError as e:
             if "size mismatch" in str(e):
                 raise RuntimeError(

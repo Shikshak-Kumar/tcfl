@@ -294,5 +294,12 @@ class AdaptFlowAgent:
         torch.save(self.policy_net.state_dict(), filepath)
 
     def load_model(self, filepath: str):
-        self.policy_net.load_state_dict(torch.load(filepath, map_location=self.device))
+        if filepath.endswith(".pt") and "saved_models" in filepath:
+            try:
+                self.policy_net = torch.jit.load(filepath, map_location=self.device)
+                print(f"Loaded optimized TorchScript model from {filepath}")
+            except Exception:
+                self.policy_net.load_state_dict(torch.load(filepath, map_location=self.device))
+        else:
+            self.policy_net.load_state_dict(torch.load(filepath, map_location=self.device))
         self.update_target_network()

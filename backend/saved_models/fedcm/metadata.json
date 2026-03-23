@@ -1,0 +1,13 @@
+{
+  "algorithm": "fedcm",
+  "version": "1.0.0",
+  "state_size": 12,
+  "action_size": 4,
+  "device": "cpu",
+  "preprocessing": {
+    "normalization": "none",
+    "clipping": "none"
+  },
+  "source_weights": "random",
+  "export_method": "torch_jit_script"
+}

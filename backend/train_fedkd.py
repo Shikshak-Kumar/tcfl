@@ -4,6 +4,8 @@ import json
 import argparse
 import numpy as np
 import torch
+from utils.logger import logger
+from utils.model_exporter import ModelExporter, get_deployment_metadata
 from federated_learning.fedkd_server import TrafficFedKDServer
 from federated_learning.fedkd_client import TrafficFedKDClient
 
@@ -147,22 +149,24 @@ def run_fedkd_simulation(
 
         # Standardized Performance Table
         mode_str = "SUMO" if gui else "Mock"
-        print(f"\nRound {round_num + 1} Client Performance Summary:")
-        print(f"{'-' * 90}")
-        print(
-            f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'Throughput':<10} | {'Mode':<6}"
-        )
-        print(f"{'-' * 90}")
+        logger.section(f"Round {round_num + 1} End-to-End Performance Summary")
+        
+        table_headers = ["Client ID", "Architecture", "Reward", "Wait", "Queue", "TP Ratio"]
+        table_rows = []
+
         for i, client in enumerate(clients):
             m = eval_results[i]
             t = train_metrics[i]
-            # Use data from configs list
             arch_str = f"{client_configs[i]['hidden_dims']}"
-            tp = m.get("total_vehicles", 0)
-            print(
-                f"{client.client_id:<12} | {arch_str:<16} | {t['average_reward']:>12.1f} | {m['waiting_time']:>14.2f} | {tp:>10} | {mode_str:<6}"
-            )
-        print(f"{'-' * 90}")
+            
+            wt = f"{m.get('waiting_time', 0):.2f}s"
+            aq = f"{m.get('queue_length', 0):.1f}"
+            ratio = f"{m.get('throughput_ratio', 0.0):.2f}"
+            reward = f"{t.get('average_reward', 0):.1f}"
+
+            table_rows.append([client.client_id, arch_str, reward, wt, aq, ratio])
+        
+        logger.table(table_headers, table_rows)
         print(f"Round Summary: Avg Waiting Time = {avg_wait:.2f}s")
 
     # ============================================
@@ -176,6 +180,19 @@ def run_fedkd_simulation(
     global_model_path = os.path.join(results_dir, f"fedkd_global_{mode_label}.pt")
     clients[0].save_model(global_model_path)
     print(f"Final representative model saved to {global_model_path}")
+
+    # 4. EXPORT TO Production (saved_models/)
+    try:
+        print(f"\n[Production] Exporting optimized model for deployment...")
+        agent = clients[0].agent
+        metadata = get_deployment_metadata("fedkd", agent)
+        metadata["mode"] = mode_label
+        metadata["source_weights"] = global_model_path
+        
+        save_path = os.path.join("saved_models", "fedkd")
+        ModelExporter.export(agent.policy_net, metadata, save_path)
+    except Exception as e:
+        print(f"[Production] Warning: Export failed: {e}")
     
     print(f"Results saved to {results_dir}")
     print("=" * 60)

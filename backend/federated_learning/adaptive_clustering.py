@@ -327,7 +327,7 @@ class AdaptiveClusterManager:
 
     def get_history_summary(self) -> Dict:
         """Full summary for saving to JSON."""
-        return {
+        history = {
             "num_rounds": len(self.cluster_history),
             "cluster_history": self.cluster_history,
             "transitions": self.transition_log,
@@ -335,4 +335,12 @@ class AdaptiveClusterManager:
                 {nid: fp.tolist() for nid, fp in fps.items()}
                 for fps in self.fingerprint_history
             ],
+            "similarity_matrices": []
         }
+        
+        # Add similarity matrices for each round
+        for fps in self.fingerprint_history:
+            _, sim = cosine_similarity_matrix(fps)
+            history["similarity_matrices"].append(sim.tolist())
+            
+        return history

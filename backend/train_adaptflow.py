@@ -18,6 +18,7 @@ import json
 import torch
 import numpy as np
 import random
+from utils.model_exporter import ModelExporter, get_deployment_metadata
 from typing import List, Dict, Tuple, Optional
 
 from agents.mock_traffic_environment import MockTrafficEnvironment
@@ -29,7 +30,6 @@ from federated_learning.adaptive_clustering import (
     extract_fingerprint,
     cosine_similarity_matrix,
 )
-from federated_learning.message_broker import broker
 from utils.logger import logger
 
 
@@ -169,7 +169,6 @@ class AdaptFlowTrainer:
         state_graph = np.stack(node_states)
         adj_node = np.ones((len(state_graph), len(state_graph)))
         return state_graph, adj_node
-
     def run_round(self, round_idx: int):
         """Execute one round of AdaptFlow training."""
         logger.header(f"ADAPTFLOW ROUND {round_idx}")
@@ -186,26 +185,14 @@ class AdaptFlowTrainer:
 
             for _ in range(200):
                 state_graph, adj_node = self._get_node_graph_state(nid, state)
-
-                # Internal agent history is updated, and sequence is used for action
                 state_seq = agent._get_sequence(state_graph)
                 action = agent.get_action(state_graph, adj_node)
                 next_state, reward, done, info = env.step(action)
 
-                next_state_graph, next_adj_node = self._get_node_graph_state(
-                    nid, next_state
-                )
+                next_state_graph, next_adj_node = self._get_node_graph_state(nid, next_state)
                 next_state_seq = agent._get_sequence(next_state_graph)
 
-                agent.remember(
-                    state_seq,
-                    adj_node,
-                    action,
-                    reward,
-                    next_state_seq,
-                    next_adj_node,
-                    done,
-                )
+                agent.remember(state_seq, adj_node, action, reward, next_state_seq, next_adj_node, done)
 
                 state = next_state
                 total_reward += reward
@@ -228,45 +215,51 @@ class AdaptFlowTrainer:
             if self.gui:
                 env.stop_simulation()
 
-        # ── Step 2: Dynamic Re-Clustering (THE NOVELTY) ─────────────
+        # ── Step 2: Dynamic Re-Clustering ───────────────────────────
         if round_idx == 1:
             logger.section("Step 2: Initial Static Clustering")
             nodes_per_cluster = self.num_nodes // self.num_clusters
             assignments = {f"node_{i}": i // nodes_per_cluster for i in range(self.num_nodes)}
-            # Still record fingerprints for Round 2
+            # Initial clustering logic calls manager
             self.cluster_manager.recluster(node_metrics, round_idx, self.priority_tiers)
             self.cluster_manager.cluster_history[-1] = assignments
         else:
             logger.section("Step 2: Dynamic Re-Clustering (Congestion + POI Priority)")
-            assignments = self.cluster_manager.recluster(
-                node_metrics, round_idx, self.priority_tiers
-            )
+            assignments = self.cluster_manager.recluster(node_metrics, round_idx, self.priority_tiers)
 
             transitions = self.cluster_manager.get_latest_transitions()
             if transitions["transitions"]:
                 for nid, change in transitions["transitions"].items():
-                    logger.warning(
-                        f"Cluster Transition: {nid} moved from cluster_{change['from']} to cluster_{change['to']}",
-                        prefix="REFRESH"
-                    )
+                    logger.warning(f"Cluster Transition: {nid} moved from cluster_{change['from']} to cluster_{change['to']}", prefix="REFRESH")
             else:
                 logger.success("Cluster membership remains stable.", prefix="STABLE")
 
-        # Display Cluster Formation Table
+        # Cluster metadata for metrics
         cluster_groups = self.cluster_manager.get_cluster_groups(assignments)
-        table_headers = ["Cluster ID", "Members", "Avg Reward (Prev)", "Avg Wait (s)"]
+        
+        # Display Cluster Performance Summary
+        table_headers = ["Cluster ID", "Nodes", "Avg Reward", "Avg Wait (s)", "Avg Queue"]
         table_rows = []
         for cid, members in sorted(cluster_groups.items()):
             avg_rew = np.mean([node_metrics[nid].get("total_reward", 0) for nid in members])
             avg_wait = np.mean([node_metrics[nid].get("avg_waiting_time_per_vehicle", 0) for nid in members])
-            table_rows.append([f"cluster_{cid}", ", ".join(members), f"{avg_rew:.1f}", f"{avg_wait:.2f}"])
+            avg_queue = np.mean([node_metrics[nid].get("average_queue_length", 0) for nid in members])
+            table_rows.append([f"cluster_{cid}", len(members), f"{avg_rew:.1f}", f"{avg_wait:.2f}s", f"{avg_queue:.2f}"])
         
         logger.table(table_headers, table_rows)
+        
+        # Clustering Insights
+        fingerprints = self.cluster_manager.fingerprint_history[-1]
+        node_ids_sim, sim_matrix = cosine_similarity_matrix(fingerprints)
+        avg_sim = np.mean(sim_matrix)
+        mean_fp_mag = np.mean([np.linalg.norm(fp) for fp in fingerprints.values()])
+        
+        print(f"\n    [Clustering Analysis] Round {round_idx}")
+        print(f"    - Average Pairwise Similarity Index: {avg_sim:.4f}")
+        print(f"    - Mean Fingerprint Magnitude: {mean_fp_mag:.4f}")
 
         # ── Step 3: Build Clusters & Aggregate ──────────────────────
         print(f"\n  [Step 3] Hierarchical Aggregation")
-
-        # 3a. Create FedFlowCluster instances for current assignments
         clusters = []
         cluster_ids = sorted(cluster_groups.keys())
         for cid in cluster_ids:
@@ -274,20 +267,18 @@ class AdaptFlowTrainer:
             cluster = FedFlowCluster(f"cluster_{cid}", members)
             clusters.append(cluster)
 
-        # 3b. Intra-cluster aggregation (Level 1)
+        # Intra-cluster aggregation
         cluster_params = []
         cluster_info = {}
         for cluster in clusters:
             for nid in cluster.agent_ids:
                 throughput = node_metrics[nid].get("throughput_ratio", 0.0)
-                # Ensure minimum flow to avoid division by zero in aggregation
                 cluster.update_flow(nid, max(float(throughput), 0.01))
 
             agent_params = [self.agents[nid].get_weights() for nid in cluster.agent_ids]
             c_weights = cluster.aggregate_intra_cluster(agent_params)
             cluster_params.append(c_weights)
 
-            # Apply cluster weights to all members
             for nid in cluster.agent_ids:
                 self.agents[nid].set_weights(c_weights)
 
@@ -295,42 +286,22 @@ class AdaptFlowTrainer:
             cluster_info[cluster.cluster_id] = {
                 "avg_flow": avg_flow,
                 "members": cluster.agent_ids,
-                "congestion": float(
-                    np.mean(
-                        [
-                            node_metrics[nid].get("avg_waiting_time_per_vehicle", 0)
-                            for nid in cluster.agent_ids
-                        ]
-                    )
-                ),
+                "congestion": float(np.mean([node_metrics[nid].get("avg_waiting_time_per_vehicle", 0) for nid in cluster.agent_ids])),
             }
-            print(
-                f"    {cluster.cluster_id}: {len(cluster.agent_ids)} nodes, "
-                f"avg_flow={avg_flow:.3f}, "
-                f"congestion={cluster_info[cluster.cluster_id]['congestion']:.2f}s"
-            )
+            print(f"    {cluster.cluster_id}: {len(cluster.agent_ids)} nodes, avg_flow={avg_flow:.3f}, congestion={cluster_info[cluster.cluster_id]['congestion']:.2f}s")
 
-        # 3c. Inter-cluster aggregation (Level 2)
+        # Inter-cluster aggregation
         self.server = FedFlowServer([c.cluster_id for c in clusters])
         for cluster in clusters:
             cong = cluster_info[cluster.cluster_id]["congestion"]
             self.server.update_cluster_metrics(cluster.cluster_id, cong)
 
         global_weights = self.server.aggregate_inter_cluster(cluster_params)
-
-        # 3d. Global broadcast
         for nid in self.agents:
             self.agents[nid].set_weights(global_weights)
 
-        print(f"    Global Meta-Aggregation Complete.")
-
-        # ── Step 4: Save Results ────────────────────────────────────
+        # ── Step 4: Save & Final Terminal Table ─────────────────────
         mode_str = "SUMO" if self.gui else "Mock"
-
-        # Similarity matrix for analysis
-        fingerprints = self.cluster_manager.fingerprint_history[-1]
-        node_ids_sim, sim_matrix = cosine_similarity_matrix(fingerprints)
-
         round_results = {
             "round": round_idx,
             "mode": mode_str,
@@ -345,10 +316,8 @@ class AdaptFlowTrainer:
             "nodes": {},
         }
 
-        # Performance table
-        logger.section(f"Round {round_idx} Performance Summary")
-        
-        table_headers = ["Node", "Cluster", "Reward", "AvgWait(s)", "TP Ratio", "Loss"]
+        logger.section(f"Round {round_idx} End-to-End Performance Summary")
+        table_headers = ["Node", "Cluster", "Reward", "Wait Time", "Queue", "TP Ratio", "Loss"]
         table_rows = []
 
         for nid in sorted(self.agents.keys()):
@@ -356,56 +325,33 @@ class AdaptFlowTrainer:
             wt = m.get("avg_waiting_time_per_vehicle", 0.0)
             tp = m.get("throughput_ratio", 0)
             cid = assignments.get(nid, -1)
+            aq = m.get("average_queue_length", 0.0)
 
-            table_rows.append([nid, f"cluster_{cid}", f"{m.get('total_reward', 0):.1f}", f"{wt:.2f}", tp, f"{node_losses.get(nid, 0.0):.4f}"])
+            table_rows.append([nid, f"cluster_{cid}", f"{m.get('total_reward', 0):.1f}", f"{wt:.2f}s", f"{aq:.1f}", f"{tp:.2f}", f"{node_losses.get(nid, 0.0):.4f}"])
         
             round_results["nodes"][nid] = {
-                "node_id": nid,
-                "cluster_id": f"cluster_{cid}",
-                "total_reward": m.get("total_reward", 0),
-                "avg_waiting_time": wt,
-                "loss": node_losses.get(nid, 0.0),
-                "metrics": m,
+                "node_id": nid, "cluster_id": f"cluster_{cid}", "total_reward": m.get("total_reward", 0),
+                "avg_waiting_time": wt, "loss": node_losses.get(nid, 0.0), "metrics": m,
             }
 
-            # Save per-node JSON
-            node_file = os.path.join(
-                self.results_dir, f"{nid}_round_{round_idx}_eval.json"
-            )
+            # Save JSONs
+            node_file = os.path.join(self.results_dir, f"{nid}_round_{round_idx}_eval.json")
             with open(node_file, "w") as f:
-                json.dump(
-                    convert_to_json_serializable(round_results["nodes"][nid]),
-                    f,
-                    indent=2,
-                )
+                json.dump(convert_to_json_serializable(round_results["nodes"][nid]), f, indent=2)
             
-            # Save the local model for this node as a .pt file (Federated Knowledge)
+            # Save models
             model_path = os.path.join(self.results_dir, f"{nid}_round_{round_idx}_model.pt")
             self.agents[nid].save_model(model_path)
 
-            # Save per-node model weights (with mode label)
-            mode_label = "sumo" if self.gui else "mock"
-            mode_model_file = os.path.join(
-                self.results_dir, f"{nid}_round_{round_idx}_{mode_label}.pt"
-            )
-            self.agents[nid].save_model(mode_model_file)
-            
-        # Also save the GLOBAL aggregated model for this round
-        global_model_path = os.path.join(self.results_dir, f"global_round_{round_idx}_model.pt")
-        # Just use node_0 since all nodes have global weights now
-        self.agents["node_0"].save_model(global_model_path)
-        
         logger.table(table_headers, table_rows)
-
-        print(f"  {'-' * 80}")
-
+        
         # Save round summary
         round_file = os.path.join(self.results_dir, f"round_{round_idx}_summary.json")
         with open(round_file, "w") as f:
             json.dump(convert_to_json_serializable(round_results), f, indent=2)
 
         self.all_round_results.append(round_results)
-        logger.success(f"Results saved to {self.results_dir}/")
+        logger.success(f"Round {round_idx} data persisted to {self.results_dir}/")
 
     def train(self, num_rounds: int = 3):
         """Run full AdaptFlow training."""
@@ -444,66 +390,24 @@ class AdaptFlowTrainer:
             f"  [{mode_label.upper()} Model] Global weights saved to {global_model_path}"
         )
 
+        # 4. EXPORT TO Production (saved_models/)
+        try:
+            print(f"\n  [Production] Exporting optimized model for deployment...")
+            agent = self.agents["node_0"]
+            metadata = get_deployment_metadata("adaptflow", agent)
+            metadata["mode"] = mode_label
+            metadata["source_weights"] = global_model_path
+            
+            save_path = os.path.join("saved_models", "adaptflow")
+            ModelExporter.export(agent.policy_net, metadata, save_path)
+        except Exception as e:
+            print(f"  [Production] Warning: Export failed: {e}")
+
         print(f"\n{'=' * 70}")
         print(f"  ADAPTFLOW TRAINING COMPLETE")
         print(f"  All results saved to {self.results_dir}/")
         print(f"{'=' * 70}")
 
-    async def train_pubsub_demo(self, num_rounds: int = 2):
-        """
-        Special demo mode to specifically show the 2-Server PUB-SUB architecture
-        requested for the dummy server requirement.
-        """
-        logger.header("ADAPTFLOW: 2-SERVER PUB-SUB DUMMY DEMO")
-
-        # 1. Define Dummy Servers
-        server_alpha = FedFlowServer(cluster_ids=["node_0", "node_1"])
-        server_beta = FedFlowServer(
-            cluster_ids=["node_2", "node_3", "node_4", "node_5"]
-        )
-
-        # 2. Setup Callbacks
-        async def make_server_cb(server_obj, name):
-            async def cb(message):
-                print(
-                    f"    [PUB-SUB] {name} received update from {message['id']} (Congestion: {message['congestion']:.1f})"
-                )
-                await server_obj.handle_update_topic(message)
-
-            return cb
-
-        broker.subscribe(
-            "cluster_alpha/updates",
-            await make_server_cb(server_alpha, "Server-Alpha (Edge 1)"),
-        )
-        broker.subscribe(
-            "cluster_beta/updates",
-            await make_server_cb(server_beta, "Server-Beta (Edge 2)"),
-        )
-
-        for r in range(1, num_rounds + 1):
-            print(f"\n[Round {r}] Starting PUB-SUB Message Flow...")
-
-            # Simulated Node Activity
-            for i in range(self.num_nodes):
-                nid = f"node_{i}"
-                topic = "cluster_alpha/updates" if i < 2 else "cluster_beta/updates"
-
-                payload = {
-                    "id": nid,
-                    "weights": self.agents[nid].get_weights(),
-                    "congestion": random.uniform(10, 40),
-                }
-                await broker.publish(topic, payload)
-
-            # Servers aggregate (simulated)
-            print(
-                f"  [Global] Servers Alpha & Beta aggregated their respective clusters via PUB-SUB."
-            )
-
-        print("\n" + "!" * 70)
-        print("  PUB-SUB DUMMY SERVER DEMO FINISHED")
-        print("!" * 70)
 
 
 def convert_to_json_serializable(obj):
@@ -562,7 +466,7 @@ if __name__ == "__main__":
     num_clusters = args.clusters
     if num_clusters <= 0:
         num_clusters = max(1, (args.nodes + 3) // 4)
-        print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} dummy servers for {args.nodes} nodes.")
+        print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} aggregation servers for {args.nodes} nodes.")
 
     target_pois_list = None
     if args.target_pois:
@@ -576,11 +480,4 @@ if __name__ == "__main__":
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
     )
-    if args.gui or args.use_tomtom:
-        trainer.train(num_rounds=args.rounds)
-    else:
-        # Run the standard train AND the PUB-SUB demo to show the dummy server work
-        trainer.train(num_rounds=args.rounds)
-        import asyncio
-
-        asyncio.run(trainer.train_pubsub_demo(num_rounds=1))
+    trainer.train(num_rounds=args.rounds)

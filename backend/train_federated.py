@@ -11,6 +11,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from federated_learning.fl_server import TrafficFLServer
 from federated_learning.fl_client import TrafficFLClient
 from utils.visualization import TrafficVisualizer
+from utils.logger import logger
 import flwr as fl
 
 
@@ -371,23 +372,24 @@ def run_multi_client_simulation(
 
         # Standardized Performance Table
         mode_str = "SUMO" if gui else "Mock"
-        print(f"\nRound {round_num + 1} Client Performance Summary:")
-        print(f"{'-' * 90}")
-        print(
-            f"{'Client ID':<12} | {'Context/Arch':<16} | {'Reward':<12} | {'Avg Wait (s)':<14} | {'Throughput':<10} | {'Mode':<6}"
-        )
-        print(f"{'-' * 90}")
+        logger.section(f"Round {round_num + 1} End-to-End Performance Summary")
+        
+        table_headers = ["Client ID", "Context", "Reward", "Wait", "Queue", "TP Ratio"]
+        table_rows = []
+
         for i, cfg in enumerate(client_configs):
             e = eval_metrics_list[i]
             t = train_metrics_list[i].get("average_reward", 0)
             cid = cfg["id"]
-            # Get short config name for context
             ctx = os.path.basename(cfg["config"])
-            tp = e.get("total_vehicles", 0)
-            print(
-                f"{cid:<12} | {ctx:<16} | {t:>12.1f} | {e.get('waiting_time', 0):>14.2f} | {tp:>10} | {mode_str:<6}"
-            )
-        print(f"{'-' * 90}")
+            
+            wt = f"{e.get('waiting_time', 0):.2f}s"
+            aq = f"{e.get('queue_length', 0):.1f}"
+            ratio = f"{e.get('throughput_ratio', 0.0):.2f}"
+            
+            table_rows.append([cid, ctx, f"{t:.1f}", wt, aq, ratio])
+        
+        logger.table(table_headers, table_rows)
 
         print(f"\nRound {round_num + 1} Summary:")
         print(f"  Avg Reward: {avg_reward:.4f}")

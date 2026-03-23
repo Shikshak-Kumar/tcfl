@@ -49,24 +49,8 @@ class FedFlowServer:
         self.global_weights = global_weights
         return global_weights
         
-    async def handle_update_topic(self, message: Dict):
-        """Callback for PUB-SUB topic: handles incoming model from a cluster/node."""
-        cid = message.get("id")
-        weights = message.get("weights")
-        congestion = message.get("congestion", 1.0)
-        
-        print(f"[Server] Received update from {cid} via PUB-SUB")
-        self.update_cluster_metrics(cid, congestion)
-        
-        # In a real async server, we might wait for N nodes before aggregating
-        # For the dummy server, we'll just store and can be triggered to aggregate
-        return weights
-
-    async def broadcast_global_weights(self, broker, topic: str):
-        """Publish global weights to the broker."""
-        if self.global_weights:
-            print(f"[Server] Broadcasting global weights to {topic}")
-            await broker.publish(topic, self.global_weights)
+    def get_global_weights(self) -> Dict[str, torch.Tensor]:
+        return self.global_weights
 
     def get_global_weights(self) -> Dict[str, torch.Tensor]:
         return self.global_weights
