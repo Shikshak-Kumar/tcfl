@@ -5,6 +5,7 @@ import time
 import json
 from datetime import datetime
 import numpy as np
+from typing import List, Optional
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -12,6 +13,11 @@ from federated_learning.fl_server import TrafficFLServer
 from federated_learning.fl_client import TrafficFLClient
 from utils.visualization import TrafficVisualizer
 from utils.logger import logger
+from utils.sumo_scenario import (
+    distinct_results_dir,
+    effective_sumo_scenario,
+    get_sumo_config_paths,
+)
 import flwr as fl
 
 
@@ -252,6 +258,7 @@ def run_multi_client_simulation(
     num_clients: int = 2,
     use_tomtom: bool = False,
     target_pois: Optional[List[str]] = None,
+    sumo_scenario: Optional[str] = None,
 ):
     print("STARTING STANDARD FEDERATED LEARNING SIMULATION")
 
@@ -260,10 +267,7 @@ def run_multi_client_simulation(
     os.makedirs(results_dir, exist_ok=True)
 
     # Heterogeneous map data configurations
-    base_configs = [
-        "sumo_configs2/osm_client1.sumocfg",
-        "sumo_configs2/osm_client2.sumocfg",
-    ]
+    base_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
 
     from utils.tomtom_api import CITY_COORDINATES
     cities = list(CITY_COORDINATES.keys())
@@ -449,11 +453,23 @@ def main():
 
     parser.add_argument("--rounds", type=int, default=3)
     parser.add_argument("--clients", type=int, default=2)
-    parser.add_argument("--results-dir", type=str, default="results_federated")
+    parser.add_argument(
+        "--results-dir",
+        type=str,
+        default="results_federated",
+        help="Sim mode only: default + china → results_federated_china",
+    )
     parser.add_argument("--gui", action="store_true")
 
     parser.add_argument("--use-tomtom", action="store_true", help="Use real-time TomTom traffic data")
     parser.add_argument("--target-pois", type=str, default=None, help="Comma-separated list of target POI categories")
+    parser.add_argument(
+        "--sumo-scenario",
+        type=str,
+        default=None,
+        choices=["default", "china"],
+        help="SUMO map preset (omit to use SUMO_SCENARIO env)",
+    )
 
     args = parser.parse_args()
     print("Running mode:", args.mode)
@@ -467,13 +483,21 @@ def main():
     if args.mode == "server":
         run_server(num_rounds=args.rounds, min_clients=args.clients)
     elif args.mode == "sim":
+        results_dir = distinct_results_dir(
+            "results_federated", args.results_dir, args.sumo_scenario
+        )
+        if results_dir != args.results_dir:
+            print(
+                f"[FedAvg sim] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+            )
         run_multi_client_simulation(
-            results_dir=args.results_dir,
+            results_dir=results_dir,
             gui=args.gui,
             num_rounds=args.rounds,
             num_clients=args.clients,
             use_tomtom=args.use_tomtom,
             target_pois=target_pois_list,
+            sumo_scenario=args.sumo_scenario,
         )
 
 if __name__ == "__main__":

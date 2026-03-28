@@ -17,6 +17,7 @@ from utils.traffic_db import insert_record, get_time_slot_aggregations, TIME_SLO
 import datetime
 from utils.viz_manager import viz_manager
 from utils.logger import logger
+from utils.sumo_scenario import effective_sumo_scenario, get_sumo_config_paths
 
 # Note: Algorithm and ML imports (FedFlowTrainer, FL clients, etc.) 
 # have been moved inside the simulation functions (lazy loading)
@@ -153,6 +154,7 @@ async def get_config():
             for city, coords in CITY_COORDINATES.items()
         },
         "algorithms": ["Demo (No RL)", "FedFlow", "FedAvg", "FedCM", "FedKD", "AdaptFlow"],
+        "sumo_scenarios": ["default", "china"],
         "poi_categories": [
             "healthcare",
             "education",
@@ -318,39 +320,51 @@ async def get_time_slots(location_id: Optional[str] = None, date: Optional[str] 
         print(f"[API] Error in time-slot-stats: {e}")
         return {"status": "error", "message": str(e)}
 
-def get_algo_model_path(algo_name: str, results_dir: str):
+def get_algo_model_path(
+    algo_name: str,
+    results_dir: str,
+    sumo_scenario: Optional[str] = None,
+):
     """
-    Standardized helper to find the best model for an algorithm.
-    Priority:
-    1. saved_models/{algo}/model.pt (Optimized TorchScript for Production)
-    2. {algo}_global_sumo.pt (Real traffic dynamics)
-    3. {algo}_global_mock.pt (Fallback)
-    4. Most recent .pt file in the directory (Safety Fallback)
+    Resolve checkpoint for inference. China runs use *_china folders when scenario is china.
+    Order: production TorchScript under saved_models, then global .pt in results dirs.
     """
     import glob
 
-    # 1. NEW: Check for optimized production model
-    prod_path = os.path.join("saved_models", algo_name.lower(), "model.pt")
-    if os.path.exists(prod_path):
-        print(f"[Model] Prioritizing optimized production model: {prod_path}")
-        return prod_path
+    scenario = effective_sumo_scenario(sumo_scenario)
+    algo_l = algo_name.lower()
 
-    # 2. Check for SUMO-trained global model
-    sumo_path = os.path.join(results_dir, f"{algo_name.lower()}_global_sumo.pt")
-    if os.path.exists(sumo_path):
-        return sumo_path
+    prod_candidates = []
+    if scenario == "china":
+        prod_candidates.append(os.path.join("saved_models", f"{algo_l}_china", "model.pt"))
+    prod_candidates.append(os.path.join("saved_models", algo_l, "model.pt"))
 
-    # 3. Check for Mock-trained global model
-    mock_path = os.path.join(results_dir, f"{algo_name.lower()}_global_mock.pt")
-    if os.path.exists(mock_path):
-        return mock_path
+    for prod_path in prod_candidates:
+        if os.path.exists(prod_path):
+            print(f"[Model] Prioritizing optimized production model: {prod_path}")
+            return prod_path
 
-    # 4. Fallback to most recent modification
-    pattern = os.path.join(results_dir, "*.pt")
-    files = glob.glob(pattern)
-    if not files:
-        return None
-    return max(files, key=os.path.getmtime)
+    result_dirs = []
+    if scenario == "china":
+        if not results_dir.endswith("_china"):
+            result_dirs.append(f"{results_dir}_china")
+        result_dirs.append(results_dir)
+    else:
+        result_dirs.append(results_dir)
+
+    for rd in result_dirs:
+        sumo_path = os.path.join(rd, f"{algo_l}_global_sumo.pt")
+        if os.path.exists(sumo_path):
+            return sumo_path
+        mock_path = os.path.join(rd, f"{algo_l}_global_mock.pt")
+        if os.path.exists(mock_path):
+            return mock_path
+        pattern = os.path.join(rd, "*.pt")
+        files = glob.glob(pattern)
+        if files:
+            return max(files, key=os.path.getmtime)
+
+    return None
 
 
 def get_latest_model(directory: str):
@@ -516,13 +530,10 @@ async def run_multi_inference(websocket, envs_agents, intersections, config, max
     viz_manager.generate_plots(session_dir, algo_name, summary)
 
 
-def _create_envs_for_intersections(intersections, use_tomtom, target_pois=None):
+def _create_envs_for_intersections(intersections, use_tomtom, target_pois=None, sumo_scenario=None):
     """Helper: create one environment per intersection."""
     envs = {}
-    sumo_configs = [
-        "sumo_configs2/osm_client1.sumocfg",
-        "sumo_configs2/osm_client2.sumocfg",
-    ]
+    sumo_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
     from utils.tomtom_api import get_api_key
     api_key = get_api_key()
 
@@ -551,6 +562,7 @@ def _create_envs_for_intersections(intersections, use_tomtom, target_pois=None):
 async def run_fedavg_simulation(websocket, config):
     intersections = config.get("intersections", [])
     use_tomtom = config.get("use_tomtom", True)
+    sumo_paths = get_sumo_config_paths(effective_sumo_scenario(config.get("sumo_scenario")))
 
     envs_agents = {}
     from federated_learning.fl_client import TrafficFLClient
@@ -559,13 +571,15 @@ async def run_fedavg_simulation(websocket, config):
         nid = f"node_{i}"
         client = TrafficFLClient(
             client_id=nid,
-            sumo_config_path=f"sumo_configs2/osm_client{(i % 2) + 1}.sumocfg",
+            sumo_config_path=sumo_paths[i % len(sumo_paths)],
             gui=False,
             use_tomtom=use_tomtom,
             tomtom_city=config.get("city", "Delhi"),
             target_pois=config.get("target_pois", []),
         )
-        model_path = get_algo_model_path("federated", "results_federated")
+        model_path = get_algo_model_path(
+            "federated", "results_federated", config.get("sumo_scenario")
+        )
         if model_path:
             try:
                 client.load_model(model_path)
@@ -584,13 +598,17 @@ async def run_fedcm_simulation(websocket, config):
     use_tomtom = config.get("use_tomtom", True)
     target_pois = config.get("target_pois", [])
     
-    envs = _create_envs_for_intersections(intersections, use_tomtom, target_pois=target_pois)
+    envs = _create_envs_for_intersections(
+        intersections, use_tomtom, target_pois=target_pois, sumo_scenario=config.get("sumo_scenario")
+    )
     envs_agents = {}
     from agents.dqn_agent import DQNAgent # Baseline architecture
     
     for nid, env in envs.items():
         agent = DQNAgent(state_size=12, action_size=4, hidden_dims=[128, 128, 64])
-        model_path = get_algo_model_path("fedcm", "results_fedcm_sumo")
+        model_path = get_algo_model_path(
+            "fedcm", "results_fedcm_sumo", config.get("sumo_scenario")
+        )
         if model_path:
             try:
                 agent.load_model(model_path)
@@ -608,13 +626,17 @@ async def run_fedkd_simulation(websocket, config):
     use_tomtom = config.get("use_tomtom", True)
     target_pois = config.get("target_pois", [])
     
-    envs = _create_envs_for_intersections(intersections, use_tomtom, target_pois=target_pois)
+    envs = _create_envs_for_intersections(
+        intersections, use_tomtom, target_pois=target_pois, sumo_scenario=config.get("sumo_scenario")
+    )
     envs_agents = {}
     from agents.dqn_agent import DQNAgent # Baseline architecture
     
     for nid, env in envs.items():
         agent = DQNAgent(state_size=12, action_size=4, hidden_dims=[128, 128, 64])
-        model_path = get_algo_model_path("fedkd", "results_fedkd_sumo")
+        model_path = get_algo_model_path(
+            "fedkd", "results_fedkd_sumo", config.get("sumo_scenario")
+        )
         if model_path:
             try:
                 agent.load_model(model_path)
@@ -640,7 +662,9 @@ async def run_fedflow_simulation(websocket, config):
     )
 
     # Override the environments with intersection-specific ones
-    envs = _create_envs_for_intersections(intersections, use_tomtom, target_pois=target_pois)
+    envs = _create_envs_for_intersections(
+        intersections, use_tomtom, target_pois=target_pois, sumo_scenario=config.get("sumo_scenario")
+    )
     trainer.envs = envs
 
     # Display Cluster Table
@@ -652,7 +676,9 @@ async def run_fedflow_simulation(websocket, config):
     logger.table(table_headers, table_rows)
 
     states = {}
-    model_path = get_algo_model_path("fedflow", "results_fedflow")
+    model_path = get_algo_model_path(
+        "fedflow", "results_fedflow", config.get("sumo_scenario")
+    )
     if model_path:
         for nid in trainer.agents:
             try:
@@ -752,14 +778,18 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
     )
 
     # Override the environments with intersection-specific ones
-    envs = _create_envs_for_intersections(intersections, use_tomtom, target_pois=target_pois)
+    envs = _create_envs_for_intersections(
+        intersections, use_tomtom, target_pois=target_pois, sumo_scenario=config.get("sumo_scenario")
+    )
     trainer.envs = envs
 
     # Assign priority tiers from frontend pins
     priority_tiers = {f"node_{i}": ix.get("tier", 3) for i, ix in enumerate(intersections)}
     trainer.priority_tiers = priority_tiers
 
-    model_path = get_algo_model_path("adaptflow", "results_adaptflow")
+    model_path = get_algo_model_path(
+        "adaptflow", "results_adaptflow", config.get("sumo_scenario")
+    )
 
     if model_path:
         for nid in trainer.agents:

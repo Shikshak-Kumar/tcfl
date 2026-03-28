@@ -31,6 +31,12 @@ from federated_learning.adaptive_clustering import (
     cosine_similarity_matrix,
 )
 from utils.logger import logger
+from utils.sumo_scenario import (
+    distinct_results_dir,
+    effective_sumo_scenario,
+    get_sumo_config_paths,
+    deployment_model_subdir,
+)
 
 
 class AdaptFlowTrainer:
@@ -51,6 +57,7 @@ class AdaptFlowTrainer:
         results_dir: str = "results_adaptflow",
         use_tomtom: bool = False,
         target_pois: Optional[List[str]] = None,
+        sumo_scenario: Optional[str] = None,
     ):
         self.num_nodes = num_nodes
         self.num_clusters = num_clusters
@@ -58,6 +65,7 @@ class AdaptFlowTrainer:
         self.results_dir = results_dir
         self.use_tomtom = use_tomtom
         self.target_pois = target_pois
+        self.sumo_scenario = sumo_scenario
         os.makedirs(self.results_dir, exist_ok=True)
         self.all_round_results = []
 
@@ -79,10 +87,7 @@ class AdaptFlowTrainer:
         self.server = None
 
         # 5. Environments
-        self.sumo_configs = [
-            "sumo_configs2/osm_client1.sumocfg",
-            "sumo_configs2/osm_client2.sumocfg",
-        ]
+        self.sumo_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
         self.envs: Dict[str, object] = {}
         self._setup_environments()
 
@@ -405,8 +410,12 @@ class AdaptFlowTrainer:
             metadata = get_deployment_metadata("adaptflow", agent)
             metadata["mode"] = mode_label
             metadata["source_weights"] = global_model_path
-            
-            save_path = os.path.join("saved_models", "adaptflow")
+            metadata["sumo_scenario"] = effective_sumo_scenario(self.sumo_scenario)
+
+            save_path = os.path.join(
+                "saved_models",
+                deployment_model_subdir("adaptflow", self.sumo_scenario),
+            )
             ModelExporter.export(agent.policy_net, metadata, save_path)
         except Exception as e:
             print(f"  [Production] Warning: Export failed: {e}")
@@ -460,7 +469,7 @@ if __name__ == "__main__":
         "--results-dir",
         type=str,
         default="results_adaptflow",
-        help="Results directory",
+        help="Results directory (default + --sumo-scenario china → results_adaptflow_china)",
     )
     parser.add_argument(
         "--gui",
@@ -478,8 +487,23 @@ if __name__ == "__main__":
         default=None,
         help="Comma-separated list of target POI categories",
     )
+    parser.add_argument(
+        "--sumo-scenario",
+        type=str,
+        default=None,
+        choices=["default", "china"],
+        help="SUMO map preset (omit flag to use SUMO_SCENARIO env)",
+    )
 
     args = parser.parse_args()
+
+    results_dir = distinct_results_dir(
+        "results_adaptflow", args.results_dir, args.sumo_scenario
+    )
+    if results_dir != args.results_dir:
+        print(
+            f"[AdaptFlow] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+        )
 
     # Automatic cluster selection for performance optimization
     num_clusters = args.clusters
@@ -495,8 +519,9 @@ if __name__ == "__main__":
         num_nodes=args.nodes,
         num_clusters=num_clusters,
         gui=args.gui,
-        results_dir=args.results_dir,
+        results_dir=results_dir,
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
+        sumo_scenario=args.sumo_scenario,
     )
     trainer.train(num_rounds=args.rounds)

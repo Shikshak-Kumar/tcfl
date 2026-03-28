@@ -5,6 +5,12 @@ import argparse
 import numpy as np
 import torch
 from utils.logger import logger
+from utils.sumo_scenario import (
+    deployment_model_subdir,
+    distinct_results_dir,
+    effective_sumo_scenario,
+    get_sumo_config_paths,
+)
 from utils.model_exporter import ModelExporter, get_deployment_metadata
 from federated_learning.fedkd_server import TrafficFedKDServer
 from federated_learning.fedkd_client import TrafficFedKDClient
@@ -29,7 +35,13 @@ def convert_to_json_serializable(obj):
 
 
 def run_fedkd_simulation(
-    num_rounds=15, results_dir="results_fedkd_sumo", gui=False, num_clients=2, use_tomtom=False, target_pois=None
+    num_rounds=15,
+    results_dir="results_fedkd_sumo",
+    gui=False,
+    num_clients=2,
+    use_tomtom=False,
+    target_pois=None,
+    sumo_scenario=None,
 ):
     print("STARTING FEDKD SIMULATION")
 
@@ -39,11 +51,7 @@ def run_fedkd_simulation(
     server.initialize_proxy_dataset(state_size=12)
 
     # Heterogeneous architecture configuration
-    # Real SUMO client configs with separate trip files
-    base_configs = [
-        "sumo_configs2/osm_client1.sumocfg",
-        "sumo_configs2/osm_client2.sumocfg",
-    ]
+    base_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
 
     # Standardized architecture template
     arch_templates = [{"hidden": [128, 128, 64]}, {"hidden": [128, 128, 64]}]
@@ -188,8 +196,12 @@ def run_fedkd_simulation(
         metadata = get_deployment_metadata("fedkd", agent)
         metadata["mode"] = mode_label
         metadata["source_weights"] = global_model_path
-        
-        save_path = os.path.join("saved_models", "fedkd")
+        metadata["sumo_scenario"] = effective_sumo_scenario(sumo_scenario)
+
+        save_path = os.path.join(
+            "saved_models",
+            deployment_model_subdir("fedkd", sumo_scenario),
+        )
         ModelExporter.export(agent.policy_net, metadata, save_path)
     except Exception as e:
         print(f"[Production] Warning: Export failed: {e}")
@@ -210,7 +222,7 @@ if __name__ == "__main__":
         "--results-dir",
         type=str,
         default="results_fedkd_sumo",
-        help="Results directory",
+        help="Results directory (default + china → results_fedkd_sumo_china)",
     )
     parser.add_argument(
         "--gui",
@@ -228,9 +240,24 @@ if __name__ == "__main__":
         default=None,
         help="Comma-separated list of target POI categories (e.g. healthcare,education)",
     )
+    parser.add_argument(
+        "--sumo-scenario",
+        type=str,
+        default=None,
+        choices=["default", "china"],
+        help="SUMO map preset (omit to use SUMO_SCENARIO env)",
+    )
 
     args = parser.parse_args()
-    
+
+    results_dir = distinct_results_dir(
+        "results_fedkd_sumo", args.results_dir, args.sumo_scenario
+    )
+    if results_dir != args.results_dir:
+        print(
+            f"[FedKD] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+        )
+
     # Parse target_pois if provided
     target_pois_list = None
     if args.target_pois:
@@ -238,9 +265,10 @@ if __name__ == "__main__":
 
     run_fedkd_simulation(
         num_rounds=args.rounds,
-        results_dir=args.results_dir,
+        results_dir=results_dir,
         gui=args.gui,
         num_clients=args.num_clients,
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
+        sumo_scenario=args.sumo_scenario,
     )

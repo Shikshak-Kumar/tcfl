@@ -1,0 +1,19 @@
+{
+  "total_reward": -99.83999999999983,
+  "average_reward": -0.45798165137614605,
+  "total_steps": 218,
+  "waiting_time": 2496.0,
+  "queue_length": 11.44954128440367,
+  "training": {
+    "average_reward": -341.17833333333334,
+    "total_steps": 622,
+    "average_loss": 0.013943585041012467,
+    "episodes": 3
+  },
+  "architecture": [
+    128,
+    128,
+    64
+  ],
+  "round": 1
+}

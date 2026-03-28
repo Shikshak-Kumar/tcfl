@@ -17,6 +17,12 @@ from utils.model_exporter import ModelExporter, get_deployment_metadata
 import numpy as np
 from typing import List, Dict, Optional
 from utils.logger import logger
+from utils.sumo_scenario import (
+    deployment_model_subdir,
+    distinct_results_dir,
+    effective_sumo_scenario,
+    get_sumo_config_paths,
+)
 
 from federated_learning.fedcm_client import FedCMClient
 from federated_learning.fedcm_server import FedCMServer
@@ -31,37 +37,14 @@ def run_fedcm_simulation(
     weighting_method: str = "performance",
     use_tomtom: bool = False,
     target_pois: Optional[List[str]] = None,
+    sumo_scenario: Optional[str] = None,
 ):
-    """
-    Run FedCM-RL simulation.
-    ... [rest of docstring]
-    """
+    """Run FedCM-RL simulation."""
 
-    # Create results directory
     os.makedirs(results_dir, exist_ok=True)
-    ...
-    # [After the loop ends]
-    # ============================================
-    # Final Summary & Global Model Save
-    # ============================================
-    print("\n" + "=" * 70)
-    print("FedCM-RL SIMULATION COMPLETED")
-    
-    # Save a representative global model (from client_1)
-    mode_label = "sumo" if gui else "mock"
-    global_model_path = os.path.join(results_dir, f"fedcm_global_{mode_label}.pt")
-    clients[0].save_model(global_model_path)
-    print(f"Final representative model saved to {global_model_path}")
-    
-    print(f"Results saved to {results_dir}")
-    print("=" * 70)
 
     # Client configurations (heterogeneous architectures)
-    # Real SUMO client configs with separate trip files
-    base_configs = [
-        "sumo_configs2/osm_client1.sumocfg",
-        "sumo_configs2/osm_client2.sumocfg",
-    ]
+    base_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
 
     # Architecture templates: [Large, Medium] - heterogeneous DQN architectures
     arch_templates = [
@@ -260,7 +243,7 @@ def run_fedcm_simulation(
 
             # Save combined metrics
             save_path = os.path.join(
-                results_dir, f"{client.client_id}_round _{round_num}_eval.json"
+                results_dir, f"{client.client_id}_round_{round_num}_eval.json"
             )
             combined_metrics = {
                 **eval_metrics,
@@ -322,7 +305,9 @@ def run_fedcm_simulation(
     # ============================================
     print("\n" + "=" * 70)
     print("FedCM-RL SIMULATION COMPLETED")
-    
+
+    mode_label = "sumo" if gui else "mock"
+
     # 4. EXPORT TO Production (saved_models/)
     try:
         # Use representative weights from client 0
@@ -334,8 +319,12 @@ def run_fedcm_simulation(
         metadata = get_deployment_metadata("fedcm", agent)
         metadata["mode"] = mode_label
         metadata["source_weights"] = global_model_path
-        
-        save_path = os.path.join("saved_models", "fedcm")
+        metadata["sumo_scenario"] = effective_sumo_scenario(sumo_scenario)
+
+        save_path = os.path.join(
+            "saved_models",
+            deployment_model_subdir("fedcm", sumo_scenario),
+        )
         ModelExporter.export(agent.policy_net, metadata, save_path)
     except Exception as e:
         print(f"[Production] Warning: Export failed: {e}")
@@ -369,7 +358,10 @@ if __name__ == "__main__":
         "--num-clients", type=int, default=2, help="Number of simulated clients"
     )
     parser.add_argument(
-        "--results-dir", type=str, default="results_fedcm", help="Results directory"
+        "--results-dir",
+        type=str,
+        default="results_fedcm_sumo",
+        help="Results directory (default + china → results_fedcm_sumo_china)",
     )
     parser.add_argument(
         "--gui",
@@ -397,8 +389,23 @@ if __name__ == "__main__":
         default=None,
         help="Comma-separated list of target POI categories (e.g. healthcare,education)",
     )
+    parser.add_argument(
+        "--sumo-scenario",
+        type=str,
+        default=None,
+        choices=["default", "china"],
+        help="SUMO map preset (omit to use SUMO_SCENARIO env)",
+    )
 
     args = parser.parse_args()
+
+    results_dir = distinct_results_dir(
+        "results_fedcm_sumo", args.results_dir, args.sumo_scenario
+    )
+    if results_dir != args.results_dir:
+        print(
+            f"[FedCM] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+        )
 
     # Parse target_pois if provided
     target_pois_list = None
@@ -407,11 +414,12 @@ if __name__ == "__main__":
 
     run_fedcm_simulation(
         num_rounds=args.rounds,
-        results_dir=args.results_dir,
+        results_dir=results_dir,
         gui=args.gui,
         num_clients=args.num_clients,
         proxy_size=args.proxy_size,
         weighting_method=args.weighting,
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
+        sumo_scenario=args.sumo_scenario,
     )

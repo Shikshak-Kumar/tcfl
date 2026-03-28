@@ -11,6 +11,12 @@ from agents.fedflow_agent import FedFlowAgent
 from federated_learning.fedflow_cluster import FedFlowCluster
 from federated_learning.fedflow_server import FedFlowServer
 from utils.logger import logger
+from utils.sumo_scenario import (
+    deployment_model_subdir,
+    distinct_results_dir,
+    effective_sumo_scenario,
+    get_sumo_config_paths,
+)
 
 
 class FedFlowTrainer:
@@ -26,6 +32,7 @@ class FedFlowTrainer:
         results_dir: str = "results_fedflow",
         use_tomtom: bool = False,
         target_pois: Optional[List[str]] = None,
+        sumo_scenario: Optional[str] = None,
     ):
         self.num_nodes = num_nodes
         self.num_clusters = num_clusters
@@ -33,6 +40,7 @@ class FedFlowTrainer:
         self.results_dir = results_dir
         self.use_tomtom = use_tomtom
         self.target_pois = target_pois
+        self.sumo_scenario = sumo_scenario
         os.makedirs(self.results_dir, exist_ok=True)
         self.all_round_results = []
 
@@ -68,10 +76,7 @@ class FedFlowTrainer:
 
         # 5. Environments (Mock or SUMO)
         # Use real SUMO configs, cycling through available ones
-        self.sumo_configs = [
-            "sumo_configs2/osm_client1.sumocfg",
-            "sumo_configs2/osm_client2.sumocfg",
-        ]
+        self.sumo_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
         self.envs = {}
         if not self.gui:
             if self.use_tomtom:
@@ -341,8 +346,12 @@ class FedFlowTrainer:
             metadata = get_deployment_metadata("fedflow", agent)
             metadata["mode"] = mode_label
             metadata["source_weights"] = global_model_path
-            
-            save_path = os.path.join("saved_models", "fedflow")
+            metadata["sumo_scenario"] = effective_sumo_scenario(self.sumo_scenario)
+
+            save_path = os.path.join(
+                "saved_models",
+                deployment_model_subdir("fedflow", self.sumo_scenario),
+            )
             ModelExporter.export(agent.policy_net, metadata, save_path)
         except Exception as e:
             print(f"[Production] Warning: Export failed: {e}")
@@ -374,7 +383,10 @@ if __name__ == "__main__":
     parser.add_argument("--nodes", type=int, default=6, help="Number of nodes")
     parser.add_argument("--clusters", type=int, default=0, help="Number of clusters (0 for auto)")
     parser.add_argument(
-        "--results-dir", type=str, default="results_fedflow", help="Results directory"
+        "--results-dir",
+        type=str,
+        default="results_fedflow",
+        help="Results directory (default + --sumo-scenario china → results_fedflow_china)",
     )
     parser.add_argument(
         "--gui",
@@ -390,10 +402,26 @@ if __name__ == "__main__":
         default=None,
         help="Comma-separated list of target POI categories",
     )
+    parser.add_argument(
+        "--sumo-scenario",
+        type=str,
+        default=None,
+        choices=["default", "china"],
+        help="SUMO map preset: default=osm clients, china=sumo_configs_china (omit flag to use SUMO_SCENARIO env)",
+    )
 
     args = parser.parse_args()
 
+    results_dir = distinct_results_dir(
+        "results_fedflow", args.results_dir, args.sumo_scenario
+    )
+    if results_dir != args.results_dir:
+        print(
+            f"[FedFlow] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+        )
+
     # Automatic cluster selection for performance optimization
+    num_clusters = args.clusters
     if num_clusters <= 0:
         num_clusters = max(1, (args.nodes + 3) // 4)
         print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} aggregation servers for {args.nodes} nodes.")
@@ -407,14 +435,16 @@ if __name__ == "__main__":
         num_nodes=args.nodes,
         num_clusters=num_clusters,
         gui=args.gui,
+        results_dir=results_dir,
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
+        sumo_scenario=args.sumo_scenario,
     )
     trainer.train(num_rounds=args.rounds)
 
     # Save final combined results
-    final_file = os.path.join(args.results_dir, "fedflow_all_rounds.json")
+    final_file = os.path.join(results_dir, "fedflow_all_rounds.json")
     with open(final_file, "w") as f:
         json.dump(convert_to_json_serializable(trainer.all_round_results), f, indent=2)
 
-    print(f"\nFedFlow-TSC Training Completed. All results saved to {args.results_dir}/")
+    print(f"\nFedFlow-TSC Training Completed. All results saved to {results_dir}/")

@@ -1,0 +1,15 @@
+{
+  "algorithm": "fedkd",
+  "version": "1.0.0",
+  "state_size": 12,
+  "action_size": 4,
+  "device": "cpu",
+  "preprocessing": {
+    "normalization": "none",
+    "clipping": "none"
+  },
+  "mode": "mock",
+  "source_weights": "results_fedkd_sumo_china\\fedkd_global_mock.pt",
+  "sumo_scenario": "china",
+  "export_method": "torch_jit_script"
+}
