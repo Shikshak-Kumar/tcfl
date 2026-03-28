@@ -8,8 +8,10 @@ from utils.logger import logger
 from utils.sumo_scenario import (
     deployment_model_subdir,
     distinct_results_dir,
+    effective_sumo_headless,
     effective_sumo_scenario,
     get_sumo_config_paths,
+    scenario_label_for_log,
 )
 from utils.model_exporter import ModelExporter, get_deployment_metadata
 from federated_learning.fedkd_server import TrafficFedKDServer
@@ -42,7 +44,11 @@ def run_fedkd_simulation(
     use_tomtom=False,
     target_pois=None,
     sumo_scenario=None,
+    sumo_headless=False,
 ):
+    if gui and sumo_headless:
+        raise ValueError("Use either gui=True or sumo_headless=True, not both.")
+
     print("STARTING FEDKD SIMULATION")
 
     os.makedirs(results_dir, exist_ok=True)
@@ -80,6 +86,7 @@ def run_fedkd_simulation(
                 use_tomtom=use_tomtom,
                 tomtom_city=cfg["city"],
                 target_pois=target_pois,
+                sumo_headless=sumo_headless,
             )
         )
 
@@ -230,6 +237,13 @@ if __name__ == "__main__":
         help="Use SUMO GUI (Enforces real SUMO simulation)",
     )
     parser.add_argument(
+        "--sumo-headless",
+        "--real-sumo",
+        action="store_true",
+        dest="sumo_headless",
+        help="Real SUMO without GUI. Or SUMO_HEADLESS=1. Incompatible with --gui.",
+    )
+    parser.add_argument(
         "--use-tomtom",
         action="store_true",
         help="Use real-time TomTom traffic data"
@@ -244,18 +258,21 @@ if __name__ == "__main__":
         "--sumo-scenario",
         type=str,
         default=None,
-        choices=["default", "china"],
-        help="SUMO map preset (omit to use SUMO_SCENARIO env)",
+        choices=["default", "china", "china_osm"],
+        help="default | china | china_osm",
     )
 
     args = parser.parse_args()
+    sumo_headless = effective_sumo_headless(args.sumo_headless)
+    if args.gui and sumo_headless:
+        parser.error("Use either --gui or --sumo-headless/--real-sumo (or SUMO_HEADLESS=1), not both.")
 
     results_dir = distinct_results_dir(
         "results_fedkd_sumo", args.results_dir, args.sumo_scenario
     )
     if results_dir != args.results_dir:
         print(
-            f"[FedKD] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+            f"[FedKD] {scenario_label_for_log(args.sumo_scenario)} map: writing results to {results_dir}/"
         )
 
     # Parse target_pois if provided
@@ -271,4 +288,5 @@ if __name__ == "__main__":
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
         sumo_scenario=args.sumo_scenario,
+        sumo_headless=sumo_headless,
     )

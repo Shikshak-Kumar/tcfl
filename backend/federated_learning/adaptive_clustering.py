@@ -206,7 +206,19 @@ def _kmeans_pp_init(data: np.ndarray, k: int, rng: np.random.RandomState) -> np.
         dists = np.min(
             [np.linalg.norm(data - c, axis=1) ** 2 for c in centroids], axis=0
         )
-        probs = dists / dists.sum()
+        dists = np.nan_to_num(dists, nan=0.0, posinf=0.0, neginf=0.0)
+        total = float(dists.sum())
+        if total <= 1e-12 or not np.isfinite(total):
+            # All points coincide with existing seeds (or bad numerics): pick uniformly
+            probs = np.ones(n_samples, dtype=np.float64) / n_samples
+        else:
+            probs = dists / total
+            probs = np.clip(probs, 0.0, 1.0)
+            s = probs.sum()
+            if s <= 1e-12:
+                probs = np.ones(n_samples, dtype=np.float64) / n_samples
+            else:
+                probs = probs / s
         idx = rng.choice(n_samples, p=probs)
         centroids.append(data[idx])
 

@@ -154,7 +154,7 @@ async def get_config():
             for city, coords in CITY_COORDINATES.items()
         },
         "algorithms": ["Demo (No RL)", "FedFlow", "FedAvg", "FedCM", "FedKD", "AdaptFlow"],
-        "sumo_scenarios": ["default", "china"],
+        "sumo_scenarios": ["default", "china", "china_osm"],
         "poi_categories": [
             "healthcare",
             "education",
@@ -335,7 +335,12 @@ def get_algo_model_path(
     algo_l = algo_name.lower()
 
     prod_candidates = []
-    if scenario == "china":
+    if scenario == "china_osm":
+        prod_candidates.append(
+            os.path.join("saved_models", f"{algo_l}_china_osm", "model.pt")
+        )
+        prod_candidates.append(os.path.join("saved_models", f"{algo_l}_china", "model.pt"))
+    elif scenario == "china":
         prod_candidates.append(os.path.join("saved_models", f"{algo_l}_china", "model.pt"))
     prod_candidates.append(os.path.join("saved_models", algo_l, "model.pt"))
 
@@ -345,7 +350,13 @@ def get_algo_model_path(
             return prod_path
 
     result_dirs = []
-    if scenario == "china":
+    if scenario == "china_osm":
+        if not results_dir.endswith("_china_osm"):
+            result_dirs.append(f"{results_dir}_china_osm")
+        if not results_dir.endswith("_china"):
+            result_dirs.append(f"{results_dir}_china")
+        result_dirs.append(results_dir)
+    elif scenario == "china":
         if not results_dir.endswith("_china"):
             result_dirs.append(f"{results_dir}_china")
         result_dirs.append(results_dir)

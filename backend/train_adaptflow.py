@@ -32,10 +32,12 @@ from federated_learning.adaptive_clustering import (
 )
 from utils.logger import logger
 from utils.sumo_scenario import (
+    deployment_model_subdir,
     distinct_results_dir,
+    effective_sumo_headless,
     effective_sumo_scenario,
     get_sumo_config_paths,
-    deployment_model_subdir,
+    scenario_label_for_log,
 )
 
 
@@ -58,10 +60,14 @@ class AdaptFlowTrainer:
         use_tomtom: bool = False,
         target_pois: Optional[List[str]] = None,
         sumo_scenario: Optional[str] = None,
+        sumo_headless: bool = False,
     ):
+        if gui and sumo_headless:
+            raise ValueError("Use either gui=True or sumo_headless=True, not both.")
         self.num_nodes = num_nodes
         self.num_clusters = num_clusters
         self.gui = gui
+        self.sumo_headless = sumo_headless
         self.results_dir = results_dir
         self.use_tomtom = use_tomtom
         self.target_pois = target_pois
@@ -91,9 +97,9 @@ class AdaptFlowTrainer:
         self.envs: Dict[str, object] = {}
         self._setup_environments()
 
-        # 6. Wire neighbors (Mock only)
+        # 6. Wire neighbors (Mock / TomTom only — not real SUMO)
         self.priority_tiers: Dict[str, int] = {}
-        if not self.gui:
+        if not self.gui and not self.sumo_headless:
             for i in range(num_nodes):
                 nid = f"node_{i}"
                 # Assign mock priority tiers (Tier 1 for node_0, Tier 2 for node_1, etc.)
@@ -111,6 +117,32 @@ class AdaptFlowTrainer:
 
     def _setup_environments(self):
         """Initialize traffic environments for each node."""
+        if self.gui:
+            from agents.traffic_environment import SUMOTrafficEnvironment
+
+            print("AdaptFlow-TSC: GUI Mode (SUMO Simulation)")
+            for i in range(self.num_nodes):
+                config = self.sumo_configs[i % len(self.sumo_configs)]
+                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=True)
+                print(f"  node_{i} -> {config}")
+            return
+
+        if self.sumo_headless:
+            from agents.traffic_environment import SUMOTrafficEnvironment, _resolve_sumo_binary
+
+            try:
+                _resolve_sumo_binary(False)
+            except FileNotFoundError as e:
+                raise RuntimeError(
+                    f"--sumo-headless requires SUMO on PATH or SUMO_HOME: {e}"
+                ) from e
+            print("AdaptFlow-TSC: Headless SUMO (real microsimulation, no GUI)")
+            for i in range(self.num_nodes):
+                config = self.sumo_configs[i % len(self.sumo_configs)]
+                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=False)
+                print(f"  node_{i} -> {config}")
+            return
+
         if not self.gui:
             if self.use_tomtom:
                 from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
@@ -140,14 +172,6 @@ class AdaptFlowTrainer:
                     config = self.sumo_configs[i % len(self.sumo_configs)]
                     self.envs[f"node_{i}"] = MockTrafficEnvironment(config)
                     print(f"  node_{i} -> {config}")
-        else:
-            from agents.traffic_environment import SUMOTrafficEnvironment
-
-            print("AdaptFlow-TSC: GUI Mode (SUMO Simulation)")
-            for i in range(self.num_nodes):
-                config = self.sumo_configs[i % len(self.sumo_configs)]
-                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=self.gui)
-                print(f"  node_{i} -> {config}")
 
     def _create_mock_graph(self) -> np.ndarray:
         """Create a ring-like adjacency matrix."""
@@ -217,7 +241,7 @@ class AdaptFlowTrainer:
                 f"AvgWait={wait_time:.2f}s, Loss={loss:.4f}"
             )
 
-            if self.gui:
+            if self.gui or self.sumo_headless:
                 env.stop_simulation()
 
         # ── Step 2: Dynamic Re-Clustering ───────────────────────────
@@ -314,7 +338,7 @@ class AdaptFlowTrainer:
             self.agents[nid].set_weights(global_weights)
 
         # ── Step 4: Save & Final Terminal Table ─────────────────────
-        mode_str = "SUMO" if self.gui else "Mock"
+        mode_str = "SUMO" if (self.gui or self.sumo_headless) else "Mock"
         round_results = {
             "round": round_idx,
             "mode": mode_str,
@@ -394,7 +418,7 @@ class AdaptFlowTrainer:
         # Save final globally-aggregated model weights.
         # After the last round all agents hold identical weights (global broadcast in step 3d),
         # so saving node_0 is equivalent to saving any node.
-        mode_label = "sumo" if self.gui else "mock"
+        mode_label = "sumo" if (self.gui or self.sumo_headless) else "mock"
         global_model_path = os.path.join(
             self.results_dir, f"adaptflow_global_{mode_label}.pt"
         )
@@ -477,6 +501,13 @@ if __name__ == "__main__":
         help="Use SUMO GUI (real SUMO simulation)",
     )
     parser.add_argument(
+        "--sumo-headless",
+        "--real-sumo",
+        action="store_true",
+        dest="sumo_headless",
+        help="Real SUMO via 'sumo' only (no GUI). Or set env SUMO_HEADLESS=1. Incompatible with --gui.",
+    )
+    parser.add_argument(
         "--use-tomtom",
         action="store_true",
         help="Use real-time TomTom traffic data",
@@ -491,18 +522,21 @@ if __name__ == "__main__":
         "--sumo-scenario",
         type=str,
         default=None,
-        choices=["default", "china"],
-        help="SUMO map preset (omit flag to use SUMO_SCENARIO env)",
+        choices=["default", "china", "china_osm"],
+        help="SUMO map: default | china (synthetic) | china_osm (folder sumo_configs_china_osm)",
     )
 
     args = parser.parse_args()
+    sumo_headless = effective_sumo_headless(args.sumo_headless)
+    if args.gui and sumo_headless:
+        parser.error("Use either --gui or --sumo-headless/--real-sumo (or SUMO_HEADLESS=1), not both.")
 
     results_dir = distinct_results_dir(
         "results_adaptflow", args.results_dir, args.sumo_scenario
     )
     if results_dir != args.results_dir:
         print(
-            f"[AdaptFlow] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+            f"[AdaptFlow] {scenario_label_for_log(args.sumo_scenario)} map: writing results to {results_dir}/"
         )
 
     # Automatic cluster selection for performance optimization
@@ -523,5 +557,6 @@ if __name__ == "__main__":
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
         sumo_scenario=args.sumo_scenario,
+        sumo_headless=sumo_headless,
     )
     trainer.train(num_rounds=args.rounds)

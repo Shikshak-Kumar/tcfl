@@ -4,6 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from federated_learning.fl_client import TrafficFLClient
+from utils.sumo_scenario import effective_sumo_headless
 import flwr as fl
 
 if __name__ == "__main__":
@@ -13,12 +14,22 @@ if __name__ == "__main__":
     parser.add_argument("--sumo-config", type=str, required=True, help="Path to SUMO config")
     parser.add_argument("--server-address", type=str, default="localhost:8080", help="Server address")
     parser.add_argument("--gui", action="store_true", help="Enable SUMO GUI")
+    parser.add_argument(
+        "--sumo-headless",
+        "--real-sumo",
+        action="store_true",
+        dest="sumo_headless",
+        help="Real SUMO without GUI; or set SUMO_HEADLESS=1",
+    )
     parser.add_argument("--show-phase-console", action="store_true", help="Print TLS phase/time each step")
     parser.add_argument("--use-tomtom", action="store_true", help="Use real-time TomTom traffic data")
     parser.add_argument("--tomtom-city", type=str, default="", help="City for TomTom data (if using TomTom)")
     parser.add_argument("--target-pois", type=str, default="", help="Comma-separated list of target POIs")
     args = parser.parse_args()
-    
+    sumo_headless = effective_sumo_headless(args.sumo_headless)
+    if args.gui and sumo_headless:
+        parser.error("Use either --gui or --sumo-headless/--real-sumo (or SUMO_HEADLESS=1), not both.")
+
     # Parse target_pois if provided
     target_pois_list = None
     if args.target_pois:
@@ -29,6 +40,7 @@ if __name__ == "__main__":
         client_id=args.client_id,
         sumo_config_path=args.sumo_config,
         gui=args.gui,
+        sumo_headless=sumo_headless,
         use_tomtom=args.use_tomtom,
         tomtom_city=args.tomtom_city if args.tomtom_city else None,
         target_pois=target_pois_list

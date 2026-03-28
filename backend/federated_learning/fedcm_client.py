@@ -13,7 +13,6 @@ Based on:
 import numpy as np
 import torch
 import torch.nn.functional as F
-import shutil
 import os
 import json
 from typing import Dict, List, Optional
@@ -38,6 +37,7 @@ class FedCMClient(TrafficFLClient):
                  use_tomtom: bool = False,
                  tomtom_city: Optional[str] = None,
                  target_pois: Optional[List[str]] = None,
+                 sumo_headless: bool = False,
                  agent_type: str = "DQN",
                  hidden_dims: List[int] = None,
                  results_dir: str = "results_fedcm",
@@ -74,8 +74,19 @@ class FedCMClient(TrafficFLClient):
         self.results_dir = results_dir
         
         # Initialize parent class
-        super().__init__(client_id, sumo_config_path, state_size, action_size,
-                        gui, show_phase_console, show_gst_gui, use_tomtom, tomtom_city, target_pois)
+        super().__init__(
+            client_id,
+            sumo_config_path,
+            state_size,
+            action_size,
+            gui,
+            show_phase_console,
+            show_gst_gui,
+            use_tomtom,
+            tomtom_city,
+            target_pois,
+            sumo_headless=sumo_headless,
+        )
         
         # Override agent with custom architecture
         if agent_type == "DQN":

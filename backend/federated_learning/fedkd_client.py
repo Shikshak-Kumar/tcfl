@@ -23,9 +23,11 @@ class TrafficFedKDClient(TrafficFLClient):
         tomtom_city: Optional[str] = None,
         target_pois: Optional[List[str]] = None,
         hidden_dims: List[int] = [128, 128, 64],
+        sumo_headless: bool = False,
     ):
 
         # Initialize with flexible architecture
+        self.sumo_headless = sumo_headless
         self.use_tomtom = use_tomtom
         self.tomtom_city = tomtom_city
         self.target_pois = target_pois
@@ -40,14 +42,25 @@ class TrafficFedKDClient(TrafficFLClient):
         self.agent = DQNAgent(state_size, action_size, hidden_dims=hidden_dims)
 
         # Environment initialization
-        self.use_mock = False
-        try:
-            _resolve_sumo_binary(gui)
-        except FileNotFoundError:
-            print(
-                "Warning: SUMO not found (PATH or SUMO_HOME). Using MockTrafficEnvironment."
-            )
-            self.use_mock = True
+        if gui and sumo_headless:
+            raise ValueError("Use either gui=True or sumo_headless=True, not both.")
+        self.use_mock = True
+        if gui:
+            try:
+                _resolve_sumo_binary(True)
+                self.use_mock = False
+            except FileNotFoundError:
+                print(
+                    "Warning: sumo-gui not found. Using MockTrafficEnvironment."
+                )
+        elif sumo_headless:
+            try:
+                _resolve_sumo_binary(False)
+                self.use_mock = False
+            except FileNotFoundError:
+                print(
+                    "Warning: sumo not found (PATH or SUMO_HOME). Using MockTrafficEnvironment."
+                )
 
         if self.use_mock:
             if self.use_tomtom and self.tomtom_city:

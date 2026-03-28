@@ -21,11 +21,13 @@ class TrafficFLClient(fl.client.NumPyClient):
         use_tomtom: bool = False,
         tomtom_city: Optional[str] = None,
         target_pois: Optional[List[str]] = None,
+        sumo_headless: bool = False,
     ):
 
         self.client_id = client_id
         self.config_path = sumo_config_path
         self.gui = gui
+        self.sumo_headless = sumo_headless
         self.show_phase_console = show_phase_console
         self.show_gst_gui = show_gst_gui
         self.use_tomtom = use_tomtom
@@ -34,13 +36,10 @@ class TrafficFLClient(fl.client.NumPyClient):
 
         self.agent = DQNAgent(state_size, action_size)
 
-        # Environment selection: CLI=Mock, GUI=SUMO
-        if not gui:
-            self.use_mock = True
-            print(
-                f"[{self.client_id}] CLI mode: Using high-fidelity MockTrafficEnvironment."
-            )
-        else:
+        # Environment: GUI SUMO | headless SUMO (sumo binary) | mock/TomTom
+        if gui and sumo_headless:
+            raise ValueError("Use either gui=True or sumo_headless=True, not both.")
+        if gui:
             self.use_mock = False
             try:
                 _resolve_sumo_binary(True)
@@ -51,6 +50,24 @@ class TrafficFLClient(fl.client.NumPyClient):
                     f"To run without SUMO, omit the --gui flag to use Mock mode."
                 ) from e
             print(f"[{self.client_id}] GUI mode: Initializing real SUMO simulation.")
+        elif sumo_headless:
+            self.use_mock = False
+            try:
+                _resolve_sumo_binary(False)
+            except FileNotFoundError as e:
+                raise RuntimeError(
+                    f"CRITICAL ERROR: {e}\n"
+                    f"Headless SUMO requires SUMO on PATH or SUMO_HOME.\n"
+                    f"Omit --sumo-headless to use MockTrafficEnvironment."
+                ) from e
+            print(
+                f"[{self.client_id}] Headless SUMO: real microsimulation (no sumo-gui window)."
+            )
+        else:
+            self.use_mock = True
+            print(
+                f"[{self.client_id}] CLI mode: Using high-fidelity MockTrafficEnvironment."
+            )
 
         if self.use_mock:
             if self.use_tomtom and self.tomtom_city:
@@ -82,7 +99,7 @@ class TrafficFLClient(fl.client.NumPyClient):
         else:
             self.env = SUMOTrafficEnvironment(
                 sumo_config_path,
-                gui=True,
+                gui=self.gui,
                 show_phase_console=show_phase_console,
                 show_gst_gui=show_gst_gui,
             )

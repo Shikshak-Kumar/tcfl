@@ -15,8 +15,10 @@ from utils.visualization import TrafficVisualizer
 from utils.logger import logger
 from utils.sumo_scenario import (
     distinct_results_dir,
+    effective_sumo_headless,
     effective_sumo_scenario,
     get_sumo_config_paths,
+    scenario_label_for_log,
 )
 import flwr as fl
 
@@ -259,6 +261,7 @@ def run_multi_client_simulation(
     use_tomtom: bool = False,
     target_pois: Optional[List[str]] = None,
     sumo_scenario: Optional[str] = None,
+    sumo_headless: bool = False,
 ):
     print("STARTING STANDARD FEDERATED LEARNING SIMULATION")
 
@@ -284,6 +287,9 @@ def run_multi_client_simulation(
             }
         )
 
+    if gui and sumo_headless:
+        raise ValueError("Use either gui=True or sumo_headless=True, not both.")
+
     clients = []
     for cfg in client_configs:
         print(f"Initializing {cfg['id']}...")
@@ -295,6 +301,7 @@ def run_multi_client_simulation(
                 use_tomtom=use_tomtom,
                 tomtom_city=cfg["city"],
                 target_pois=target_pois,
+                sumo_headless=sumo_headless,
             )
         )
 
@@ -428,7 +435,7 @@ def run_multi_client_simulation(
     print("FEDERATED LEARNING SIMULATION COMPLETED")
     
     # Save the final global model
-    mode_label = "sumo" if gui else "mock"
+    mode_label = "sumo" if (gui or sumo_headless) else "mock"
     global_model_path = os.path.join(results_dir, f"federated_global_{mode_label}.pt")
     
     # All clients hold the latest global params
@@ -460,6 +467,13 @@ def main():
         help="Sim mode only: default + china → results_federated_china",
     )
     parser.add_argument("--gui", action="store_true")
+    parser.add_argument(
+        "--sumo-headless",
+        "--real-sumo",
+        action="store_true",
+        dest="sumo_headless",
+        help="Real SUMO without GUI. Or SUMO_HEADLESS=1. Incompatible with --gui.",
+    )
 
     parser.add_argument("--use-tomtom", action="store_true", help="Use real-time TomTom traffic data")
     parser.add_argument("--target-pois", type=str, default=None, help="Comma-separated list of target POI categories")
@@ -467,11 +481,14 @@ def main():
         "--sumo-scenario",
         type=str,
         default=None,
-        choices=["default", "china"],
-        help="SUMO map preset (omit to use SUMO_SCENARIO env)",
+        choices=["default", "china", "china_osm"],
+        help="default | china | china_osm",
     )
 
     args = parser.parse_args()
+    sumo_headless = effective_sumo_headless(args.sumo_headless)
+    if args.gui and sumo_headless:
+        parser.error("Use either --gui or --sumo-headless/--real-sumo (or SUMO_HEADLESS=1), not both.")
     print("Running mode:", args.mode)
     create_client_script()
 
@@ -488,7 +505,7 @@ def main():
         )
         if results_dir != args.results_dir:
             print(
-                f"[FedAvg sim] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+                f"[FedAvg sim] {scenario_label_for_log(args.sumo_scenario)} map: writing results to {results_dir}/"
             )
         run_multi_client_simulation(
             results_dir=results_dir,
@@ -498,6 +515,7 @@ def main():
             use_tomtom=args.use_tomtom,
             target_pois=target_pois_list,
             sumo_scenario=args.sumo_scenario,
+            sumo_headless=sumo_headless,
         )
 
 if __name__ == "__main__":

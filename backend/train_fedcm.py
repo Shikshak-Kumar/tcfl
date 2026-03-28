@@ -20,8 +20,10 @@ from utils.logger import logger
 from utils.sumo_scenario import (
     deployment_model_subdir,
     distinct_results_dir,
+    effective_sumo_headless,
     effective_sumo_scenario,
     get_sumo_config_paths,
+    scenario_label_for_log,
 )
 
 from federated_learning.fedcm_client import FedCMClient
@@ -38,8 +40,11 @@ def run_fedcm_simulation(
     use_tomtom: bool = False,
     target_pois: Optional[List[str]] = None,
     sumo_scenario: Optional[str] = None,
+    sumo_headless: bool = False,
 ):
     """Run FedCM-RL simulation."""
+    if gui and sumo_headless:
+        raise ValueError("Use either gui=True or sumo_headless=True, not both.")
 
     os.makedirs(results_dir, exist_ok=True)
 
@@ -98,6 +103,7 @@ def run_fedcm_simulation(
             agent_type=config["agent_type"],
             hidden_dims=config["hidden_dims"],
             gui=gui,
+            sumo_headless=sumo_headless,
             use_tomtom=use_tomtom,
             tomtom_city=config["city"],
             results_dir=results_dir,
@@ -369,6 +375,13 @@ if __name__ == "__main__":
         help="Use SUMO GUI (Enforces real SUMO simulation)",
     )
     parser.add_argument(
+        "--sumo-headless",
+        "--real-sumo",
+        action="store_true",
+        dest="sumo_headless",
+        help="Real SUMO without GUI. Or SUMO_HEADLESS=1. Incompatible with --gui.",
+    )
+    parser.add_argument(
         "--proxy-size", type=int, default=2000, help="Proxy dataset size"
     )
     parser.add_argument(
@@ -393,18 +406,21 @@ if __name__ == "__main__":
         "--sumo-scenario",
         type=str,
         default=None,
-        choices=["default", "china"],
-        help="SUMO map preset (omit to use SUMO_SCENARIO env)",
+        choices=["default", "china", "china_osm"],
+        help="default | china | china_osm",
     )
 
     args = parser.parse_args()
+    sumo_headless = effective_sumo_headless(args.sumo_headless)
+    if args.gui and sumo_headless:
+        parser.error("Use either --gui or --sumo-headless/--real-sumo (or SUMO_HEADLESS=1), not both.")
 
     results_dir = distinct_results_dir(
         "results_fedcm_sumo", args.results_dir, args.sumo_scenario
     )
     if results_dir != args.results_dir:
         print(
-            f"[FedCM] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+            f"[FedCM] {scenario_label_for_log(args.sumo_scenario)} map: writing results to {results_dir}/"
         )
 
     # Parse target_pois if provided
@@ -422,4 +438,5 @@ if __name__ == "__main__":
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
         sumo_scenario=args.sumo_scenario,
+        sumo_headless=sumo_headless,
     )

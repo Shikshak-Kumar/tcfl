@@ -14,8 +14,10 @@ from utils.logger import logger
 from utils.sumo_scenario import (
     deployment_model_subdir,
     distinct_results_dir,
+    effective_sumo_headless,
     effective_sumo_scenario,
     get_sumo_config_paths,
+    scenario_label_for_log,
 )
 
 
@@ -33,10 +35,14 @@ class FedFlowTrainer:
         use_tomtom: bool = False,
         target_pois: Optional[List[str]] = None,
         sumo_scenario: Optional[str] = None,
+        sumo_headless: bool = False,
     ):
+        if gui and sumo_headless:
+            raise ValueError("Use either gui=True or sumo_headless=True, not both.")
         self.num_nodes = num_nodes
         self.num_clusters = num_clusters
         self.gui = gui
+        self.sumo_headless = sumo_headless
         self.results_dir = results_dir
         self.use_tomtom = use_tomtom
         self.target_pois = target_pois
@@ -78,47 +84,61 @@ class FedFlowTrainer:
         # Use real SUMO configs, cycling through available ones
         self.sumo_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
         self.envs = {}
-        if not self.gui:
-            if self.use_tomtom:
-                from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
-                from utils.tomtom_api import CITY_COORDINATES
-                
-                print("FedFlow-TSC: CLI Mode (TomTom Real-Time Traffic)")
-                cities = list(CITY_COORDINATES.keys())
-                from utils.tomtom_api import get_api_key
-                api_key = get_api_key()
-                for i in range(num_nodes):
-                    config = self.sumo_configs[i % len(self.sumo_configs)]
-                    city = cities[i % len(cities)]
-                    lat, lon = CITY_COORDINATES[city]
-                    self.envs[f"node_{i}"] = TomTomTrafficEnvironment(
-                        sumo_config_path=config,
-                        tomtom_api_key=api_key,
-                        lat=lat,
-                        lon=lon,
-                        tl_id=f"{city}_{i}",
-                        target_pois=self.target_pois
-                    )
-                    print(f"  node_{i} -> {config} ({city})")
-            else:
-                from agents.mock_traffic_environment import MockTrafficEnvironment
-
-                print("FedFlow-TSC: CLI Mode (Mock with real config mapping)")
-                for i in range(num_nodes):
-                    config = self.sumo_configs[i % len(self.sumo_configs)]
-                    self.envs[f"node_{i}"] = MockTrafficEnvironment(config)
-                    print(f"  node_{i} -> {config}")
-        else:
+        if self.gui:
             from agents.traffic_environment import SUMOTrafficEnvironment
 
             print("FedFlow-TSC: GUI Mode (SUMO Simulation)")
             for i in range(num_nodes):
                 config = self.sumo_configs[i % len(self.sumo_configs)]
-                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=self.gui)
+                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=True)
+                print(f"  node_{i} -> {config}")
+        elif self.sumo_headless:
+            from agents.traffic_environment import SUMOTrafficEnvironment, _resolve_sumo_binary
+
+            try:
+                _resolve_sumo_binary(False)
+            except FileNotFoundError as e:
+                raise RuntimeError(
+                    f"--sumo-headless requires SUMO on PATH or SUMO_HOME: {e}"
+                ) from e
+            print("FedFlow-TSC: Headless SUMO (real microsimulation, no GUI)")
+            for i in range(num_nodes):
+                config = self.sumo_configs[i % len(self.sumo_configs)]
+                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=False)
+                print(f"  node_{i} -> {config}")
+        elif self.use_tomtom:
+            from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
+            from utils.tomtom_api import CITY_COORDINATES
+
+            print("FedFlow-TSC: CLI Mode (TomTom Real-Time Traffic)")
+            cities = list(CITY_COORDINATES.keys())
+            from utils.tomtom_api import get_api_key
+
+            api_key = get_api_key()
+            for i in range(num_nodes):
+                config = self.sumo_configs[i % len(self.sumo_configs)]
+                city = cities[i % len(cities)]
+                lat, lon = CITY_COORDINATES[city]
+                self.envs[f"node_{i}"] = TomTomTrafficEnvironment(
+                    sumo_config_path=config,
+                    tomtom_api_key=api_key,
+                    lat=lat,
+                    lon=lon,
+                    tl_id=f"{city}_{i}",
+                    target_pois=self.target_pois,
+                )
+                print(f"  node_{i} -> {config} ({city})")
+        else:
+            from agents.mock_traffic_environment import MockTrafficEnvironment
+
+            print("FedFlow-TSC: CLI Mode (Mock with real config mapping)")
+            for i in range(num_nodes):
+                config = self.sumo_configs[i % len(self.sumo_configs)]
+                self.envs[f"node_{i}"] = MockTrafficEnvironment(config)
                 print(f"  node_{i} -> {config}")
 
-        # 6. Wire up neighbors for Coupled Flow (Mock only)
-        if not self.gui:
+        # 6. Wire up neighbors for Coupled Flow (Mock / TomTom only)
+        if not self.gui and not self.sumo_headless:
             for i in range(num_nodes):
                 nid = f"node_{i}"
                 for j in range(num_nodes):
@@ -197,7 +217,7 @@ class FedFlowTrainer:
             node_losses[nid] = loss
 
             wait_time = metrics.get("avg_waiting_time_per_vehicle", 0.0)
-            if self.gui:
+            if self.gui or self.sumo_headless:
                 wait_time = metrics.get("total_waiting_time", 0.0) / max(
                     1, metrics.get("total_vehicles", 1)
                 )
@@ -207,7 +227,7 @@ class FedFlowTrainer:
             )
 
             # Close SUMO connection after each node to avoid "already active" error
-            if self.gui:
+            if self.gui or self.sumo_headless:
                 env.stop_simulation()
 
         # 2. Intra-Cluster Aggregation (Level 1)
@@ -239,8 +259,6 @@ class FedFlowTrainer:
             wait_times = []
             for nid in cluster.agent_ids:
                 wt = node_metrics[nid].get("avg_waiting_time_per_vehicle", 0.0)
-                if self.gui:
-                    wt = node_metrics[nid].get("avg_waiting_time_per_vehicle", 0.0)
                 wait_times.append(wt)
 
             congestion = float(np.mean(wait_times))
@@ -256,7 +274,7 @@ class FedFlowTrainer:
         print(f"  Global Meta-Aggregation Complete.")
 
         # 5. Standardized Performance Table
-        mode_str = "SUMO" if self.gui else "Mock"
+        mode_str = "SUMO" if (self.gui or self.sumo_headless) else "Mock"
         logger.section(f"Round {round_idx} Client Performance Summary")
         
         table_headers = ["Client ID", "Cluster", "Reward", "Wait", "Queue", "TP Ratio"]
@@ -331,7 +349,7 @@ class FedFlowTrainer:
             self.run_round(r)
 
         # Save final global model weights
-        mode_label = "sumo" if self.gui else "mock"
+        mode_label = "sumo" if (self.gui or self.sumo_headless) else "mock"
         global_model_path = os.path.join(
             self.results_dir, f"fedflow_global_{mode_label}.pt"
         )
@@ -394,6 +412,13 @@ if __name__ == "__main__":
         help="Use SUMO GUI (Enforces real SUMO simulation)",
     )
     parser.add_argument(
+        "--sumo-headless",
+        "--real-sumo",
+        action="store_true",
+        dest="sumo_headless",
+        help="Real SUMO ('sumo' only, no GUI). Or SUMO_HEADLESS=1. Incompatible with --gui.",
+    )
+    parser.add_argument(
         "--use-tomtom", action="store_true", help="Use real-time TomTom traffic data"
     )
     parser.add_argument(
@@ -406,18 +431,21 @@ if __name__ == "__main__":
         "--sumo-scenario",
         type=str,
         default=None,
-        choices=["default", "china"],
-        help="SUMO map preset: default=osm clients, china=sumo_configs_china (omit flag to use SUMO_SCENARIO env)",
+        choices=["default", "china", "china_osm"],
+        help="default | china (synthetic) | china_osm (sumo_configs_china_osm)",
     )
 
     args = parser.parse_args()
+    sumo_headless = effective_sumo_headless(args.sumo_headless)
+    if args.gui and sumo_headless:
+        parser.error("Use either --gui or --sumo-headless/--real-sumo (or SUMO_HEADLESS=1), not both.")
 
     results_dir = distinct_results_dir(
         "results_fedflow", args.results_dir, args.sumo_scenario
     )
     if results_dir != args.results_dir:
         print(
-            f"[FedFlow] China scenario: writing results to {results_dir}/ (distinct from default OSM runs)"
+            f"[FedFlow] {scenario_label_for_log(args.sumo_scenario)} map: writing results to {results_dir}/"
         )
 
     # Automatic cluster selection for performance optimization
@@ -439,6 +467,7 @@ if __name__ == "__main__":
         use_tomtom=args.use_tomtom,
         target_pois=target_pois_list,
         sumo_scenario=args.sumo_scenario,
+        sumo_headless=sumo_headless,
     )
     trainer.train(num_rounds=args.rounds)
 
