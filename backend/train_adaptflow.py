@@ -63,6 +63,7 @@ class AdaptFlowTrainer:
         target_pois: Optional[List[str]] = None,
         sumo_scenario: Optional[str] = None,
         sumo_headless: bool = False,
+        steps: int = 500,
     ):
         if gui and sumo_headless:
             raise ValueError("Use either gui=True or sumo_headless=True, not both.")
@@ -74,6 +75,7 @@ class AdaptFlowTrainer:
         self.use_tomtom = use_tomtom
         self.target_pois = target_pois
         self.sumo_scenario = sumo_scenario
+        self.steps = steps
         os.makedirs(self.results_dir, exist_ok=True)
         self.all_round_results = []
 
@@ -102,20 +104,22 @@ class AdaptFlowTrainer:
             self._infer_results_mode_labels()
         )
 
-        # 6. Wire neighbors (Mock / TomTom only — not real SUMO)
+        # 6. Priority tiers (always set — used by AdaptFlow clustering regardless of env mode)
+        # node_0 = Hospital (tier 1), node_1 = School (tier 2), rest = Normal (tier 3)
         self.priority_tiers: Dict[str, int] = {}
+        for i in range(num_nodes):
+            nid = f"node_{i}"
+            if i == 0:
+                self.priority_tiers[nid] = 1   # Hospital — highest priority
+            elif i == 1:
+                self.priority_tiers[nid] = 2   # School — elevated priority
+            else:
+                self.priority_tiers[nid] = 3   # Normal / commercial / industrial
+
+        # Wire neighbors for coupled-flow simulation (Mock / TomTom only — not real SUMO)
         if not self.gui and not self.sumo_headless:
             for i in range(num_nodes):
                 nid = f"node_{i}"
-                # Assign mock priority tiers (Tier 1 for node_0, Tier 2 for node_1, etc.)
-                # In real use, this comes from the environment config
-                if i == 0:
-                    self.priority_tiers[nid] = 1  # Hospital
-                elif i == 1:
-                    self.priority_tiers[nid] = 2  # School
-                else:
-                    self.priority_tiers[nid] = 3  # Normal
-
                 for j in range(num_nodes):
                     if i != j and self.adj[i, j] > 0:
                         self.envs[nid].add_neighbor(self.envs[f"node_{j}"])
@@ -246,7 +250,7 @@ class AdaptFlowTrainer:
             state = env.reset()
             total_reward = 0
 
-            for _ in range(200):
+            for _ in range(self.steps):
                 state_graph, adj_node = self._get_node_graph_state(nid, state)
                 state_seq = agent._get_sequence(state_graph)
                 action = agent.get_action(state_graph, adj_node)
@@ -517,8 +521,14 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="AdaptFlow-TSC Training")
-    parser.add_argument("--rounds", type=int, default=3, help="Number of rounds")
+    parser.add_argument("--rounds", type=int, default=10, help="Number of federated rounds")
     parser.add_argument("--nodes", type=int, default=6, help="Number of nodes")
+    parser.add_argument(
+        "--steps",
+        type=int,
+        default=500,
+        help="SUMO simulation steps per episode per node (default 500)",
+    )
     parser.add_argument(
         "--clusters", type=int, default=2, help="Number of clusters (0 for auto)"
     )
@@ -601,5 +611,6 @@ if __name__ == "__main__":
         target_pois=target_pois_list,
         sumo_scenario=args.sumo_scenario,
         sumo_headless=sumo_headless,
+        steps=args.steps,
     )
     trainer.train(num_rounds=args.rounds)

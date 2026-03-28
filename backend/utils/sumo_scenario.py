@@ -20,8 +20,14 @@ CHINA_SUMO_CONFIGS: List[str] = [
 ]
 
 CHINA_OSM_SUMO_CONFIGS: List[str] = [
-    "sumo_configs_china_osm/osm_client1.sumocfg",
-    "sumo_configs_china_osm/osm_client2.sumocfg",
+    # One dedicated config per node: distinct begin-time offsets + TLS parameters
+    # so each node experiences genuinely different congestion fingerprints.
+    "sumo_configs_china_osm/osm_node0.sumocfg",  # Hospital  – begin=0,    jam=20
+    "sumo_configs_china_osm/osm_node1.sumocfg",  # School    – begin=400,  jam=25
+    "sumo_configs_china_osm/osm_node2.sumocfg",  # Commerce  – begin=800,  jam=30
+    "sumo_configs_china_osm/osm_node3.sumocfg",  # Resident  – begin=1200, jam=35
+    "sumo_configs_china_osm/osm_node4.sumocfg",  # Industry  – begin=1600, jam=40
+    "sumo_configs_china_osm/osm_node5.sumocfg",  # Transit   – begin=2000, jam=28
 ]
 
 
