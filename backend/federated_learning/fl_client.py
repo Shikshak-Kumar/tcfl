@@ -1,9 +1,8 @@
 import numpy as np
-import shutil
 from typing import Dict, List, Tuple, Optional
 import flwr as fl
 from agents.dqn_agent import DQNAgent
-from agents.traffic_environment import SUMOTrafficEnvironment
+from agents.traffic_environment import SUMOTrafficEnvironment, _resolve_sumo_binary
 import os
 import json
 import time
@@ -43,13 +42,14 @@ class TrafficFLClient(fl.client.NumPyClient):
             )
         else:
             self.use_mock = False
-            sumo_binary = "sumo-gui"
-            if not shutil.which(sumo_binary):
+            try:
+                _resolve_sumo_binary(True)
+            except FileNotFoundError as e:
                 raise RuntimeError(
-                    f"CRITICAL ERROR: 'sumo-gui' not found in PATH.\n"
+                    f"CRITICAL ERROR: {e}\n"
                     f"GUI mode requires an installed SUMO simulator.\n"
                     f"To run without SUMO, omit the --gui flag to use Mock mode."
-                )
+                ) from e
             print(f"[{self.client_id}] GUI mode: Initializing real SUMO simulation.")
 
         if self.use_mock:

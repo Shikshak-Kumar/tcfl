@@ -1,9 +1,8 @@
 import numpy as np
 import torch
-import shutil
 from typing import Dict, List, Tuple, Optional
 from agents.dqn_agent import DQNAgent
-from agents.traffic_environment import SUMOTrafficEnvironment
+from agents.traffic_environment import SUMOTrafficEnvironment, _resolve_sumo_binary
 from federated_learning.fl_client import TrafficFLClient
 import flwr as fl
 
@@ -41,13 +40,12 @@ class TrafficFedKDClient(TrafficFLClient):
         self.agent = DQNAgent(state_size, action_size, hidden_dims=hidden_dims)
 
         # Environment initialization
-        # Environment initialization
-        sumo_binary = "sumo-gui" if gui else "sumo"
         self.use_mock = False
-
-        if not shutil.which(sumo_binary):
+        try:
+            _resolve_sumo_binary(gui)
+        except FileNotFoundError:
             print(
-                f"Warning: SUMO binary '{sumo_binary}' not found. Using MockTrafficEnvironment."
+                "Warning: SUMO not found (PATH or SUMO_HOME). Using MockTrafficEnvironment."
             )
             self.use_mock = True
 

@@ -3,8 +3,37 @@ import numpy as np
 import random
 import os
 import sys
+import shutil
 from typing import Tuple, List, Dict, Optional
 import time
+
+
+def _resolve_sumo_binary(gui: bool) -> str:
+    """
+    Locate sumo / sumo-gui for TraCI. Uses PATH, then SUMO_HOME/bin (Windows: .exe).
+    """
+    stem = "sumo-gui" if gui else "sumo"
+    for name in (stem, f"{stem}.exe") if sys.platform == "win32" else (stem,):
+        found = shutil.which(name)
+        if found:
+            return found
+
+    sumo_home = os.environ.get("SUMO_HOME")
+    if sumo_home:
+        bin_dir = os.path.join(sumo_home, "bin")
+        for fname in (
+            f"{stem}.exe",
+            stem,
+        ) if sys.platform == "win32" else (stem,):
+            candidate = os.path.join(bin_dir, fname)
+            if os.path.isfile(candidate):
+                return candidate
+
+    raise FileNotFoundError(
+        f"SUMO executable '{stem}' not found. Install Eclipse SUMO, add its "
+        f"'bin' folder to your system PATH, or set SUMO_HOME to the install root "
+        f"(e.g. C:\\Program Files\\Eclipse SUMO\\sumo-1.20.0)."
+    )
 
 
 class SUMOTrafficEnvironment:
@@ -59,7 +88,7 @@ class SUMOTrafficEnvironment:
         }
 
     def start_simulation(self):
-        sumo_binary = "sumo-gui" if self.gui else "sumo"
+        sumo_binary = _resolve_sumo_binary(self.gui)
         sumo_cmd = [
             sumo_binary,
             "-c",
