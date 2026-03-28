@@ -16,6 +16,7 @@ from utils.sumo_scenario import (
     distinct_results_dir,
     effective_sumo_headless,
     effective_sumo_scenario,
+    effective_training_gui,
     get_sumo_config_paths,
     scenario_label_for_log,
 )
@@ -41,8 +42,8 @@ class FedFlowTrainer:
             raise ValueError("Use either gui=True or sumo_headless=True, not both.")
         self.num_nodes = num_nodes
         self.num_clusters = num_clusters
-        self.gui = gui
         self.sumo_headless = sumo_headless
+        self.gui = effective_training_gui(sumo_scenario, use_tomtom, gui, sumo_headless)
         self.results_dir = results_dir
         self.use_tomtom = use_tomtom
         self.target_pois = target_pois
@@ -85,8 +86,15 @@ class FedFlowTrainer:
         self.sumo_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
         self.envs = {}
         if self.gui:
-            from agents.traffic_environment import SUMOTrafficEnvironment
+            from agents.traffic_environment import SUMOTrafficEnvironment, _resolve_sumo_binary
 
+            try:
+                _resolve_sumo_binary(True)
+            except FileNotFoundError as e:
+                raise RuntimeError(
+                    "sumo-gui not found (PATH or SUMO_HOME). China maps use GUI by default "
+                    f"unless --real-sumo / SUMO_HEADLESS=1: {e}"
+                ) from e
             print("FedFlow-TSC: GUI Mode (SUMO Simulation)")
             for i in range(num_nodes):
                 config = self.sumo_configs[i % len(self.sumo_configs)]
@@ -409,7 +417,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--gui",
         action="store_true",
-        help="Use SUMO GUI (Enforces real SUMO simulation)",
+        help="Use sumo-gui (default for china|china_osm unless headless)",
     )
     parser.add_argument(
         "--sumo-headless",

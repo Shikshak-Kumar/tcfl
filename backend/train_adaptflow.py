@@ -10,7 +10,8 @@ no longer pollute each other's model updates.
 
 Usage:
   python train_adaptflow.py --rounds 3 --nodes 6 --clusters 2
-  python train_adaptflow.py --rounds 5 --nodes 6 --clusters 3 --use-tomtom
+  python train_adaptflow.py --sumo-scenario china_osm --rounds 3 --nodes 6
+  (china / china_osm → real SUMO + sumo-gui by default; headless: --real-sumo or SUMO_HEADLESS=1)
 """
 
 import os
@@ -36,6 +37,7 @@ from utils.sumo_scenario import (
     distinct_results_dir,
     effective_sumo_headless,
     effective_sumo_scenario,
+    effective_training_gui,
     get_sumo_config_paths,
     scenario_label_for_log,
 )
@@ -66,8 +68,8 @@ class AdaptFlowTrainer:
             raise ValueError("Use either gui=True or sumo_headless=True, not both.")
         self.num_nodes = num_nodes
         self.num_clusters = num_clusters
-        self.gui = gui
         self.sumo_headless = sumo_headless
+        self.gui = effective_training_gui(sumo_scenario, use_tomtom, gui, sumo_headless)
         self.results_dir = results_dir
         self.use_tomtom = use_tomtom
         self.target_pois = target_pois
@@ -96,6 +98,9 @@ class AdaptFlowTrainer:
         self.sumo_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
         self.envs: Dict[str, object] = {}
         self._setup_environments()
+        self._results_mode_str, self._results_ckpt_label = (
+            self._infer_results_mode_labels()
+        )
 
         # 6. Wire neighbors (Mock / TomTom only — not real SUMO)
         self.priority_tiers: Dict[str, int] = {}
@@ -118,8 +123,15 @@ class AdaptFlowTrainer:
     def _setup_environments(self):
         """Initialize traffic environments for each node."""
         if self.gui:
-            from agents.traffic_environment import SUMOTrafficEnvironment
+            from agents.traffic_environment import SUMOTrafficEnvironment, _resolve_sumo_binary
 
+            try:
+                _resolve_sumo_binary(True)
+            except FileNotFoundError as e:
+                raise RuntimeError(
+                    "sumo-gui not found (PATH or SUMO_HOME). Required for China maps "
+                    f"unless you use --real-sumo / SUMO_HEADLESS=1: {e}"
+                ) from e
             print("AdaptFlow-TSC: GUI Mode (SUMO Simulation)")
             for i in range(self.num_nodes):
                 config = self.sumo_configs[i % len(self.sumo_configs)]
@@ -172,6 +184,28 @@ class AdaptFlowTrainer:
                     config = self.sumo_configs[i % len(self.sumo_configs)]
                     self.envs[f"node_{i}"] = MockTrafficEnvironment(config)
                     print(f"  node_{i} -> {config}")
+
+    def _infer_results_mode_labels(self) -> Tuple[str, str]:
+        """
+        Labels for JSON + checkpoint filenames from the *actual* env class
+        (not only gui/sumo_headless flags).
+        Returns: (mode string for JSON, 'sumo' | 'mock' for *_global_*.pt)
+        """
+        from agents.traffic_environment import SUMOTrafficEnvironment
+        from agents.tomtom_traffic_environment import TomTomTrafficEnvironment
+
+        e0 = self.envs.get("node_0")
+        if e0 is None:
+            return "Unknown", "mock"
+        if isinstance(e0, SUMOTrafficEnvironment):
+            if self.gui:
+                return "SUMO-GUI", "sumo"
+            return "SUMO-headless", "sumo"
+        if isinstance(e0, TomTomTrafficEnvironment):
+            return "TomTom-mock", "mock"
+        if isinstance(e0, MockTrafficEnvironment):
+            return "Mock", "mock"
+        return type(e0).__name__, "mock"
 
     def _create_mock_graph(self) -> np.ndarray:
         """Create a ring-like adjacency matrix."""
@@ -338,10 +372,9 @@ class AdaptFlowTrainer:
             self.agents[nid].set_weights(global_weights)
 
         # ── Step 4: Save & Final Terminal Table ─────────────────────
-        mode_str = "SUMO" if (self.gui or self.sumo_headless) else "Mock"
         round_results = {
             "round": round_idx,
-            "mode": mode_str,
+            "mode": self._results_mode_str,
             "clustering": {
                 "assignments": assignments,
                 "groups": {str(k): v for k, v in cluster_groups.items()},
@@ -418,7 +451,7 @@ class AdaptFlowTrainer:
         # Save final globally-aggregated model weights.
         # After the last round all agents hold identical weights (global broadcast in step 3d),
         # so saving node_0 is equivalent to saving any node.
-        mode_label = "sumo" if (self.gui or self.sumo_headless) else "mock"
+        mode_label = self._results_ckpt_label
         global_model_path = os.path.join(
             self.results_dir, f"adaptflow_global_{mode_label}.pt"
         )
@@ -498,7 +531,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--gui",
         action="store_true",
-        help="Use SUMO GUI (real SUMO simulation)",
+        help="Use sumo-gui (also default for --sumo-scenario china|china_osm unless headless)",
     )
     parser.add_argument(
         "--sumo-headless",
@@ -548,6 +581,16 @@ if __name__ == "__main__":
     target_pois_list = None
     if args.target_pois:
         target_pois_list = [p.strip() for p in args.target_pois.split(",")]
+
+    if (
+        effective_sumo_scenario(args.sumo_scenario) in ("china", "china_osm")
+        and not args.use_tomtom
+        and not sumo_headless
+    ):
+        print(
+            f"[AdaptFlow] {scenario_label_for_log(args.sumo_scenario)}: "
+            "real SUMO with sumo-gui (default). Headless: --real-sumo or SUMO_HEADLESS=1."
+        )
 
     trainer = AdaptFlowTrainer(
         num_nodes=args.nodes,

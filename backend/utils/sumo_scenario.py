@@ -112,3 +112,24 @@ def effective_sumo_headless(cli_flag: bool) -> bool:
         return True
     v = os.environ.get("SUMO_HEADLESS", "").strip().lower()
     return v in ("1", "true", "yes", "on")
+
+
+def effective_training_gui(
+    sumo_scenario: Optional[str],
+    use_tomtom: bool,
+    gui_cli: bool,
+    sumo_headless: bool,
+) -> bool:
+    """
+    ``china`` / ``china_osm`` run real SUMO with sumo-gui by default (no mock),
+    unless headless is enabled or TomTom drives the backend.
+
+    Default and other scenarios keep ``gui_cli`` (CLI mock when False and not headless).
+    """
+    if sumo_headless:
+        return False
+    if use_tomtom:
+        return gui_cli
+    if effective_sumo_scenario(sumo_scenario) in ("china", "china_osm"):
+        return True
+    return gui_cli

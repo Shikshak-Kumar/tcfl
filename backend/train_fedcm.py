@@ -22,6 +22,7 @@ from utils.sumo_scenario import (
     distinct_results_dir,
     effective_sumo_headless,
     effective_sumo_scenario,
+    effective_training_gui,
     get_sumo_config_paths,
     scenario_label_for_log,
 )
@@ -45,6 +46,8 @@ def run_fedcm_simulation(
     """Run FedCM-RL simulation."""
     if gui and sumo_headless:
         raise ValueError("Use either gui=True or sumo_headless=True, not both.")
+
+    gui = effective_training_gui(sumo_scenario, use_tomtom, gui, sumo_headless)
 
     os.makedirs(results_dir, exist_ok=True)
 

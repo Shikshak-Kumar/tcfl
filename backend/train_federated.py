@@ -17,6 +17,7 @@ from utils.sumo_scenario import (
     distinct_results_dir,
     effective_sumo_headless,
     effective_sumo_scenario,
+    effective_training_gui,
     get_sumo_config_paths,
     scenario_label_for_log,
 )
@@ -268,6 +269,8 @@ def run_multi_client_simulation(
     import os
 
     os.makedirs(results_dir, exist_ok=True)
+
+    gui = effective_training_gui(sumo_scenario, use_tomtom, gui, sumo_headless)
 
     # Heterogeneous map data configurations
     base_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
