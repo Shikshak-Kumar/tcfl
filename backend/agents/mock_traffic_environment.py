@@ -56,16 +56,20 @@ class MockTrafficEnvironment:
         print(f"initialized MockTrafficEnvironment (config={sumo_config_path})")
 
     def _seed_from_config(self, config_path: str):
-        """Mock 'data-driven' seeding from SUMO configs."""
+        """Mock 'data-driven' seeding from SUMO configs with unique node variance."""
+        # Add a unique "personality" factor based on instance memory address or random seed
+        # This ensures node_0, node_1, etc. don't produce IDENTICAL fingerprints
+        self.personality = random.uniform(0.8, 1.2)
+        
         if "netccfg" in config_path:  # Central / Dense
-            self.base_arrival_rate = 0.4
-            self.target_vehicles = 600
+            self.base_arrival_rate = 0.4 * self.personality
+            self.target_vehicles = int(600 * self.personality)
         elif "polycfg" in config_path:  # Suburban / Sparse
-            self.base_arrival_rate = 0.2
-            self.target_vehicles = 300
+            self.base_arrival_rate = 0.2 * self.personality
+            self.target_vehicles = int(300 * self.personality)
         else:
-            self.base_arrival_rate = 0.3
-            self.target_vehicles = 400
+            self.base_arrival_rate = 0.3 * self.personality
+            self.target_vehicles = int(400 * self.personality)
 
     def add_neighbor(self, neighbor_env):
         self.neighbors.append(neighbor_env)
@@ -299,6 +303,7 @@ class MockTrafficEnvironment:
             "average_queue_length": np.mean(self.queue_lengths)
             if self.queue_lengths
             else 0,
+            "throughput_ratio": float(np.mean(self.queue_lengths)) / 20.0 if self.queue_lengths else 0.5, # Realistic mock TP
             "max_queue_length": max(self.queue_lengths) if self.queue_lengths else 0,
             "steps": self.step_count,
             "avg_waiting_time_per_vehicle": (

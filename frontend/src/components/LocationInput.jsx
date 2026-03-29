@@ -134,7 +134,7 @@ export default function LocationInput({ intersections, onIntersectionsChange, ci
       )}
 
       {/* Location list */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '8px' }}>
+      <div className="custom-scrollbar" style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '8px', maxHeight: '200px', overflowY: 'auto', paddingRight: '4px' }}>
         {intersections.map((loc, i) => (
           <div key={i} style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -142,24 +142,32 @@ export default function LocationInput({ intersections, onIntersectionsChange, ci
             background: 'rgba(255,255,255,0.06)', fontSize: '13px',
             border: '1px solid rgba(255,255,255,0.08)',
           }}>
-            <div>
-              <span style={{ fontWeight: '600', color: '#e2e8f0' }}>📍 {loc.name}</span>
-              <span style={{ color: '#64748b', marginLeft: '8px', fontSize: '11px' }}>
-                ({loc.lat.toFixed(4)}, {loc.lon.toFixed(4)})
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontWeight: '600', color: '#e2e8f0', fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>📍 {loc.name}</span>
+              <span style={{ color: '#64748b', fontSize: '10px' }}>
+                ({loc.lat.toFixed(3)}, {loc.lon.toFixed(3)})
               </span>
             </div>
             {!disabled && (
-              <button onClick={() => removeLocation(i)} style={{
-                background: 'none', border: 'none', color: '#ef4444',
-                cursor: 'pointer', fontSize: '16px', padding: '0 4px',
-              }}>✕</button>
+              <button 
+                onClick={() => removeLocation(i)} 
+                title="Remove location"
+                style={{
+                  background: 'none', border: 'none', color: '#f87171',
+                  cursor: 'pointer', fontSize: '14px', padding: '0 4px',
+                  opacity: 0.6, transition: 'opacity 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = '0.6'}
+              >✕</button>
             )}
           </div>
         ))}
+        {intersections.length === 0 && <div className="text-center py-4 text-[10px] text-slate-600 italic">No pins placed yet</div>}
       </div>
 
-      <p style={{ color: '#64748b', fontSize: '11px', marginTop: '6px' }}>
-        {intersections.length} locations • Type an intersection name, area, or landmark
+      <p style={{ color: '#64748b', fontSize: '10px', marginTop: '6px', textAlign: 'center' }}>
+        {intersections.length} location{intersections.length !== 1 ? 's' : ''} • Search & place on map
       </p>
     </div>
   );

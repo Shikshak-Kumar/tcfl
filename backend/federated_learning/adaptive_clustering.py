@@ -263,6 +263,10 @@ class AdaptiveClusterManager:
         # History
         self.cluster_history: List[Dict[str, int]] = []
         self.fingerprint_history: List[Dict[str, np.ndarray]] = []
+        self.reward_history: List[float] = []
+        self.queue_history: List[float] = []
+        self.wait_history: List[float] = []
+        self.throughput_history: List[float] = []
         self.transition_log: List[Dict] = []
 
     def recluster(
@@ -291,6 +295,17 @@ class AdaptiveClusterManager:
             for nid, m in node_metrics.items()
         }
         self.fingerprint_history.append(fingerprints)
+
+        # 1.5 Record global averages for analytics
+        avg_reward = np.mean([m.get("total_reward", 0) for m in node_metrics.values()])
+        avg_queue = np.mean([m.get("average_queue_length", 0) for m in node_metrics.values()])
+        avg_wait = np.mean([m.get("avg_waiting_time_per_vehicle", 0) for m in node_metrics.values()])
+        avg_tp = np.mean([m.get("throughput_ratio", 0) for m in node_metrics.values()])
+        
+        self.reward_history.append(float(avg_reward))
+        self.queue_history.append(float(avg_queue))
+        self.wait_history.append(float(avg_wait))
+        self.throughput_history.append(float(avg_tp))
 
         # 2. Normalize
         normed = normalize_fingerprints(fingerprints)
@@ -342,6 +357,10 @@ class AdaptiveClusterManager:
         history = {
             "num_rounds": len(self.cluster_history),
             "cluster_history": self.cluster_history,
+            "reward_history": self.reward_history,
+            "queue_history": self.queue_history,
+            "wait_history": self.wait_history,
+            "throughput_history": self.throughput_history,
             "transitions": self.transition_log,
             "fingerprints": [
                 {nid: fp.tolist() for nid, fp in fps.items()}

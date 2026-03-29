@@ -49,7 +49,10 @@ export default function LiveCharts({ simData, intersections }) {
     <div className="flex flex-col gap-4">
       {/* Queue Length Chart */}
       <div className="glass-panel p-4 rounded-xl">
-        <h3 className="text-sm font-semibold text-slate-300 mb-3">Queue Length per Intersection</h3>
+        <div className="flex flex-col mb-3">
+          <h3 className="text-sm font-semibold text-slate-300">Live Queue Lengths</h3>
+          <p className="text-[10px] text-slate-500 italic mt-1 leading-tight">Tracks vehicle accumulation at each intersection. Stable, low lines indicate effective signal synchronization.</p>
+        </div>
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
@@ -88,7 +91,10 @@ export default function LiveCharts({ simData, intersections }) {
 
       {/* Reward Chart */}
       <div className="glass-panel p-4 rounded-xl">
-        <h3 className="text-sm font-semibold text-slate-300 mb-3">Reward per Intersection</h3>
+        <div className="flex flex-col mb-3">
+          <h3 className="text-sm font-semibold text-slate-300">Reward Performance (Efficiency)</h3>
+          <p className="text-[10px] text-slate-500 italic mt-1 leading-tight">Reward measures how well the AI minimizes delays and safety risks. Climbing lines indicate the system is successfully learning efficient strategies.</p>
+        </div>
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
