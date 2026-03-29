@@ -658,8 +658,8 @@ if __name__ == "__main__":
         "--sumo-scenario",
         type=str,
         default=None,
-        choices=["default", "china", "china_osm"],
-        help="SUMO map: default | china (synthetic) | china_osm (folder sumo_configs_china_osm)",
+        choices=["default", "china", "china_osm", "china_rural_osm", "india_rural_osm"],
+        help="SUMO map: default | china (synthetic) | china_osm | china_rural_osm | india_rural_osm",
     )
 
     args = parser.parse_args()
@@ -690,7 +690,7 @@ if __name__ == "__main__":
         target_pois_list = [p.strip() for p in args.target_pois.split(",")]
 
     if (
-        effective_sumo_scenario(args.sumo_scenario) in ("china", "china_osm")
+        effective_sumo_scenario(args.sumo_scenario) in ("china", "china_osm", "china_rural_osm", "india_rural_osm")
         and not args.use_tomtom
         and not sumo_headless
     ):

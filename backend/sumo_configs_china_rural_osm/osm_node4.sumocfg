@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- node_4 — Rural industrial / factory zone: begin=2400 (shift-change surge).
+     Priority tier 3. Bursty heavy traffic, very lenient jam threshold. -->
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="osm.net.xml.gz"/>
+        <route-files value="osm.passenger.trips.xml"/>
+        <additional-files value="osm.poly.xml.gz,output.add.xml"/>
+    </input>
+
+    <time>
+        <begin value="2400"/>
+        <end value="3600"/>
+        <step-length value="1"/>
+    </time>
+
+    <output>
+        <tripinfo-output value="tripinfos_node4.xml"/>
+        <statistic-output value="stats_node4.xml"/>
+    </output>
+
+    <processing>
+        <ignore-route-errors value="true"/>
+        <tls.actuated.jam-threshold value="45"/>
+        <time-to-teleport value="150"/>
+        <ignore-junction-blocker value="10"/>
+    </processing>
+
+    <routing>
+        <device.rerouting.adaptation-steps value="26"/>
+        <device.rerouting.adaptation-interval value="16"/>
+    </routing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <gui_only>
+        <gui-settings-file value="osm.view.xml"/>
+    </gui_only>
+
+</sumoConfiguration>

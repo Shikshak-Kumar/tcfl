@@ -261,8 +261,8 @@ if __name__ == "__main__":
         "--sumo-scenario",
         type=str,
         default=None,
-        choices=["default", "china", "china_osm"],
-        help="default | china | china_osm",
+        choices=["default", "china", "china_osm", "china_rural_osm", "india_rural_osm"],
+        help="default | china | china_osm | china_rural_osm | india_rural_osm",
     )
 
     args = parser.parse_args()

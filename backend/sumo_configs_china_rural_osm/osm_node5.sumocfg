@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- node_5 — Highway junction / town entrance: begin=3000 (evening peak inbound).
+     Priority tier 3. High-speed approach traffic, fast rerouting, sensitive TLS. -->
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="osm.net.xml.gz"/>
+        <route-files value="osm.passenger.trips.xml"/>
+        <additional-files value="osm.poly.xml.gz,output.add.xml"/>
+    </input>
+
+    <time>
+        <begin value="3000"/>
+        <end value="3600"/>
+        <step-length value="1"/>
+    </time>
+
+    <output>
+        <tripinfo-output value="tripinfos_node5.xml"/>
+        <statistic-output value="stats_node5.xml"/>
+    </output>
+
+    <processing>
+        <ignore-route-errors value="true"/>
+        <tls.actuated.jam-threshold value="22"/>
+        <time-to-teleport value="35"/>
+        <ignore-junction-blocker value="3"/>
+    </processing>
+
+    <routing>
+        <device.rerouting.adaptation-steps value="8"/>
+        <device.rerouting.adaptation-interval value="5"/>
+    </routing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <gui_only>
+        <gui-settings-file value="osm.view.xml"/>
+    </gui_only>
+
+</sumoConfiguration>
