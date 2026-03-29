@@ -97,7 +97,9 @@ class AdaptFlowTrainer:
         self.server = None
 
         # 5. Environments
-        self.sumo_configs = get_sumo_config_paths(effective_sumo_scenario(sumo_scenario))
+        self.sumo_configs = get_sumo_config_paths(
+            effective_sumo_scenario(sumo_scenario)
+        )
         self.envs: Dict[str, object] = {}
         self._setup_environments()
         self._results_mode_str, self._results_ckpt_label = (
@@ -110,11 +112,11 @@ class AdaptFlowTrainer:
         for i in range(num_nodes):
             nid = f"node_{i}"
             if i == 0:
-                self.priority_tiers[nid] = 1   # Hospital — highest priority
+                self.priority_tiers[nid] = 1  # Hospital — highest priority
             elif i == 1:
-                self.priority_tiers[nid] = 2   # School — elevated priority
+                self.priority_tiers[nid] = 2  # School — elevated priority
             else:
-                self.priority_tiers[nid] = 3   # Normal / commercial / industrial
+                self.priority_tiers[nid] = 3  # Normal / commercial / industrial
 
         # Wire neighbors for coupled-flow simulation (Mock / TomTom only — not real SUMO)
         if not self.gui and not self.sumo_headless:
@@ -127,7 +129,10 @@ class AdaptFlowTrainer:
     def _setup_environments(self):
         """Initialize traffic environments for each node."""
         if self.gui:
-            from agents.traffic_environment import SUMOTrafficEnvironment, _resolve_sumo_binary
+            from agents.traffic_environment import (
+                SUMOTrafficEnvironment,
+                _resolve_sumo_binary,
+            )
 
             try:
                 _resolve_sumo_binary(True)
@@ -144,7 +149,10 @@ class AdaptFlowTrainer:
             return
 
         if self.sumo_headless:
-            from agents.traffic_environment import SUMOTrafficEnvironment, _resolve_sumo_binary
+            from agents.traffic_environment import (
+                SUMOTrafficEnvironment,
+                _resolve_sumo_binary,
+            )
 
             try:
                 _resolve_sumo_binary(False)
@@ -236,6 +244,7 @@ class AdaptFlowTrainer:
         state_graph = np.stack(node_states)
         adj_node = np.ones((len(state_graph), len(state_graph)))
         return state_graph, adj_node
+
     def run_round(self, round_idx: int):
         """Execute one round of AdaptFlow training."""
         logger.header(f"ADAPTFLOW ROUND {round_idx}")
@@ -256,10 +265,20 @@ class AdaptFlowTrainer:
                 action = agent.get_action(state_graph, adj_node)
                 next_state, reward, done, info = env.step(action)
 
-                next_state_graph, next_adj_node = self._get_node_graph_state(nid, next_state)
+                next_state_graph, next_adj_node = self._get_node_graph_state(
+                    nid, next_state
+                )
                 next_state_seq = agent._get_sequence(next_state_graph)
 
-                agent.remember(state_seq, adj_node, action, reward, next_state_seq, next_adj_node, done)
+                agent.remember(
+                    state_seq,
+                    adj_node,
+                    action,
+                    reward,
+                    next_state_seq,
+                    next_adj_node,
+                    done,
+                )
 
                 state = next_state
                 total_reward += reward
@@ -286,47 +305,79 @@ class AdaptFlowTrainer:
         if round_idx == 1:
             logger.section("Step 2: Initial Static Clustering")
             nodes_per_cluster = self.num_nodes // self.num_clusters
-            assignments = {f"node_{i}": i // nodes_per_cluster for i in range(self.num_nodes)}
+            assignments = {
+                f"node_{i}": i // nodes_per_cluster for i in range(self.num_nodes)
+            }
             # Initial clustering logic calls manager
             self.cluster_manager.recluster(node_metrics, round_idx, self.priority_tiers)
             self.cluster_manager.cluster_history[-1] = assignments
         else:
             logger.section("Step 2: Dynamic Re-Clustering (Congestion + POI Priority)")
-            assignments = self.cluster_manager.recluster(node_metrics, round_idx, self.priority_tiers)
+            assignments = self.cluster_manager.recluster(
+                node_metrics, round_idx, self.priority_tiers
+            )
 
             transitions = self.cluster_manager.get_latest_transitions()
             if transitions["transitions"]:
                 for nid, change in transitions["transitions"].items():
-                    logger.warning(f"Cluster Transition: {nid} moved from cluster_{change['from']} to cluster_{change['to']}", prefix="REFRESH")
+                    logger.warning(
+                        f"Cluster Transition: {nid} moved from cluster_{change['from']} to cluster_{change['to']}",
+                        prefix="REFRESH",
+                    )
             else:
                 logger.success("Cluster membership remains stable.", prefix="STABLE")
 
         # Cluster metadata for metrics
         cluster_groups = self.cluster_manager.get_cluster_groups(assignments)
-        
+
         # Display Cluster Performance Summary
-        table_headers = ["Cluster ID", "Nodes", "Avg Reward", "Avg Wait (s)", "Avg Queue"]
+        table_headers = [
+            "Cluster ID",
+            "Nodes",
+            "Avg Reward",
+            "Avg Wait (s)",
+            "Avg Queue",
+        ]
         table_rows = []
         for cid, members in sorted(cluster_groups.items()):
-            avg_rew = np.mean([node_metrics[nid].get("total_reward", 0) for nid in members])
-            avg_wait = np.mean([node_metrics[nid].get("avg_waiting_time_per_vehicle", 0) for nid in members])
-            avg_queue = np.mean([node_metrics[nid].get("average_queue_length", 0) for nid in members])
-            table_rows.append([f"cluster_{cid}", len(members), f"{avg_rew:.1f}", f"{avg_wait:.2f}s", f"{avg_queue:.2f}"])
-        
+            avg_rew = np.mean(
+                [node_metrics[nid].get("total_reward", 0) for nid in members]
+            )
+            avg_wait = np.mean(
+                [
+                    node_metrics[nid].get("avg_waiting_time_per_vehicle", 0)
+                    for nid in members
+                ]
+            )
+            avg_queue = np.mean(
+                [node_metrics[nid].get("average_queue_length", 0) for nid in members]
+            )
+            table_rows.append(
+                [
+                    f"cluster_{cid}",
+                    len(members),
+                    f"{avg_rew:.1f}",
+                    f"{avg_wait:.2f}s",
+                    f"{avg_queue:.2f}",
+                ]
+            )
+
         logger.table(table_headers, table_rows)
-        
+
         # Clustering Insights
         fingerprints = self.cluster_manager.fingerprint_history[-1]
         node_ids_sim, sim_matrix = cosine_similarity_matrix(fingerprints)
         avg_sim = np.mean(sim_matrix)
         mean_fp_mag = np.mean([np.linalg.norm(fp) for fp in fingerprints.values()])
-        
+
         print(f"\n    [Clustering Analysis] Round {round_idx}")
         print(f"    - Average Pairwise Similarity Index: {avg_sim:.4f}")
         print(f"    - Mean Fingerprint Magnitude: {mean_fp_mag:.4f}")
 
         # Similarity Matrix Table
-        sim_headers = ["Similarity"] + [f"n_{nid.split('_')[1]}" for nid in node_ids_sim]
+        sim_headers = ["Similarity"] + [
+            f"n_{nid.split('_')[1]}" for nid in node_ids_sim
+        ]
         sim_rows = []
         for i, nid in enumerate(node_ids_sim):
             row = [nid] + [f"{sim_matrix[i][j]:.2f}" for j in range(len(node_ids_sim))]
@@ -361,9 +412,18 @@ class AdaptFlowTrainer:
             cluster_info[cluster.cluster_id] = {
                 "avg_flow": avg_flow,
                 "members": cluster.agent_ids,
-                "congestion": float(np.mean([node_metrics[nid].get("avg_waiting_time_per_vehicle", 0) for nid in cluster.agent_ids])),
+                "congestion": float(
+                    np.mean(
+                        [
+                            node_metrics[nid].get("avg_waiting_time_per_vehicle", 0)
+                            for nid in cluster.agent_ids
+                        ]
+                    )
+                ),
             }
-            print(f"    {cluster.cluster_id}: {len(cluster.agent_ids)} nodes, avg_flow={avg_flow:.3f}, congestion={cluster_info[cluster.cluster_id]['congestion']:.2f}s")
+            print(
+                f"    {cluster.cluster_id}: {len(cluster.agent_ids)} nodes, avg_flow={avg_flow:.3f}, congestion={cluster_info[cluster.cluster_id]['congestion']:.2f}s"
+            )
 
         # Inter-cluster aggregation
         self.server = FedFlowServer([c.cluster_id for c in clusters])
@@ -391,7 +451,15 @@ class AdaptFlowTrainer:
         }
 
         logger.section(f"Round {round_idx} End-to-End Performance Summary")
-        table_headers = ["Node", "Cluster", "Reward", "Wait Time", "Queue", "TP Ratio", "Loss"]
+        table_headers = [
+            "Node",
+            "Cluster",
+            "Reward",
+            "Wait Time",
+            "Queue",
+            "TP Ratio",
+            "Loss",
+        ]
         table_rows = []
 
         for nid in sorted(self.agents.keys()):
@@ -401,24 +469,46 @@ class AdaptFlowTrainer:
             cid = assignments.get(nid, -1)
             aq = m.get("average_queue_length", 0.0)
 
-            table_rows.append([nid, f"cluster_{cid}", f"{m.get('total_reward', 0):.1f}", f"{wt:.2f}s", f"{aq:.1f}", f"{tp:.2f}", f"{node_losses.get(nid, 0.0):.4f}"])
-        
+            table_rows.append(
+                [
+                    nid,
+                    f"cluster_{cid}",
+                    f"{m.get('total_reward', 0):.1f}",
+                    f"{wt:.2f}s",
+                    f"{aq:.1f}",
+                    f"{tp:.2f}",
+                    f"{node_losses.get(nid, 0.0):.4f}",
+                ]
+            )
+
             round_results["nodes"][nid] = {
-                "node_id": nid, "cluster_id": f"cluster_{cid}", "total_reward": m.get("total_reward", 0),
-                "avg_waiting_time": wt, "loss": node_losses.get(nid, 0.0), "metrics": m,
+                "node_id": nid,
+                "cluster_id": f"cluster_{cid}",
+                "total_reward": m.get("total_reward", 0),
+                "avg_waiting_time": wt,
+                "loss": node_losses.get(nid, 0.0),
+                "metrics": m,
             }
 
             # Save JSONs
-            node_file = os.path.join(self.results_dir, f"{nid}_round_{round_idx}_eval.json")
+            node_file = os.path.join(
+                self.results_dir, f"{nid}_round_{round_idx}_eval.json"
+            )
             with open(node_file, "w") as f:
-                json.dump(convert_to_json_serializable(round_results["nodes"][nid]), f, indent=2)
-            
+                json.dump(
+                    convert_to_json_serializable(round_results["nodes"][nid]),
+                    f,
+                    indent=2,
+                )
+
             # Save models
-            model_path = os.path.join(self.results_dir, f"{nid}_round_{round_idx}_model.pt")
+            model_path = os.path.join(
+                self.results_dir, f"{nid}_round_{round_idx}_model.pt"
+            )
             self.agents[nid].save_model(model_path)
 
         logger.table(table_headers, table_rows)
-        
+
         # Save round summary
         round_file = os.path.join(self.results_dir, f"round_{round_idx}_summary.json")
         with open(round_file, "w") as f:
@@ -484,19 +574,20 @@ class AdaptFlowTrainer:
         print(f"\n{'=' * 70}")
         print(f"  ADAPTFLOW TRAINING COMPLETE")
         print(f"  All results saved to {self.results_dir}/")
-        
+
         # Save training-specific clustering history for UI Partitioning
         try:
             history = self.cluster_manager.get_history_summary()
-            history_file = os.path.join(self.results_dir, "training_cluster_history.json")
+            history_file = os.path.join(
+                self.results_dir, "training_cluster_history.json"
+            )
             with open(history_file, "w") as f:
                 json.dump(convert_to_json_serializable(history), f, indent=2)
             print(f"  [UI] Training analytics history saved to {history_file}")
         except Exception as e:
             print(f"  [UI] Warning: Failed to save training analytics: {e}")
-            
-        print(f"{'=' * 70}")
 
+        print(f"{'=' * 70}")
 
 
 def convert_to_json_serializable(obj):
@@ -521,12 +612,14 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="AdaptFlow-TSC Training")
-    parser.add_argument("--rounds", type=int, default=10, help="Number of federated rounds")
+    parser.add_argument(
+        "--rounds", type=int, default=10, help="Number of federated rounds"
+    )
     parser.add_argument("--nodes", type=int, default=6, help="Number of nodes")
     parser.add_argument(
         "--steps",
         type=int,
-        default=500,
+        default=200,
         help="SUMO simulation steps per episode per node (default 500)",
     )
     parser.add_argument(
@@ -572,7 +665,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     sumo_headless = effective_sumo_headless(args.sumo_headless)
     if args.gui and sumo_headless:
-        parser.error("Use either --gui or --sumo-headless/--real-sumo (or SUMO_HEADLESS=1), not both.")
+        parser.error(
+            "Use either --gui or --sumo-headless/--real-sumo (or SUMO_HEADLESS=1), not both."
+        )
 
     results_dir = distinct_results_dir(
         "results_adaptflow", args.results_dir, args.sumo_scenario
@@ -586,7 +681,9 @@ if __name__ == "__main__":
     num_clusters = args.clusters
     if num_clusters <= 0:
         num_clusters = max(1, (args.nodes + 3) // 4)
-        print(f"\n[AUTO] Optimizing performance: Selected {num_clusters} aggregation servers for {args.nodes} nodes.")
+        print(
+            f"\n[AUTO] Optimizing performance: Selected {num_clusters} aggregation servers for {args.nodes} nodes."
+        )
 
     target_pois_list = None
     if args.target_pois:
