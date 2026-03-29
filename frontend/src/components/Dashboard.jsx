@@ -6,14 +6,17 @@ import TimeSlotStats from './TimeSlotStats';
 import LiveCharts from './LiveCharts';
 import Map3DView from './Map3DView';
 
-function StatCard({ icon, label, value, color }) {
+function StatCard({ icon, label, value, color, description }) {
   return (
-    <div className="glass-panel p-3 rounded-xl">
+    <div className="glass-panel p-3 rounded-xl flex flex-col gap-1 border-b-2 transition-all hover:bg-white/5" style={{ borderBottomColor: color.includes('rose') ? '#ef444433' : color.includes('emerald') ? '#10b98133' : color.includes('indigo') ? '#6366f133' : '#f59e0b33' }}>
       <div className="flex items-center gap-2 mb-1">
         <span className={color}>{icon}</span>
-        <span className="text-xs text-slate-400">{label}</span>
+        <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">{label}</span>
       </div>
-      <p className={`text-xl font-bold ${color}`}>{value}</p>
+      <p className={`text-xl font-black ${color}`}>{value}</p>
+      {description && (
+        <p className="text-[9px] text-slate-500 leading-tight mt-1 italic">{description}</p>
+      )}
     </div>
   );
 }
@@ -82,43 +85,54 @@ export default function Dashboard({
             label="Total Queue"
             value={globalMetrics.total_queue ?? '—'}
             color="text-rose-400"
+            description="Sum of all waiting vehicles across the selected network."
           />
           <StatCard
             icon={<Timer className="w-4 h-4" />}
             label="Avg Reward"
             value={globalMetrics.avg_reward ?? '—'}
             color="text-emerald-400"
+            description="Model efficiency score. Higher means smarter signal timing."
           />
           <StatCard
             icon={<Activity className="w-4 h-4" />}
             label="Intersections"
             value={numIntersections || simConfig.intersections.length || '—'}
             color="text-indigo-400"
+            description="Number of signal-controlled nodes in the simulation."
           />
           <StatCard
             icon={<AlertTriangle className="w-4 h-4" />}
             label="Step"
             value={latestMetrics?.step ?? '—'}
             color="text-amber-400"
+            description="Current simulation time-step (1 tick = signal update)."
           />
         </div>
 
         {/* View Toggles */}
-        <div className="flex gap-2 mb-4">
-           <button 
-             onClick={() => setActiveTab('charts')}
-             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === 'charts' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
-           >
-             <BarChart3 className="w-4 h-4" />
-             Live Metrics
-           </button>
-           <button 
-             onClick={() => setActiveTab('3d')}
-             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === '3d' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
-           >
-             <Box className="w-4 h-4" />
-             3D Density View
-           </button>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 glass-panel p-2">
+            <div className="flex gap-2">
+                <button 
+                    onClick={() => setActiveTab('charts')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === 'charts' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
+                >
+                    <BarChart3 className="w-4 h-4" />
+                    Live Metrics
+                </button>
+                <button 
+                    onClick={() => setActiveTab('3d')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === '3d' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
+                >
+                    <Box className="w-4 h-4" />
+                    3D Density View
+                </button>
+            </div>
+            <p className="text-[10px] text-slate-500 italic pr-2">
+                {activeTab === 'charts' 
+                    ? "Displaying real-time line charts for rewards, queue lengths, and waiting times." 
+                    : "Visualizing traffic density as 3D bars across the geographical map."}
+            </p>
         </div>
 
         {activeTab === '3d' ? (
@@ -172,9 +186,6 @@ export default function Dashboard({
                 ))}
               </div>
             )}
-
-            {/* Historical Time-Slot Data */}
-            {!isRunning && <TimeSlotStats city={simConfig.city} />}
 
             {/* Charts */}
             <LiveCharts simData={simData} intersections={simConfig.intersections} />

@@ -197,18 +197,9 @@ function App() {
       ) : (
         <div className="relative">
           <div className="absolute top-4 right-4 z-50 flex gap-2">
-            {simConfig.algorithm === 'AdaptFlow' && (
-              <button
-                onClick={() => setView('analytics')}
-                className="px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-xs font-semibold hover:bg-indigo-500/20 transition-all text-indigo-300 flex items-center gap-2"
-              >
-                <BarChart2 className="w-3.5 h-3.5" />
-                AdaptFlow Analytics
-              </button>
-            )}
             <button
               onClick={() => setView('landing')}
-              className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold hover:bg-white/10 transition-all"
+              className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-semibold hover:bg-white/10 transition-all focus:ring-2 focus:ring-white/20 outline-none"
             >
               ← Home
             </button>

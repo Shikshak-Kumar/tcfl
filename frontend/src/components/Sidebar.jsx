@@ -20,8 +20,8 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
             disabled={isRunning}
             onClick={() => handleChange('use_tomtom', true)}
             className={`flex-1 py-2 text-xs font-semibold transition-all flex items-center justify-center gap-1.5
-              ${simConfig.use_tomtom 
-                ? 'bg-indigo-500/30 text-indigo-300 border-indigo-400/30' 
+              ${simConfig.use_tomtom
+                ? 'bg-indigo-500/30 text-indigo-300 border-indigo-400/30'
                 : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
           >
             <Zap className="w-3.5 h-3.5" /> Real-Time
@@ -30,13 +30,16 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
             disabled={isRunning}
             onClick={() => handleChange('use_tomtom', false)}
             className={`flex-1 py-2 text-xs font-semibold transition-all flex items-center justify-center gap-1.5
-              ${!simConfig.use_tomtom 
-                ? 'bg-amber-500/30 text-amber-300 border-amber-400/30' 
+              ${!simConfig.use_tomtom
+                ? 'bg-amber-500/30 text-amber-300 border-amber-400/30'
                 : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
           >
             <ZapOff className="w-3.5 h-3.5" /> Mock
           </button>
         </div>
+        <p className="text-[10px] text-slate-500 mt-2 leading-tight italic">
+          {simConfig.use_tomtom ? "Fetching real traffic data from TomTom APIs." : "Using synthetic traffic patterns for controlled testing."}
+        </p>
       </div>
 
       {/* City Selection */}
@@ -53,6 +56,7 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
             <option key={c} value={c} style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}>{c}</option>
           ))}
         </select>
+        <p className="text-[10px] text-slate-500 mt-1.5 italic">Geographical bounds for searching intersections.</p>
       </div>
 
       {/* Algorithm */}
@@ -69,6 +73,9 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
             <option key={a} value={a} style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}>{a}</option>
           ))}
         </select>
+        <p className="text-[10px] text-slate-500 mt-1.5 italic">
+          {simConfig.algorithm === 'AdaptFlow' ? "Federated RL with dynamic clustering for scale." : "Standard fixed-cycle signal control logic."}
+        </p>
       </div>
 
       {/* Pareto Legend */}
@@ -115,11 +122,10 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-lg">{r.tier_emoji}</span>
                   <span className="text-sm font-semibold">{r.name}</span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${
-                    r.tier === 1 ? 'bg-red-500/20 text-red-300' :
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${r.tier === 1 ? 'bg-red-500/20 text-red-300' :
                     r.tier === 2 ? 'bg-amber-500/20 text-amber-300' :
-                    'bg-blue-500/20 text-blue-300'
-                  }`}>
+                      'bg-blue-500/20 text-blue-300'
+                    }`}>
                     Tier {r.tier}
                   </span>
                 </div>
@@ -149,11 +155,11 @@ export default function Sidebar({ simConfig, onConfigChange, isRunning, onToggle
       {/* Deep Analytics Button (AdaptFlow Only) */}
       {simConfig.algorithm === 'AdaptFlow' && (
         <button
-            onClick={onShowAnalytics}
-            className="w-full mb-2 flex items-center justify-center gap-2 px-4 py-3 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-xl transition-all font-bold text-amber-300"
+          onClick={onShowAnalytics}
+          className="w-full mb-2 flex items-center justify-center gap-2 px-4 py-3 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-xl transition-all font-bold text-amber-300"
         >
-            <BarChart2 className="w-4 h-4" />
-            Clustering Analytics
+          <BarChart2 className="w-4 h-4" />
+          Clustering Analytics
         </button>
       )}
 
