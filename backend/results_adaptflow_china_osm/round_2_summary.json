@@ -157,7 +157,7 @@
       "cluster_id": "cluster_0",
       "total_reward": 185.97072822621197,
       "avg_waiting_time": 9.595744680851064,
-      "loss": 0.4465307593345642,
+      "loss": 0.42575475573539734,
       "metrics": {
         "total_waiting_time": 772.0,
         "throughput": 23,
@@ -227,8 +227,8 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "1115849040": 1.2549019607843137,
-          "1115849033#0": 0.39215686274509803
+          "1115849040": 1.0588235294117647,
+          "1115849033#0": 0.049019607843137254
         },
         "green_signal_time_history": [
           {
@@ -2440,7 +2440,7 @@
       "cluster_id": "cluster_0",
       "total_reward": 166.06463860366702,
       "avg_waiting_time": 11.763440860215054,
-      "loss": 0.40152260661125183,
+      "loss": 0.3893915116786957,
       "metrics": {
         "total_waiting_time": 2041.0,
         "throughput": 13,
@@ -2510,7 +2510,7 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "1115849040": 1.1568627450980393,
+          "1115849040": 1.2941176470588236,
           "1115849033#0": 0.0196078431372549
         },
         "green_signal_time_history": [
@@ -4723,7 +4723,7 @@
       "cluster_id": "cluster_1",
       "total_reward": 171.21313238504467,
       "avg_waiting_time": 9.172043010752688,
-      "loss": 0.3949962556362152,
+      "loss": 0.43697991967201233,
       "metrics": {
         "total_waiting_time": 1841.0,
         "throughput": 17,
@@ -4795,8 +4795,8 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "1115849040": 0.9117647058823529,
-          "1115849033#0": 0.5392156862745098
+          "1115849040": 0.6862745098039216,
+          "1115849033#0": 0.46078431372549017
         },
         "green_signal_time_history": [
           {
@@ -7008,7 +7008,7 @@
       "cluster_id": "cluster_1",
       "total_reward": 158.44245158463744,
       "avg_waiting_time": 8.838709677419354,
-      "loss": 0.39148426055908203,
+      "loss": 0.4053785502910614,
       "metrics": {
         "total_waiting_time": 3511.0,
         "throughput": 22,
@@ -7080,8 +7080,8 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "1115849040": 0.29411764705882354,
-          "1115849033#0": 1.7450980392156863
+          "1115849040": 0.0196078431372549,
+          "1115849033#0": 2.0588235294117645
         },
         "green_signal_time_history": [
           {
@@ -9293,7 +9293,7 @@
       "cluster_id": "cluster_0",
       "total_reward": 165.4233924899245,
       "avg_waiting_time": 9.946236559139784,
-      "loss": 0.4126330018043518,
+      "loss": 0.3997981548309326,
       "metrics": {
         "total_waiting_time": 2106.0,
         "throughput": 15,
@@ -9363,8 +9363,8 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "1115849040": 1.2058823529411764,
-          "1115849033#0": 0.08823529411764706
+          "1115849040": 1.1568627450980393,
+          "1115849033#0": 0.37254901960784315
         },
         "green_signal_time_history": [
           {
@@ -11576,7 +11576,7 @@
       "cluster_id": "cluster_0",
       "total_reward": 188.51205368904016,
       "avg_waiting_time": 7.612903225806452,
-      "loss": 0.41871801018714905,
+      "loss": 0.41304782032966614,
       "metrics": {
         "total_waiting_time": 436.0,
         "throughput": 27,
@@ -11646,8 +11646,8 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "1115849040": 0.8725490196078431,
-          "1115849033#0": 0.5490196078431373
+          "1115849040": 0.6078431372549019,
+          "1115849033#0": 0.7352941176470589
         },
         "green_signal_time_history": [
           {

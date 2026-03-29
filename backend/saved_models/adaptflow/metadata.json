@@ -9,7 +9,8 @@
     "clipping": "none"
   },
   "time_steps": 4,
-  "mode": "mock",
-  "source_weights": "results_adaptflow/adaptflow_global_mock.pt",
+  "mode": "sumo",
+  "source_weights": "results_adaptflow\\adaptflow_global_sumo.pt",
+  "sumo_scenario": "default",
   "export_method": "torch_jit_script"
 }
