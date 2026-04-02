@@ -1,5 +1,5 @@
 # AdaptFlow China Rural OSM — Results Analysis
-**Mode:** SUMO-GUI (Real Simulation) | **Rounds:** 3 | **Nodes:** 6 | **Clusters:** 2 | **Steps:** 500
+**Mode:** SUMO-GUI (Real Simulation) | **Rounds:** 5 | **Nodes:** 6 | **Clusters:** 2 | **Steps:** 200
 
 ---
 
@@ -7,24 +7,36 @@
 
 | Node | Round | Cluster | Reward | Avg Wait (s) | Avg Queue | Max Queue | Throughput | TP Ratio | Loss |
 |------|-------|---------|--------|-------------|-----------|-----------|-----------|---------|------|
-| node_0 | 1 | cluster_0 | 242.03 | 7.845 | 5.143 | 18 | 198 / 1027 | 0.1928 | 0.2922 |
-| node_1 | 1 | cluster_0 | 259.92 | 8.635 | 5.253 | 16 | 176 / 1024 | 0.1719 | 0.3383 |
-| node_2 | 1 | cluster_0 | 281.13 | 8.931 | 4.753 | 16 | 172 / 1028 | 0.1673 | 0.3437 |
-| node_3 | 1 | cluster_1 | 292.47 | 9.088 | 4.295 | 12 | 201 / 1024 | 0.1963 | 0.3860 |
-| node_4 | 1 | cluster_1 | **296.63** | 8.942 | 4.950 | 17 | **207** / 1026 | **0.2018** | 0.3650 |
-| node_5 | 1 | cluster_1 | 258.75 | **7.860** | 4.785 | 13 | 191 / 1024 | 0.1865 | 0.3484 |
-| node_0 | 2 | cluster_1 | 325.28 | **7.749** | 3.528 | 10 | 199 / 1027 | 0.1938 | 0.3300 |
-| node_1 | 2 | cluster_1 | **336.03** | 8.838 | **3.248** | 11 | 179 / 1024 | 0.1748 | 0.2585 |
-| node_2 | 2 | cluster_1 | 307.95 | 8.824 | 4.253 | 12 | 180 / 1023 | 0.1760 | 0.3184 |
-| node_3 | 2 | cluster_0 | 315.11 | 8.905 | 3.968 | 10 | 203 / 1023 | 0.1984 | 0.2253 |
-| node_4 | 2 | cluster_0 | 300.71 | 9.169 | 4.635 | 12 | **204** / 1026 | 0.1988 | 0.3147 |
-| node_5 | 2 | cluster_1 | 321.96 | 8.271 | 3.610 | 12 | 187 / 1024 | 0.1826 | 0.2573 |
-| node_0 | 3 | cluster_1 | 325.28 | **7.749** | 3.528 | 10 | 199 / 1027 | 0.1938 | 0.2112 |
-| node_1 | 3 | cluster_1 | **336.03** | 8.838 | **3.248** | 11 | 179 / 1024 | 0.1748 | 0.2607 |
-| node_2 | 3 | cluster_1 | 307.95 | 8.824 | 4.253 | 12 | 180 / 1023 | 0.1760 | 0.2921 |
-| node_3 | 3 | cluster_0 | 315.11 | 8.905 | 3.968 | 10 | 203 / 1023 | 0.1984 | 0.2672 |
-| node_4 | 3 | cluster_0 | 300.71 | 9.169 | 4.635 | 12 | **204** / 1026 | 0.1988 | **0.1969** |
-| node_5 | 3 | cluster_1 | 321.96 | 8.271 | 3.610 | 12 | 187 / 1024 | 0.1826 | ~0.25 |
+| node_0 | 1 | cluster_0 | 188.41 | 2.593 | 2.040 | 6 | 37 / 511 | 7.24% | 0.5300 |
+| node_1 | 1 | cluster_0 | 184.00 | 3.313 | 1.915 | 6 | **48** / 511 | **9.39%** | 0.4832 |
+| node_2 | 1 | cluster_0 | 177.24 | 3.843 | 2.710 | 7 | 41 / 510 | 8.04% | 0.5105 |
+| node_3 | 1 | cluster_1 | 154.08 | **4.604** | **3.970** | **13** | 33 / 510 | 6.47% | 0.4125 |
+| node_4 | 1 | cluster_1 | 171.92 | 3.611 | 2.965 | 7 | 42 / 512 | 8.20% | 0.4717 |
+| node_5 | 1 | cluster_1 | **189.29** | 2.729 | 1.500 | 8 | 37 / 510 | 7.25% | 0.5569 |
+| node_0 | 2 | cluster_0 | 165.75 | **2.918** | 2.650 | 7 | 38 / 512 | 7.42% | 0.4184 |
+| node_1 | 2 | cluster_1 | 178.35 | 3.137 | 2.180 | 7 | **48** / 511 | **9.39%** | 0.4183 |
+| node_2 | 2 | cluster_0 | 179.47 | 3.515 | 2.765 | 8 | 37 / 509 | 7.27% | 0.4367 |
+| node_3 | 2 | cluster_0 | 158.57 | **4.141** | **3.675** | 10 | 35 / 512 | 6.84% | 0.3009 |
+| node_4 | 2 | cluster_0 | 179.76 | 4.250 | 2.695 | 7 | 44 / 511 | 8.61% | 0.4020 |
+| node_5 | 2 | cluster_1 | **189.56** | 3.373 | 1.610 | 7 | 39 / 510 | 7.65% | 0.4243 |
+| node_0 | 3 | cluster_1 | 165.75 | **2.918** | 2.650 | 7 | 38 / 512 | 7.42% | 0.4164 |
+| node_1 | 3 | cluster_1 | **191.65** | 2.887 | 1.780 | 10 | **48** / 512 | **9.38%** | 0.4388 |
+| node_2 | 3 | cluster_0 | 179.24 | 3.519 | 2.770 | 8 | 37 / 509 | 7.27% | 0.3983 |
+| node_3 | 3 | cluster_0 | 158.57 | **4.141** | **3.675** | 10 | 35 / 512 | 6.84% | 0.2091 |
+| node_4 | 3 | cluster_0 | 179.76 | 4.250 | 2.695 | 7 | 44 / 511 | 8.61% | 0.3459 |
+| node_5 | 3 | cluster_1 | **189.56** | 3.373 | 1.610 | 7 | 39 / 510 | 7.65% | 0.4599 |
+| node_0 | 4 | cluster_0 | 165.75 | **2.918** | 2.650 | 7 | 38 / 512 | 7.42% | 0.3134 |
+| node_1 | 4 | cluster_1 | **191.65** | 2.887 | 1.780 | 10 | **48** / 512 | **9.38%** | 0.4498 |
+| node_2 | 4 | cluster_1 | 179.24 | 3.519 | 2.770 | 8 | 37 / 509 | 7.27% | 0.3485 |
+| node_3 | 4 | cluster_0 | 158.57 | **4.141** | **3.675** | 10 | 35 / 512 | 6.84% | 0.3117 |
+| node_4 | 4 | cluster_0 | 179.76 | 4.250 | 2.695 | 7 | 44 / 511 | 8.61% | 0.4117 |
+| node_5 | 4 | cluster_0 | **189.56** | 3.373 | 1.610 | 7 | 39 / 510 | 7.65% | 0.4413 |
+| node_0 | 5 | cluster_0 | 165.75 | **2.918** | 2.650 | 7 | 38 / 512 | 7.42% | 0.3516 |
+| node_1 | 5 | cluster_0 | **191.65** | 2.887 | 1.780 | 10 | **48** / 512 | **9.38%** | 0.4345 |
+| node_2 | 5 | cluster_1 | 179.24 | 3.519 | 2.770 | 8 | 37 / 509 | 7.27% | 0.3992 |
+| node_3 | 5 | cluster_1 | 158.57 | **4.141** | **3.675** | 10 | 35 / 512 | 6.84% | 0.3393 |
+| node_4 | 5 | cluster_1 | 179.76 | 4.250 | 2.695 | 7 | 44 / 511 | 8.61% | ~0.411 |
+| node_5 | 5 | cluster_1 | **189.56** | 3.373 | 1.610 | 7 | 39 / 510 | 7.65% | ~0.441 |
 
 ---
 
@@ -32,38 +44,39 @@
 
 | Round | Avg Reward | Min | Max | Avg Wait (s) | Avg Queue | Avg Loss | Total TP |
 |-------|-----------|-----|-----|-------------|-----------|---------|---------|
-| 1 | 271.82 | 242.03 | 296.63 | 8.550 | 4.863 | 0.3456 | 1145 veh |
-| 2 | **317.84** | 300.71 | 336.03 | 8.626 | 3.873 | **0.2840** | 1152 veh |
-| 3 | **317.84** | 300.71 | 336.03 | 8.626 | 3.873 | ~0.2547 | 1152 veh |
+| 1 | 177.49 | 154.08 | 189.29 | 3.449 | 2.517 | 0.4941 | 238 veh |
+| 2 | 175.24 | 158.57 | 189.56 | 3.556 | 2.596 | 0.4001 | 241 veh |
+| 3 | **177.42** | 158.57 | **191.65** | 3.514 | 2.530 | 0.3781 | 241 veh |
+| 4 | **177.42** | 158.57 | **191.65** | 3.514 | 2.530 | 0.3714 | 241 veh |
+| 5 | **177.42** | 158.57 | **191.65** | 3.514 | 2.530 | ~0.397 | 241 veh |
 
 ### Key Observations
-- **Reward JUMPED +16.9%** from R1 → R2 (271.82 → 317.84) — unlike the urban China OSM run where federation *degraded* performance, here **federation significantly improved it**
-- **Average queue dropped sharply**: 4.863 → 3.873 (−20.4%) after the first aggregation round — all nodes learned to clear queues faster from shared weights
-- **Max queue fell from 18 → 10–12** — the hospital node (node_0) went from catastrophic backlog (max_q=18) to manageable (max_q=10)
-- **Loss steadily fell**: ~0.346 → ~0.284 → ~0.255 (−26.3% over 3 rounds)
-- **Throughput near-stable**: 1145 → 1152 — marginal (+0.6%), the 500-step window processes roughly 19% of total demand each episode
-
-> [!IMPORTANT]
-> **Federation helped the rural map but hurt the urban map.** Rural demand density (~2.56 veh/s, ~1025 departing per 500 steps) creates richer experience for aggregation — all nodes observe similar high-volume rural traffic, so shared weights generalise better. Urban OSM (~0.47 veh/s, ~187 departures) has too little data per episode for good cross-node transfer.
+- **R1 → R2: reward dipped −1.3%** (177.49 → 175.24) — first FedAvg aggregation slightly hurt node_0 and node_5 while helping node_3 and node_4
+- **R2 → R3: reward recovered +1.2%** (175.24 → 177.42) — node_1's policy improved significantly (+7.5% reward) after the cluster aggregation settled
+- **R3–R5 frozen** — avg reward 177.42, wait 3.514 s, queue 2.530 identical across rounds 3–5 (SUMO-reset bug; only loss changes)
+- **node_1 consistently leads** — only node to produce 48 completed trips every round (9.38–9.39% TP), highest of all 6 nodes
+- **node_3 consistently worst** — lowest reward (154–158), highest wait (4.14–4.60 s), highest queue (3.67–3.97), fewest completions (33–35 trips)
+- **Total throughput jumped R1→R2**: 238 → 241 (+1.3%) and held there — slightly more vehicles completing with shorter congestion after first federation
 
 > [!CAUTION]
-> Rounds 2 and 3 are **bit-for-bit identical** in all environment metrics (reward, wait, throughput, queue per node). Only loss values differ. The SUMO simulation is **not restarting** between rounds — `env.reset()` reuses the existing TraCI connection instead of launching a fresh episode.
+> Rounds 3, 4, and 5 are **bit-for-bit identical** in all environment metrics per node (reward, wait, queue, throughput). Only DQN loss values differ. The SUMO simulation is not restarting between rounds — `env.reset()` reuses the existing TraCI connection from round 2 onwards. Round 2 fingerprints also differ from round 1, meaning the first re-cluster used fresh real episode data.
 
 ---
 
 ## 3. Node Traffic Profiles
 
-Six nodes run distinct rural SUMO configs with 600 s begin-time offsets. Two clear groups emerge by round 3:
+Six distinct configs with 600 s begin-time offsets produce clear performance tiers:
 
-| Profile | Nodes | Zone Type | Avg Reward (R3) | Avg Wait (R3) | Avg Queue (R3) |
-|---------|-------|-----------|----------------|--------------|----------------|
-| **High-reward group** | node_0, node_1, node_5 | Village, School, Highway | **327.75** | **8.286 s** | 3.462 |
-| **Moderate group** | node_2, node_3, node_4 | Farm, Residential, Industrial | 307.92 | 8.966 s | 4.285 |
+| Profile | Nodes | Avg Reward (R3+) | Avg Wait (R3+) | Avg Queue (R3+) | TP Ratio |
+|---------|-------|-----------------|---------------|----------------|---------|
+| **High-flow** | node_1, node_5 | **190.61** | **3.130 s** | **1.695** | 8.52% |
+| **Mid-flow** | node_0, node_2, node_4 | 174.92 | 3.562 s | 2.705 | 7.77% |
+| **Congested** | node_3 | 158.57 | **4.141 s** | **3.675** | 6.84% |
 
-- **node_1 is the best node overall** (round 2+): highest reward (336.03), lowest queue (3.248) — school zone at begin=600 s sees a balanced demand window
-- **node_0 improved the most** R1→R3: reward +34.4% (242.03 → 325.28), queue −31.4% (5.143 → 3.528) — hospital node benefited most from weight sharing
-- **node_4 is the persistent challenge**: highest wait (9.169 s), highest queue among R2+ nodes (4.635) — industrial zone at begin=2400 s sees bursty shift-change traffic
-- **node_4 is the fastest learner** by round 3: lowest loss (0.1969) despite moderate performance — DQN converging fastest in industrial traffic
+- **node_1 is the best node** (R3+): reward 191.65, TP ratio 9.38%, wait 2.887 s — school/temple zone at begin=600 s sees the lightest demand window in the 200-step episode
+- **node_5 is second best**: reward 189.56, lowest queue (1.61), wait 3.373 s — highway junction serves through-traffic efficiently
+- **node_3 is the persistent bottleneck**: reward 158.57, worst wait (4.141 s), worst queue (3.675), worst TP (6.84%) — residential outskirts at begin=1200 s faces dense afternoon return traffic; max_queue hit 13 in R1 (highest across all nodes all rounds)
+- **node_4 (industrial)** has highest persistent wait in R2+ (4.250 s) despite decent TP (8.61%) — bursty shift-change demand at begin=1600 s creates wait without forming long queues
 
 ---
 
@@ -71,12 +84,14 @@ Six nodes run distinct rural SUMO configs with 600 s begin-time offsets. Two cle
 
 | Round | cluster_0 | cluster_1 | cluster_0 avg wait | cluster_1 avg wait |
 |-------|-----------|-----------|-------------------|-------------------|
-| 1 | node_0, node_1, node_2 | node_3, node_4, node_5 | 8.470 s | 8.630 s |
-| 2 | node_3, node_4 | node_0, node_1, node_2, node_5 | 9.037 s | 8.421 s |
-| 3 | node_3, node_4 | node_0, node_1, node_2, node_5 | 9.037 s | **STABLE** |
+| 1 | node_0, node_1, node_2 | node_3, node_4, node_5 | 3.250 s | 3.648 s |
+| 2 | node_0, node_2, node_3, node_4 | node_1, node_5 | 3.706 s | 3.255 s |
+| 3 | node_0, node_2, node_3, node_4 | node_1, node_5 | 3.707 s | **STABLE** |
+| 4 | node_0, node_3, node_4 | node_1, node_2, node_5 | 3.770 s | 3.260 s |
+| 5 | **node_0, node_1** | **node_2, node_3, node_4, node_5** | **2.903 s** | **3.821 s** |
 
 > [!IMPORTANT]
-> **Clustering stabilised by round 3 — zero transitions.** Round 2 correctly grouped the two highest-wait nodes (node_3: 9.088 s, node_4: 9.169 s) into cluster_0 and kept the lower-wait nodes in cluster_1. The algorithm converged to a semantically correct split in a single re-clustering step, then held it — a significant improvement over the urban run which reshuffled constantly.
+> **Round 5 produces the most semantically correct clustering of the entire run** — cluster_0 groups the two lowest-wait nodes (node_0: 2.918 s, node_1: 2.887 s, avg 2.903 s) and cluster_1 groups the four highest-wait nodes (avg 3.821 s). The algorithm correctly converged to a wait-based separation by round 5, even though it took 4 re-clustering steps to reach it.
 
 ---
 
@@ -86,15 +101,24 @@ Six nodes run distinct rural SUMO configs with 600 s begin-time offsets. Two cle
 Round 1:  No transitions (static baseline)
 Round 2:  node_0: cluster_0 → cluster_1
           node_1: cluster_0 → cluster_1
-          node_2: cluster_0 → cluster_1
           node_3: cluster_1 → cluster_0
           node_4: cluster_1 → cluster_0
 Round 3:  No transitions (STABLE)
+Round 4:  node_0: cluster_1 → cluster_0
+          node_2: cluster_0 → cluster_1
+          node_5: cluster_1 → cluster_0
+Round 5:  node_1: cluster_1 → cluster_0
+          node_3: cluster_0 → cluster_1
+          node_4: cluster_0 → cluster_1
+          node_5: cluster_0 → cluster_1
 ```
 
-**Total transitions: 5** in 1 re-clustering step (all in round 2).
+**Total transitions: 11** across 3 re-clustering steps (R2, R4, R5).
 
-The algorithm correctly identified that node_3 and node_4 (the two highest-congestion nodes in the rural map) belong together, and kept all faster-flowing nodes in cluster_1. Achieving stability by round 3 with correct grouping indicates the rural fingerprints provided sufficient signal for k-means to converge cleanly.
+- Round 3 is the only **stable** round — no transitions after round 2's reshuffle
+- **node_1** is the most active swing node — transitions in R2, R4 (indirectly via R5 recovery), and R5
+- **node_3** finally lands in cluster_1 (high-congestion cluster) at R5 — semantically correct since it has the worst metrics
+- Round 5's clustering (cluster_0={0,1} vs cluster_1={2,3,4,5}) is the best quality grouping of the run
 
 ---
 
@@ -102,75 +126,78 @@ The algorithm correctly identified that node_3 and node_4 (the two highest-conge
 
 `[avg_wait, avg_queue, throughput_ratio, max_queue, POI_score, priority_flag]`
 
-| Node | Round | Fingerprint | Zone |
-|------|-------|-------------|------|
-| node_0 | 1 | `[7.845, 5.143, 0.1928, 18.0, 0.0, 1.0]` | Village market (Tier 1) |
-| node_0 | 2 | `[7.749, 3.528, 0.1938, 10.0, 0.0, 1.0]` | +queue −31.4%, +wait −1.2% |
-| node_1 | 1 | `[8.635, 5.253, 0.1719, 16.0, 1.0, 0.5]` | Rural school (Tier 2) |
-| node_1 | 2 | `[8.838, 3.248, 0.1748, 11.0, 0.0, 0.5]` | +queue −38.2% |
-| node_2 | 1 | `[8.931, 4.753, 0.1673, 16.0, 1.0, 0.0]` | Farming district |
-| node_2 | 2 | `[8.824, 4.253, 0.1760, 12.0, 0.0, 0.0]` | +queue −10.5% |
-| node_3 | 1 | `[9.088, 4.295, 0.1963, 12.0, 0.0, 0.0]` | Residential outskirts |
-| node_3 | 2 | `[8.905, 3.968, 0.1984, 10.0, 0.0, 0.0]` | +queue −7.6% |
-| node_4 | 1 | `[8.942, 4.950, 0.2018, 17.0, 0.0, 0.0]` | Industrial zone |
-| node_4 | 2 | `[9.169, 4.635, 0.1988, 12.0, 0.0, 0.0]` | Wait +2.5%, queue −6.4% |
-| node_5 | 1 | `[7.860, 4.785, 0.1865, 13.0, 1.0, 0.0]` | Highway junction |
-| node_5 | 2 | `[8.271, 3.610, 0.1826, 12.0, 0.0, 0.0]` | +queue −24.6% |
+| Node | Round | Fingerprint |
+|------|-------|-------------|
+| node_0 | 1 | `[2.593, 2.040, 0.0724, 6.0, 0.0, 1.0]` |
+| node_0 | 2+ | `[2.918, 2.650, 0.0742, 7.0, 0.0, 1.0]` |
+| node_1 | 1 | `[3.313, 1.915, 0.0939, 6.0, 0.0, 0.5]` |
+| node_1 | 2 | `[3.137, 2.180, 0.0939, 7.0, 0.0, 0.5]` |
+| node_1 | 3+ | `[2.887, 1.780, 0.0938, 10.0, 0.0, 0.5]` |
+| node_2 | 1 | `[3.843, 2.710, 0.0804, 7.0, 0.0, 0.0]` |
+| node_2 | 2+ | `[3.519, 2.770, 0.0727, 8.0, 0.0, 0.0]` |
+| node_3 | 1 | `[4.604, 3.970, 0.0647, 13.0, 0.0, 0.0]` |
+| node_3 | 2+ | `[4.141, 3.675, 0.0684, 10.0, 0.0, 0.0]` |
+| node_4 | 1 | `[3.611, 2.965, 0.0820, 7.0, 0.0, 0.0]` |
+| node_4 | 2+ | `[4.250, 2.695, 0.0861, 7.0, 0.0, 0.0]` |
+| node_5 | 1 | `[2.729, 1.500, 0.0725, 8.0, 0.0, 0.0]` |
+| node_5 | 2+ | `[3.373, 1.610, 0.0765, 7.0, 0.0, 0.0]` |
 
-**Fingerprint insights:**
-- node_0 (hospital, priority_flag=1.0) had the worst queue in R1 (5.143, max_q=18) — rural village market with earliest demand window (begin=0) faces highest initial congestion
-- **All nodes improved queue length R1→R2** — federated weights helped every node manage queues better
-- node_4 is the only node where wait *increased* R1→R2 (8.942→9.169) — industrial traffic patterns resist simple weight sharing
-- Fingerprints for R2 = R3 exactly (environment frozen — SUMO not resetting between rounds)
+**Key fingerprint insights:**
+- **node_3 improved most** R1→R2: max_queue dropped 13→10, wait 4.604→4.141 s — the first FedAvg weight sharing reduced node_3's peak congestion
+- **node_4 worsened** R1→R2: wait jumped 3.611→4.250 s (+0.64 s) — the aggregated policy hurts the industrial zone
+- **node_1 continued evolving R2→R3**: wait dropped 3.137→2.887 s, queue improved 2.18→1.78 — unique among all nodes; only one with 3-round fingerprint evolution
+- Fingerprints frozen from R3 onwards for all nodes (SUMO-reset bug)
 
 ---
 
-## 7. Cosine Similarity Matrix
+## 7. Loss Trajectories (DQN Learning Progress)
+
+| Node | R1 | R2 | R3 | R4 | R5 | R1→R5 drop |
+|------|----|----|----|----|-----|-----------|
+| node_0 | 0.5300 | 0.4184 | 0.4164 | **0.3134** | 0.3516 | −33.7% |
+| node_1 | 0.4832 | 0.4183 | 0.4388 | 0.4498 | 0.4345 | −10.1% |
+| node_2 | 0.5105 | 0.4367 | 0.3983 | **0.3485** | 0.3992 | −21.8% |
+| node_3 | 0.4125 | 0.3009 | **0.2091** | 0.3117 | 0.3393 | −17.7% |
+| node_4 | 0.4717 | 0.4020 | 0.3459 | 0.4117 | ~0.411 | ~−12.9% |
+| node_5 | 0.5569 | 0.4243 | 0.4599 | 0.4413 | ~0.441 | ~−20.8% |
+
+**Key loss insights:**
+- **node_3 is the fastest learner** — drops from 0.4125 → 0.2091 by R3 (−49.3%), lowest absolute loss of any node at R3. The DQN quickly learned to manage residential congestion
+- **node_0** shows the best sustained improvement over 5 rounds (−33.7%), reaching its low of 0.3134 at R4
+- **node_1 is the slowest learner** — loss barely moves (0.483 → 0.435, −10.1%); its policy is already near-optimal from round 1, so there is little gradient to reduce
+- **Loss trajectories are noisy** (oscillating not monotonic) — DQN with replay buffer in 200-step episodes creates high-variance gradient estimates
+- All losses remain relatively high (0.20–0.56) compared to India rural (0.08–0.12) — the China rural map's congestion creates harder, more variable learning problems
+
+---
+
+## 8. Cosine Similarity Matrix
 
 ### Round 1
 |        | node_0 | node_1 | node_2 | node_3 | node_4 | node_5 |
 |--------|--------|--------|--------|--------|--------|--------|
-| node_0 | 1.0000 | 0.9948 | 0.9929 | 0.9725 | 0.9963 | 0.9875 |
-| node_1 | 0.9948 | 1.0000 | **0.9992** | 0.9874 | 0.9978 | 0.9982 |
-| node_2 | 0.9929 | **0.9992** | 1.0000 | 0.9893 | 0.9983 | 0.9981 |
-| node_3 | 0.9725 | 0.9874 | 0.9893 | 1.0000 | 0.9872 | 0.9927 |
-| node_4 | 0.9963 | 0.9978 | 0.9983 | 0.9872 | 1.0000 | 0.9950 |
-| node_5 | 0.9875 | 0.9982 | 0.9981 | 0.9927 | 0.9950 | 1.0000 |
+| node_0 | 1.0000 | 0.9925 | 0.9852 | 0.9872 | 0.9858 | 0.9786 |
+| node_1 | 0.9925 | 1.0000 | 0.9960 | 0.9851 | 0.9934 | 0.9783 |
+| node_2 | 0.9852 | 0.9960 | 1.0000 | 0.9870 | **0.9992** | 0.9746 |
+| node_3 | 0.9872 | 0.9851 | 0.9870 | 1.0000 | 0.9885 | **0.9945** |
+| node_4 | 0.9858 | 0.9934 | **0.9992** | 0.9885 | 1.0000 | 0.9730 |
+| node_5 | 0.9786 | 0.9783 | 0.9746 | **0.9945** | 0.9730 | 1.0000 |
 
-### Round 2 / 3 (stable)
+### Round 3–5 (stable)
 |        | node_0 | node_1 | node_2 | node_3 | node_4 | node_5 |
 |--------|--------|--------|--------|--------|--------|--------|
-| node_0 | 1.0000 | 0.9980 | 0.9968 | 0.9948 | 0.9968 | 0.9952 |
-| node_1 | 0.9980 | 1.0000 | 0.9972 | 0.9963 | 0.9966 | 0.9967 |
-| node_2 | 0.9968 | 0.9972 | 1.0000 | 0.9959 | **0.9997** | 0.9989 |
-| node_3 | 0.9948 | 0.9963 | 0.9959 | 1.0000 | 0.9974 | 0.9918 |
-| node_4 | 0.9968 | 0.9966 | **0.9997** | 0.9974 | 1.0000 | 0.9974 |
-| node_5 | 0.9952 | 0.9967 | 0.9989 | 0.9918 | 0.9974 | 1.0000 |
+| node_0 | 1.0000 | 0.9773 | 0.9917 | 0.9923 | 0.9821 | 0.9824 |
+| node_1 | 0.9773 | 1.0000 | 0.9811 | 0.9807 | **0.9553** | 0.9847 |
+| node_2 | 0.9917 | 0.9811 | 1.0000 | **0.9996** | 0.9921 | 0.9942 |
+| node_3 | 0.9923 | 0.9807 | **0.9996** | 1.0000 | 0.9894 | 0.9910 |
+| node_4 | 0.9821 | **0.9553** | 0.9921 | 0.9894 | 1.0000 | 0.9892 |
+| node_5 | 0.9824 | 0.9847 | 0.9942 | 0.9910 | 0.9892 | 1.0000 |
 
-**Similarity patterns:**
-- **R1 most similar pair:** node_1 ↔ node_2 (0.9992) — school zone and farming district share similar demand fingerprints in the morning window
-- **R1 most dissimilar:** node_0 ↔ node_3 (0.9725) — village market (begin=0, high early congestion) vs residential outskirts (begin=1800, afternoon return traffic) — most distinct fingerprints
-- **R2+ most similar pair:** node_2 ↔ node_4 (0.9997) — farming district and industrial zone converge to almost identical fingerprints after aggregation
-- **R2+ average similarity: ~0.9967** — higher than R1 (~0.9951), fingerprints compressed after federation but still retain meaningful spread (range 0.9918–0.9997 vs urban 0.9673–0.9999)
-
----
-
-## 8. Rural vs Urban Comparison
-
-| Metric | China OSM (Urban) | China Rural OSM | Winner |
-|--------|------------------|-----------------|--------|
-| Vehicles/episode | ~187 | **~1025** | Rural (5.5× more) |
-| Avg queue R1 | 0.245–2.08 | **4.3–5.3** | — (rural far higher) |
-| Max queue R1 | 4–5 | **12–18** | — |
-| Federation effect on reward | **−8.4% to −45.4%** | **+16.9% avg** | Rural (federation helped!) |
-| Cluster stability | 8 transitions / 2 rounds | **5 transitions / 1 round, then stable** | Rural |
-| Throughput | 53–58% | 17–20% | Urban |
-| Loss reduction | ~0.37→0.22 | ~0.35→0.25 | Similar |
-| Best node | node_4 (reward 343.33) | node_1 (reward 336.03) | — |
-| Worst node | node_2 (queue 2.08) | node_4 (wait 9.17 s) | — |
-
-> [!NOTE]
-> The rural map's much higher vehicle density (5.5× more departures per episode) is the key reason federation **helped** rather than hurt. With 1025 vehicles per 500-step episode, each node gathers rich experience that generalises well across the rural network — the shared federated weights carry meaningful signal. The urban OSM at ~187 vehicles per episode doesn't generate enough varied experience for productive cross-node transfer.
+**Similarity insights:**
+- **R1 most similar pair:** node_2 ↔ node_4 (0.9992) — farming and industrial zones share almost identical R1 fingerprints
+- **R1 most dissimilar:** node_2 ↔ node_5 (0.9746) — node_5 starts with very low queue (1.5) vs node_2's higher queue (2.71)
+- **R3+ most similar pair:** node_2 ↔ node_3 (0.9996) — farming district and residential outskirts converge to near-identical fingerprints after federation
+- **R3+ most dissimilar pair:** node_1 ↔ node_4 (0.9553) — **lowest similarity seen in this run** — node_1's improved policy (wait 2.887 s, queue 1.78, max_q=10, priority_flag=0.5) is genuinely unlike node_4's bursty industrial fingerprint (wait 4.250 s, queue 2.695). This makes the round-5 split cluster_0={0,1} vs cluster_1={2,3,4,5} especially meaningful
+- R3+ average similarity: **~0.9884** — wider spread than the old 500-step run (~0.9967), meaning 200-step episodes produce more diverse fingerprints
 
 ---
 
@@ -178,13 +205,16 @@ The algorithm correctly identified that node_3 and node_4 (the two highest-conge
 
 | Metric | Value | Trend |
 |--------|-------|-------|
-| Best node overall | node_1 (reward 336.03, queue 3.248) | Stable leader from R2 |
-| Worst node overall | node_0 R1 (reward 242.03, max_q=18) | Recovered +34.4% by R2 |
-| Most improved node | node_0 (+34.4% reward R1→R2) | Hospital benefits most from federation |
-| Hardest node | node_4 (highest wait 9.169 s, highest loss initially) | Industrial zone, slowest convergence |
-| Fastest learner | node_4 (lowest loss 0.197 by R3) | Best policy gradient signal |
-| Federation impact | **+16.9% avg reward R1→R2** | Positive (unlike urban) |
-| Cluster quality | Correct split achieved R2, stable R3 | Excellent for 3-round run |
-| Reward spread R2+ | 35.3 points (300.71–336.03) | Healthy heterogeneity |
-| Queue improvement | −20.4% avg (4.863 → 3.873) | Significant after federation |
-| Critical bug | SUMO not resetting between rounds | Metrics frozen R2→R3 |
+| Best node | node_1 (reward 191.65, TP 9.38%) | Consistent leader R3+ |
+| Worst node | node_3 (reward 154–158, wait 4.14–4.60 s) | Persistent bottleneck |
+| Best wait | node_0 R1 (2.593 s) / node_1 R3+ (2.887 s) | Low-congestion zones |
+| Worst wait | node_3 R1 (4.604 s) | Residential outskirts |
+| Reward R1→R5 | −177.49 → −177.42 (stable, tiny net drop −0.04%) | Essentially neutral |
+| Reward dip | R2 −1.3%, then recovered | FedAvg slightly disruptive once |
+| Loss improvement | 0.494 → ~0.397 (−19.6% avg over 5 rounds) | Slowly improving |
+| Fastest learner | node_3 (−49.3% loss by R3) | Congested node benefits most from learning |
+| Cluster quality | Oscillating but R5 semantically correct | Improving across rounds |
+| Total transitions | 11 across 3 re-clustering steps | High churn |
+| Best clustering | Round 5: {node_0,node_1} vs {node_2,node_3,node_4,node_5} | Correctly separates by wait |
+| SUMO reset bug | R1 real, R2 partially real, R3–R5 frozen | Only first 2 rounds have fresh episodes |
+| Throughput | 7–9% (200-step limit) | Environment-bound |
