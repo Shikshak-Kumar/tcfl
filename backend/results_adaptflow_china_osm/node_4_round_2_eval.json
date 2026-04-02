@@ -3,7 +3,7 @@
   "cluster_id": "cluster_0",
   "total_reward": 165.4233924899245,
   "avg_waiting_time": 9.946236559139784,
-  "loss": 0.4126330018043518,
+  "loss": 0.3997981548309326,
   "metrics": {
     "total_waiting_time": 2106.0,
     "throughput": 15,
@@ -73,8 +73,8 @@
       "max_green_time": 30.0
     },
     "green_signal_time_avg_per_edge": {
-      "1115849040": 1.2058823529411764,
-      "1115849033#0": 0.08823529411764706
+      "1115849040": 1.1568627450980393,
+      "1115849033#0": 0.37254901960784315
     },
     "green_signal_time_history": [
       {

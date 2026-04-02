@@ -554,6 +554,48 @@ class AdaptFlowTrainer:
             f"  [{mode_label.upper()} Model] Global weights saved to {global_model_path}"
         )
 
+        # ── WEIGHT SUMMARY (printed so you know what the frontend will use) ──
+        try:
+            import torch as _torch
+            _sd = _torch.load(global_model_path, map_location="cpu")
+            _total_params = sum(v.numel() for v in _sd.values())
+            _col = "{:<55} {:<22} {:>8}  {:>10}  {:>9}  {:>10}  {:>10}"
+            print(f"\n  {'─' * 125}")
+            print(f"  FINAL MODEL WEIGHTS  —  {global_model_path}")
+            print(f"  Total layers: {len(_sd)}   Total parameters: {_total_params:,}")
+            print(f"  {'─' * 125}")
+            print(f"  " + _col.format("Layer", "Shape", "Params", "Mean", "Std", "Min", "Max"))
+            print(f"  {'─' * 125}")
+            for _name, _t in _sd.items():
+                _f = _t.float()
+                print(f"  " + _col.format(
+                    _name,
+                    str(list(_t.shape)),
+                    f"{_t.numel():,}",
+                    f"{_f.mean().item():+.6f}",
+                    f"{_f.std().item():.6f}",
+                    f"{_f.min().item():+.6f}",
+                    f"{_f.max().item():+.6f}",
+                ))
+            print(f"  {'─' * 125}")
+            # Show which file the server will actually load at simulation time
+            # deployment_model_subdir and effective_sumo_scenario already imported at top
+            _prod_path = os.path.join(
+                "saved_models",
+                deployment_model_subdir("adaptflow", self.sumo_scenario),
+                "model.pt",
+            )
+            _raw_path = global_model_path
+            print(f"\n  FRONTEND SIMULATION WILL LOAD (in priority order):")
+            print(f"    [1st] saved_models path : {_prod_path}")
+            print(f"          exists?            : {os.path.exists(_prod_path)}")
+            print(f"    [2nd] results path       : {_raw_path}")
+            print(f"          exists?            : {os.path.exists(_raw_path)}")
+            print(f"  {'─' * 125}\n")
+        except Exception as _e:
+            print(f"  [Weight Summary] Could not print weights: {_e}")
+        # ─────────────────────────────────────────────────────────────────────
+
         # 4. EXPORT TO Production (saved_models/)
         try:
             print(f"\n  [Production] Exporting optimized model for deployment...")
