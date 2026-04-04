@@ -1,22 +1,22 @@
 {
-  "round": 2,
+  "round": 4,
   "mode": "SUMO-GUI",
   "clustering": {
     "assignments": {
-      "node_0": 0,
-      "node_1": 1,
-      "node_2": 0,
-      "node_3": 1,
-      "node_4": 0,
-      "node_5": 1
+      "node_0": 1,
+      "node_1": 0,
+      "node_2": 1,
+      "node_3": 0,
+      "node_4": 1,
+      "node_5": 0
     },
     "groups": {
-      "0": [
+      "1": [
         "node_0",
         "node_2",
         "node_4"
       ],
-      "1": [
+      "0": [
         "node_1",
         "node_3",
         "node_5"
@@ -133,15 +133,6 @@
   },
   "cluster_info": {
     "cluster_0": {
-      "avg_flow": 0.3316633266533066,
-      "members": [
-        "node_0",
-        "node_2",
-        "node_4"
-      ],
-      "congestion": 11.356713426853707
-    },
-    "cluster_1": {
       "avg_flow": 0.32630522088353414,
       "members": [
         "node_1",
@@ -149,15 +140,24 @@
         "node_5"
       ],
       "congestion": 12.653614457831326
+    },
+    "cluster_1": {
+      "avg_flow": 0.3316633266533066,
+      "members": [
+        "node_0",
+        "node_2",
+        "node_4"
+      ],
+      "congestion": 11.356713426853707
     }
   },
   "nodes": {
     "node_0": {
       "node_id": "node_0",
-      "cluster_id": "cluster_0",
+      "cluster_id": "cluster_1",
       "total_reward": 387.31246662914634,
       "avg_waiting_time": 11.356713426853707,
-      "loss": 0.4848458468914032,
+      "loss": 0.46479079127311707,
       "metrics": {
         "total_waiting_time": 307.0,
         "throughput": 331,
@@ -276,9 +276,9 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "203598795#3": 1.7843137254901962,
-          "608989233#2": 0.5882352941176471,
-          "39452784#4": 0.38235294117647056
+          "203598795#3": 1.6274509803921569,
+          "608989233#2": 0.5588235294117647,
+          "39452784#4": 0.39705882352941174
         },
         "green_signal_time_history": [
           {
@@ -2687,10 +2687,10 @@
     },
     "node_1": {
       "node_id": "node_1",
-      "cluster_id": "cluster_1",
+      "cluster_id": "cluster_0",
       "total_reward": 379.1275050907253,
       "avg_waiting_time": 12.653614457831326,
-      "loss": 0.44683849811553955,
+      "loss": 0.4630545675754547,
       "metrics": {
         "total_waiting_time": 548.0,
         "throughput": 325,
@@ -2809,9 +2809,9 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "203598795#3": 1.3529411764705883,
-          "608989233#2": 1.6568627450980393,
-          "39452784#4": 0.44607843137254904
+          "203598795#3": 1.4215686274509804,
+          "608989233#2": 1.6911764705882353,
+          "39452784#4": 0.40441176470588236
         },
         "green_signal_time_history": [
           {
@@ -5220,10 +5220,10 @@
     },
     "node_2": {
       "node_id": "node_2",
-      "cluster_id": "cluster_0",
+      "cluster_id": "cluster_1",
       "total_reward": 387.31246662914634,
       "avg_waiting_time": 11.356713426853707,
-      "loss": 0.46096110343933105,
+      "loss": 0.47353312373161316,
       "metrics": {
         "total_waiting_time": 307.0,
         "throughput": 331,
@@ -5342,9 +5342,9 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "203598795#3": 1.6470588235294117,
-          "608989233#2": 0.49019607843137253,
-          "39452784#4": 0.49019607843137253
+          "203598795#3": 1.5588235294117647,
+          "608989233#2": 0.5098039215686274,
+          "39452784#4": 0.45098039215686275
         },
         "green_signal_time_history": [
           {
@@ -7753,10 +7753,10 @@
     },
     "node_3": {
       "node_id": "node_3",
-      "cluster_id": "cluster_1",
+      "cluster_id": "cluster_0",
       "total_reward": 379.1275050907253,
       "avg_waiting_time": 12.653614457831326,
-      "loss": 0.4601915776729584,
+      "loss": 0.47138258814811707,
       "metrics": {
         "total_waiting_time": 548.0,
         "throughput": 325,
@@ -7875,9 +7875,9 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "203598795#3": 1.5980392156862746,
-          "608989233#2": 1.7696078431372548,
-          "39452784#4": 0.25980392156862747
+          "203598795#3": 1.5441176470588236,
+          "608989233#2": 1.7475490196078431,
+          "39452784#4": 0.3112745098039216
         },
         "green_signal_time_history": [
           {
@@ -10286,10 +10286,10 @@
     },
     "node_4": {
       "node_id": "node_4",
-      "cluster_id": "cluster_0",
+      "cluster_id": "cluster_1",
       "total_reward": 387.31246662914634,
       "avg_waiting_time": 11.356713426853707,
-      "loss": 0.464400976896286,
+      "loss": 0.4617670774459839,
       "metrics": {
         "total_waiting_time": 307.0,
         "throughput": 331,
@@ -10408,9 +10408,9 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "203598795#3": 1.6323529411764706,
-          "608989233#2": 0.6617647058823529,
-          "39452784#4": 0.6715686274509803
+          "203598795#3": 1.5514705882352942,
+          "608989233#2": 0.5955882352941176,
+          "39452784#4": 0.5416666666666666
         },
         "green_signal_time_history": [
           {
@@ -12819,10 +12819,10 @@
     },
     "node_5": {
       "node_id": "node_5",
-      "cluster_id": "cluster_1",
+      "cluster_id": "cluster_0",
       "total_reward": 379.1275050907253,
       "avg_waiting_time": 12.653614457831326,
-      "loss": 0.42050325870513916,
+      "loss": 0.4352433383464813,
       "metrics": {
         "total_waiting_time": 548.0,
         "throughput": 325,
@@ -12941,9 +12941,9 @@
           "max_green_time": 30.0
         },
         "green_signal_time_avg_per_edge": {
-          "203598795#3": 1.8235294117647058,
-          "608989233#2": 2.0784313725490198,
-          "39452784#4": 0.47058823529411764
+          "203598795#3": 1.6568627450980393,
+          "608989233#2": 1.9019607843137254,
+          "39452784#4": 0.4166666666666667
         },
         "green_signal_time_history": [
           {
