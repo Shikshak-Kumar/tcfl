@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- node_2 — Jhajjar agricultural / farming crossroads: begin=1200 (midday lull).
+     Priority tier 3. Slow-moving tractor and farm vehicle mix, lower demand.
+     Haryana rural: relaxed jam-threshold for slow agricultural traffic. -->
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="osm.net.xml.gz"/>
+        <route-files value="osm.passenger.trips.xml"/>
+        <additional-files value="osm.poly.xml.gz,output.add.xml"/>
+    </input>
+
+    <time>
+        <begin value="1200"/>
+        <end value="3600"/>
+        <step-length value="1"/>
+    </time>
+
+    <output>
+        <tripinfo-output value="tripinfos_node2.xml"/>
+        <statistic-output value="stats_node2.xml"/>
+    </output>
+
+    <processing>
+        <ignore-route-errors value="true"/>
+        <tls.actuated.jam-threshold value="25"/>
+        <time-to-teleport value="90"/>
+        <ignore-junction-blocker value="5"/>
+    </processing>
+
+    <routing>
+        <device.rerouting.adaptation-steps value="14"/>
+        <device.rerouting.adaptation-interval value="9"/>
+    </routing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <gui_only>
+        <gui-settings-file value="osm.view.xml"/>
+    </gui_only>
+
+</sumoConfiguration>

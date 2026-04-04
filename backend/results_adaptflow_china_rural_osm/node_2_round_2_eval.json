@@ -1,16 +1,16 @@
 {
   "node_id": "node_2",
   "cluster_id": "cluster_0",
-  "total_reward": 179.47418069493284,
-  "avg_waiting_time": 3.5147347740667976,
-  "loss": 0.4367195665836334,
+  "total_reward": 179.24206408269717,
+  "avg_waiting_time": 3.518664047151277,
+  "loss": 0.41026949882507324,
   "metrics": {
-    "total_waiting_time": 622.0,
+    "total_waiting_time": 647.0,
     "throughput": 37,
     "total_departed": 509,
     "throughput_ratio": 0.07269155206286837,
-    "avg_waiting_time_per_vehicle": 3.5147347740667976,
-    "average_queue_length": 2.765,
+    "avg_waiting_time_per_vehicle": 3.518664047151277,
+    "average_queue_length": 2.77,
     "max_queue_length": 8,
     "steps": 200,
     "per_lane_metrics": {
@@ -82,10 +82,10 @@
         "edge_id": "-1084156504#0",
         "lane_id": "-1084156504#0_1",
         "vehicle_count": 4,
-        "queue_length": 2,
-        "waiting_time": 44.0,
-        "average_speed": 6.461349501260254,
-        "occupancy_percent": 0.12064909211558182,
+        "queue_length": 3,
+        "waiting_time": 45.0,
+        "average_speed": 5.896436309704672,
+        "occupancy_percent": 0.14116554356975036,
         "green_signal_time": 16.0,
         "vehicle_types": {
           "car": 4
@@ -96,10 +96,10 @@
     "lane_summary": {
       "total_lanes": 6,
       "total_vehicles": 7,
-      "total_queue_length": 2,
-      "total_waiting_time": 62.0,
-      "average_speed": 24.10371273120875,
-      "average_occupancy": 0.028867039667772158,
+      "total_queue_length": 3,
+      "total_waiting_time": 63.0,
+      "average_speed": 24.009560532616153,
+      "average_occupancy": 0.032286448243466916,
       "num_congested_lanes": 0
     },
     "green_signal_time": {
@@ -114,9 +114,9 @@
       "max_green_time": 30.0
     },
     "green_signal_time_avg_per_edge": {
-      "50677938#1": 6.888888888888889,
-      "-1084156502#0": 1.5265700483091786,
-      "-1084156504#0": 2.975845410628019
+      "50677938#1": 6.811594202898551,
+      "-1084156502#0": 1.6908212560386473,
+      "-1084156504#0": 3.1497584541062804
     },
     "green_signal_time_history": [
       {
@@ -2415,9 +2415,9 @@
         "per_edge": {
           "50677938#1": 8.0,
           "-1084156502#0": 4.0,
-          "-1084156504#0": 16.0
+          "-1084156504#0": 20.0
         },
-        "avg_gst": 9.333333333333334,
+        "avg_gst": 10.666666666666666,
         "num_lanes": 3,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
@@ -2520,6 +2520,6 @@
         "time": 1400.0
       }
     ],
-    "total_reward": 179.47418069493284
+    "total_reward": 179.24206408269717
   }
 }
