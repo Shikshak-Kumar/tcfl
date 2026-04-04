@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- node_1 — School / temple approach road: begin=400 (school opening rush).
+     Priority tier 2. Mixed pedestrian + vehicular demand. -->
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="osm.net.xml.gz"/>
+        <route-files value="osm.passenger.trips.xml"/>
+        <additional-files value="osm.poly.xml.gz,output.add.xml"/>
+    </input>
+
+    <time>
+        <begin value="400"/>
+        <end value="3600"/>
+        <step-length value="1"/>
+    </time>
+
+    <output>
+        <tripinfo-output value="tripinfos_node1.xml"/>
+        <statistic-output value="stats_node1.xml"/>
+    </output>
+
+    <processing>
+        <ignore-route-errors value="true"/>
+        <tls.actuated.jam-threshold value="18"/>
+        <time-to-teleport value="65"/>
+        <ignore-junction-blocker value="4"/>
+    </processing>
+
+    <routing>
+        <device.rerouting.adaptation-steps value="12"/>
+        <device.rerouting.adaptation-interval value="8"/>
+    </routing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <gui_only>
+        <gui-settings-file value="osm.view.xml"/>
+    </gui_only>
+
+</sumoConfiguration>

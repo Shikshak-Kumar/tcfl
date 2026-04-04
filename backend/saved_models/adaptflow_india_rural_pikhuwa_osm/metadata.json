@@ -1,0 +1,16 @@
+{
+  "algorithm": "adaptflow",
+  "version": "1.0.0",
+  "state_size": 12,
+  "action_size": 4,
+  "device": "cpu",
+  "preprocessing": {
+    "normalization": "none",
+    "clipping": "none"
+  },
+  "time_steps": 4,
+  "mode": "sumo",
+  "source_weights": "results_adaptflow_india_rural_pikhuwa_osm\\adaptflow_global_sumo.pt",
+  "sumo_scenario": "pikhuwa_osm",
+  "export_method": "torch_jit_script"
+}

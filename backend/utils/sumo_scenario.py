@@ -53,6 +53,28 @@ INDIA_RURAL_OSM_SUMO_CONFIGS: List[str] = [
     "sumo_configs_india_rural_osm/osm_node5.sumocfg",  # State hwy junc   – begin=2000, jam=22
 ]
 
+PIKHUWA_OSM_SUMO_CONFIGS: List[str] = [
+    # Pikhuwa (UP) rural OSM map — six nodes with 400 s begin-time offsets
+    # and UP-specific TLS parameters (mixed rural + highway fringe traffic).
+    "pikhuwa/osm_node0.sumocfg",  # Town centre/market  – begin=0,    jam=12
+    "pikhuwa/osm_node1.sumocfg",  # School/temple       – begin=400,  jam=18
+    "pikhuwa/osm_node2.sumocfg",  # Farming district    – begin=800,  jam=25
+    "pikhuwa/osm_node3.sumocfg",  # Residential colony  – begin=1200, jam=30
+    "pikhuwa/osm_node4.sumocfg",  # Industrial/hwy frng – begin=1600, jam=40
+    "pikhuwa/osm_node5.sumocfg",  # State hwy junction  – begin=2000, jam=22
+]
+
+RURAL_OSM_SUMO_CONFIGS: List[str] = [
+    # Jhajjar (Haryana) rural OSM map — 8851 vehicles over 3600 s (~2.46 veh/s).
+    # Six nodes with 600 s begin-time offsets, Haryana-specific TLS parameters.
+    "sumo_configs_rural_osm/osm_node0.sumocfg",  # Town market/mandi – begin=0,    jam=12
+    "sumo_configs_rural_osm/osm_node1.sumocfg",  # School/college    – begin=600,  jam=18
+    "sumo_configs_rural_osm/osm_node2.sumocfg",  # Farming area      – begin=1200, jam=25
+    "sumo_configs_rural_osm/osm_node3.sumocfg",  # Residential colony– begin=1800, jam=30
+    "sumo_configs_rural_osm/osm_node4.sumocfg",  # HSIIDC industrial – begin=2400, jam=38
+    "sumo_configs_rural_osm/osm_node5.sumocfg",  # NH-48 hwy junc    – begin=3000, jam=22
+]
+
 
 def normalize_scenario(name: Optional[str]) -> str:
     if not name:
@@ -70,7 +92,6 @@ def normalize_scenario(name: Optional[str]) -> str:
     if n in (
         "china_rural_osm",
         "chinaruralosm",
-        "rural_osm",
         "sumo_configs_china_rural_osm",
         "china_rural",
     ):
@@ -84,6 +105,24 @@ def normalize_scenario(name: Optional[str]) -> str:
         "in_rural",
     ):
         return "india_rural_osm"
+    if n in (
+        "rural_osm",
+        "ruralosm",
+        "jhajjar",
+        "jhajjar_osm",
+        "sumo_configs_rural_osm",
+        "haryana_rural",
+    ):
+        return "rural_osm"
+    if n in (
+        "pikhuwa_osm",
+        "pikhuwaosm",
+        "pikhuwa",
+        "india_rural_pikhuwa_osm",
+        "indiaruralpikhuwaosm",
+        "pikhuwa_rural",
+    ):
+        return "pikhuwa_osm"
     return "default"
 
 
@@ -104,6 +143,10 @@ def get_sumo_config_paths(scenario: Optional[str] = None) -> List[str]:
         return list(CHINA_RURAL_OSM_SUMO_CONFIGS)
     if s == "india_rural_osm":
         return list(INDIA_RURAL_OSM_SUMO_CONFIGS)
+    if s == "rural_osm":
+        return list(RURAL_OSM_SUMO_CONFIGS)
+    if s == "pikhuwa_osm":
+        return list(PIKHUWA_OSM_SUMO_CONFIGS)
     return list(DEFAULT_SUMO_CONFIGS)
 
 
@@ -116,6 +159,10 @@ def scenario_results_suffix(resolved: str) -> str:
         return "_china_rural_osm"
     if resolved == "india_rural_osm":
         return "_india_rural_osm"
+    if resolved == "rural_osm":
+        return "_rural_osm"
+    if resolved == "pikhuwa_osm":
+        return "_india_rural_pikhuwa_osm"
     return ""
 
 
@@ -149,6 +196,10 @@ def deployment_model_subdir(algo_stem: str, sumo_scenario: Optional[str] = None)
         return f"{stem}_china_rural_osm"
     if r == "india_rural_osm":
         return f"{stem}_india_rural_osm"
+    if r == "rural_osm":
+        return f"{stem}_rural_osm"
+    if r == "pikhuwa_osm":
+        return f"{stem}_india_rural_pikhuwa_osm"
     return stem
 
 
@@ -160,6 +211,10 @@ def scenario_label_for_log(sumo_scenario: Optional[str] = None) -> str:
         return "China Rural OSM"
     if r == "india_rural_osm":
         return "India Rural OSM"
+    if r == "rural_osm":
+        return "Jhajjar Rural OSM"
+    if r == "pikhuwa_osm":
+        return "Pikhuwa Rural OSM"
     if r == "china":
         return "China (synthetic)"
     return "default"
@@ -192,7 +247,7 @@ def effective_training_gui(
     if use_tomtom:
         return gui_cli
     if effective_sumo_scenario(sumo_scenario) in (
-        "china", "china_osm", "china_rural_osm", "india_rural_osm"
+        "china", "china_osm", "china_rural_osm", "india_rural_osm", "rural_osm", "pikhuwa_osm"
     ):
         return True
     return gui_cli
