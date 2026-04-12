@@ -51,7 +51,7 @@ class SUMOTrafficEnvironment:
         self.show_gst_gui = show_gst_gui
         self.episode_count = 0
         self.step_count = 0
-        self.max_steps = 400
+        self.max_steps = 1000
         self.min_phase_duration_s: float = 5.0
         self.yellow_duration_s: float = 3.0
         self.last_phase_switch_time: float = 0.0

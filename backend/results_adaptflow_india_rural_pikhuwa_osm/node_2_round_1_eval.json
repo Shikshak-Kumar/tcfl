@@ -1,70 +1,66 @@
 {
   "node_id": "node_2",
   "cluster_id": "cluster_0",
-  "total_reward": 182.88687755831532,
-  "avg_waiting_time": 14.933774834437086,
-  "loss": 0.5592494606971741,
+  "total_reward": 1473.062460193026,
+  "avg_waiting_time": 0.4346978557504873,
+  "loss": 0.536965012550354,
   "metrics": {
     "total_waiting_time": 0.0,
-    "throughput": 101,
-    "total_departed": 604,
-    "throughput_ratio": 0.1672185430463576,
-    "avg_waiting_time_per_vehicle": 14.933774834437086,
-    "average_queue_length": 1.13,
-    "max_queue_length": 7,
-    "steps": 200,
+    "throughput": 459,
+    "total_departed": 513,
+    "throughput_ratio": 0.8947368421052632,
+    "avg_waiting_time_per_vehicle": 0.4346978557504873,
+    "average_queue_length": 0.218,
+    "max_queue_length": 2,
+    "steps": 1500,
     "per_lane_metrics": {
       "-195801522#10_0": {
         "edge_id": "-195801522#10",
         "lane_id": "-195801522#10_0",
-        "vehicle_count": 1,
+        "vehicle_count": 0,
         "queue_length": 0,
         "waiting_time": 0.0,
-        "average_speed": 13.169633280741461,
-        "occupancy_percent": 0.021090817058252838,
-        "green_signal_time": 4.0,
-        "vehicle_types": {
-          "car": 1
-        },
+        "average_speed": 22.22,
+        "occupancy_percent": 0.0,
+        "green_signal_time": 0.0,
+        "vehicle_types": {},
         "lane_length": 237.07
       },
       "195801522#6_0": {
         "edge_id": "195801522#6",
         "lane_id": "195801522#6_0",
-        "vehicle_count": 1,
+        "vehicle_count": 0,
         "queue_length": 0,
         "waiting_time": 0.0,
-        "average_speed": 19.297892086742927,
-        "occupancy_percent": 0.04850601474582848,
-        "green_signal_time": 4.0,
-        "vehicle_types": {
-          "car": 1
-        },
+        "average_speed": 22.22,
+        "occupancy_percent": 0.0,
+        "green_signal_time": 0.0,
+        "vehicle_types": {},
         "lane_length": 103.08
       }
     },
     "lane_summary": {
       "total_lanes": 2,
-      "total_vehicles": 2,
+      "total_vehicles": 0,
       "total_queue_length": 0,
       "total_waiting_time": 0.0,
-      "average_speed": 16.233762683742192,
-      "average_occupancy": 0.034798415902040664,
+      "average_speed": 22.22,
+      "average_occupancy": 0.0,
       "num_congested_lanes": 0
     },
     "green_signal_time": {
       "per_edge": {
-        "-195801522#10": 4.0,
-        "195801522#6": 4.0
+        "-195801522#10": 0.0,
+        "195801522#6": 0.0
       },
-      "avg_gst": 4.0,
+      "avg_gst": 0.0,
       "num_lanes": 2,
       "min_green_time": 5.0,
       "max_green_time": 30.0
     },
     "green_signal_time_avg_per_edge": {
-      "-195801522#10": 2.0098522167487687,
-      "195801522#6": 2.561576354679803
+      "-195801522#10": 0.4524284763805722,
+      "195801522#6": 0.41783100465735196
     },
     "green_signal_time_history": [
       {
@@ -76,7 +72,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 804.0
+        "time": 2104.0
       },
       {
         "per_edge": {
@@ -87,7 +83,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 805.0
+        "time": 2105.0
       },
       {
         "per_edge": {
@@ -98,7 +94,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 806.0
+        "time": 2106.0
       },
       {
         "per_edge": {
@@ -109,7 +105,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 807.0
+        "time": 2107.0
       },
       {
         "per_edge": {
@@ -120,7 +116,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 808.0
+        "time": 2108.0
       },
       {
         "per_edge": {
@@ -131,7 +127,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 809.0
+        "time": 2109.0
       },
       {
         "per_edge": {
@@ -142,7 +138,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 810.0
+        "time": 2110.0
       },
       {
         "per_edge": {
@@ -153,7 +149,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 811.0
+        "time": 2111.0
       },
       {
         "per_edge": {
@@ -164,7 +160,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 812.0
+        "time": 2112.0
       },
       {
         "per_edge": {
@@ -175,7 +171,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 813.0
+        "time": 2113.0
       },
       {
         "per_edge": {
@@ -186,7 +182,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 814.0
+        "time": 2114.0
       },
       {
         "per_edge": {
@@ -197,7 +193,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 815.0
+        "time": 2115.0
       },
       {
         "per_edge": {
@@ -208,7 +204,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 816.0
+        "time": 2116.0
       },
       {
         "per_edge": {
@@ -219,7 +215,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 817.0
+        "time": 2117.0
       },
       {
         "per_edge": {
@@ -230,7 +226,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 818.0
+        "time": 2118.0
       },
       {
         "per_edge": {
@@ -241,7 +237,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 819.0
+        "time": 2119.0
       },
       {
         "per_edge": {
@@ -252,7 +248,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 820.0
+        "time": 2120.0
       },
       {
         "per_edge": {
@@ -263,7 +259,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 821.0
+        "time": 2121.0
       },
       {
         "per_edge": {
@@ -274,7 +270,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 822.0
+        "time": 2122.0
       },
       {
         "per_edge": {
@@ -285,7 +281,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 823.0
+        "time": 2123.0
       },
       {
         "per_edge": {
@@ -296,7 +292,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 824.0
+        "time": 2124.0
       },
       {
         "per_edge": {
@@ -307,7 +303,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 825.0
+        "time": 2125.0
       },
       {
         "per_edge": {
@@ -318,51 +314,51 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 826.0
+        "time": 2126.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 0.0
+          "195801522#6": 4.0
         },
-        "avg_gst": 0.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 827.0
+        "time": 2127.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 0.0
+          "195801522#6": 4.0
         },
-        "avg_gst": 0.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 828.0
+        "time": 2128.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 0.0
+          "195801522#6": 4.0
         },
-        "avg_gst": 0.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 829.0
+        "time": 2129.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 0.0
+          "195801522#6": 4.0
         },
-        "avg_gst": 0.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 830.0
+        "time": 2130.0
       },
       {
         "per_edge": {
@@ -373,7 +369,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 831.0
+        "time": 2131.0
       },
       {
         "per_edge": {
@@ -384,7 +380,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 832.0
+        "time": 2132.0
       },
       {
         "per_edge": {
@@ -395,7 +391,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 833.0
+        "time": 2133.0
       },
       {
         "per_edge": {
@@ -406,7 +402,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 834.0
+        "time": 2134.0
       },
       {
         "per_edge": {
@@ -417,7 +413,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 835.0
+        "time": 2135.0
       },
       {
         "per_edge": {
@@ -428,7 +424,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 836.0
+        "time": 2136.0
       },
       {
         "per_edge": {
@@ -439,7 +435,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 837.0
+        "time": 2137.0
       },
       {
         "per_edge": {
@@ -450,7 +446,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 838.0
+        "time": 2138.0
       },
       {
         "per_edge": {
@@ -461,7 +457,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 839.0
+        "time": 2139.0
       },
       {
         "per_edge": {
@@ -472,7 +468,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 840.0
+        "time": 2140.0
       },
       {
         "per_edge": {
@@ -483,183 +479,183 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 841.0
+        "time": 2141.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 842.0
+        "time": 2142.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 843.0
+        "time": 2143.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 844.0
+        "time": 2144.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 845.0
+        "time": 2145.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 846.0
+        "time": 2146.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 847.0
+        "time": 2147.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 848.0
+        "time": 2148.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 849.0
+        "time": 2149.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 850.0
+        "time": 2150.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 851.0
+        "time": 2151.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 852.0
+        "time": 2152.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 853.0
+        "time": 2153.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 854.0
+        "time": 2154.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 855.0
+        "time": 2155.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 856.0
+        "time": 2156.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 857.0
+        "time": 2157.0
       },
       {
         "per_edge": {
@@ -670,7 +666,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 858.0
+        "time": 2158.0
       },
       {
         "per_edge": {
@@ -681,7 +677,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 859.0
+        "time": 2159.0
       },
       {
         "per_edge": {
@@ -692,7 +688,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 860.0
+        "time": 2160.0
       },
       {
         "per_edge": {
@@ -703,7 +699,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 861.0
+        "time": 2161.0
       },
       {
         "per_edge": {
@@ -714,7 +710,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 862.0
+        "time": 2162.0
       },
       {
         "per_edge": {
@@ -725,7 +721,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 863.0
+        "time": 2163.0
       },
       {
         "per_edge": {
@@ -736,7 +732,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 864.0
+        "time": 2164.0
       },
       {
         "per_edge": {
@@ -747,7 +743,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 865.0
+        "time": 2165.0
       },
       {
         "per_edge": {
@@ -758,95 +754,95 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 866.0
+        "time": 2166.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 867.0
+        "time": 2167.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 868.0
+        "time": 2168.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 869.0
+        "time": 2169.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 870.0
+        "time": 2170.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 871.0
+        "time": 2171.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 872.0
+        "time": 2172.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 873.0
+        "time": 2173.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 874.0
+        "time": 2174.0
       },
       {
         "per_edge": {
@@ -857,7 +853,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 875.0
+        "time": 2175.0
       },
       {
         "per_edge": {
@@ -868,7 +864,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 876.0
+        "time": 2176.0
       },
       {
         "per_edge": {
@@ -879,7 +875,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 877.0
+        "time": 2177.0
       },
       {
         "per_edge": {
@@ -890,62 +886,62 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 878.0
+        "time": 2178.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 879.0
+        "time": 2179.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 880.0
+        "time": 2180.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 881.0
+        "time": 2181.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 882.0
+        "time": 2182.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 883.0
+        "time": 2183.0
       },
       {
         "per_edge": {
@@ -956,7 +952,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 884.0
+        "time": 2184.0
       },
       {
         "per_edge": {
@@ -967,29 +963,29 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 885.0
+        "time": 2185.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 0.0
+          "195801522#6": 4.0
         },
-        "avg_gst": 0.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 886.0
+        "time": 2186.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 0.0
+          "195801522#6": 4.0
         },
-        "avg_gst": 0.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 887.0
+        "time": 2187.0
       },
       {
         "per_edge": {
@@ -1000,326 +996,326 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 888.0
+        "time": 2188.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 889.0
+        "time": 2189.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 890.0
+        "time": 2190.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 891.0
+        "time": 2191.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 892.0
+        "time": 2192.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 893.0
+        "time": 2193.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 894.0
+        "time": 2194.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 895.0
+        "time": 2195.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 896.0
+        "time": 2196.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 897.0
+        "time": 2197.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 898.0
+        "time": 2198.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 899.0
+        "time": 2199.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 900.0
+        "time": 2200.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 901.0
+        "time": 2201.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 902.0
+        "time": 2202.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 903.0
+        "time": 2203.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 904.0
+        "time": 2204.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 905.0
+        "time": 2205.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 906.0
+        "time": 2206.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 907.0
+        "time": 2207.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 908.0
+        "time": 2208.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 909.0
+        "time": 2209.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 910.0
+        "time": 2210.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 911.0
+        "time": 2211.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 912.0
+        "time": 2212.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 913.0
+        "time": 2213.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 914.0
+        "time": 2214.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 915.0
+        "time": 2215.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 916.0
+        "time": 2216.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 917.0
+        "time": 2217.0
       },
       {
         "per_edge": {
@@ -1330,128 +1326,128 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 918.0
+        "time": 2218.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 919.0
+        "time": 2219.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 920.0
+        "time": 2220.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 921.0
+        "time": 2221.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 922.0
+        "time": 2222.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 923.0
+        "time": 2223.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 924.0
+        "time": 2224.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 925.0
+        "time": 2225.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 926.0
+        "time": 2226.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 927.0
+        "time": 2227.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 928.0
+        "time": 2228.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 929.0
+        "time": 2229.0
       },
       {
         "per_edge": {
@@ -1462,7 +1458,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 930.0
+        "time": 2230.0
       },
       {
         "per_edge": {
@@ -1473,7 +1469,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 931.0
+        "time": 2231.0
       },
       {
         "per_edge": {
@@ -1484,18 +1480,18 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 932.0
+        "time": 2232.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 0.0
+          "195801522#6": 4.0
         },
-        "avg_gst": 0.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 933.0
+        "time": 2233.0
       },
       {
         "per_edge": {
@@ -1506,7 +1502,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 934.0
+        "time": 2234.0
       },
       {
         "per_edge": {
@@ -1517,7 +1513,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 935.0
+        "time": 2235.0
       },
       {
         "per_edge": {
@@ -1528,73 +1524,73 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 936.0
+        "time": 2236.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 937.0
+        "time": 2237.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 938.0
+        "time": 2238.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 939.0
+        "time": 2239.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 940.0
+        "time": 2240.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 941.0
+        "time": 2241.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 942.0
+        "time": 2242.0
       },
       {
         "per_edge": {
@@ -1605,7 +1601,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 943.0
+        "time": 2243.0
       },
       {
         "per_edge": {
@@ -1616,7 +1612,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 944.0
+        "time": 2244.0
       },
       {
         "per_edge": {
@@ -1627,84 +1623,84 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 945.0
+        "time": 2245.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 946.0
+        "time": 2246.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 947.0
+        "time": 2247.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 948.0
+        "time": 2248.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 949.0
+        "time": 2249.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 8.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 950.0
+        "time": 2250.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 951.0
+        "time": 2251.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 952.0
+        "time": 2252.0
       },
       {
         "per_edge": {
@@ -1715,7 +1711,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 953.0
+        "time": 2253.0
       },
       {
         "per_edge": {
@@ -1726,7 +1722,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 954.0
+        "time": 2254.0
       },
       {
         "per_edge": {
@@ -1737,7 +1733,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 955.0
+        "time": 2255.0
       },
       {
         "per_edge": {
@@ -1748,7 +1744,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 956.0
+        "time": 2256.0
       },
       {
         "per_edge": {
@@ -1759,7 +1755,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 957.0
+        "time": 2257.0
       },
       {
         "per_edge": {
@@ -1770,7 +1766,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 958.0
+        "time": 2258.0
       },
       {
         "per_edge": {
@@ -1781,7 +1777,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 959.0
+        "time": 2259.0
       },
       {
         "per_edge": {
@@ -1792,7 +1788,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 960.0
+        "time": 2260.0
       },
       {
         "per_edge": {
@@ -1803,7 +1799,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 961.0
+        "time": 2261.0
       },
       {
         "per_edge": {
@@ -1814,7 +1810,7 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 962.0
+        "time": 2262.0
       },
       {
         "per_edge": {
@@ -1825,449 +1821,449 @@
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 963.0
+        "time": 2263.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 964.0
+        "time": 2264.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 965.0
+        "time": 2265.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 966.0
+        "time": 2266.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 967.0
+        "time": 2267.0
       },
       {
         "per_edge": {
           "-195801522#10": 0.0,
-          "195801522#6": 4.0
+          "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 968.0
+        "time": 2268.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 969.0
+        "time": 2269.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 970.0
+        "time": 2270.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 971.0
+        "time": 2271.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 0.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
         "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 972.0
+        "time": 2272.0
       },
       {
         "per_edge": {
-          "-195801522#10": 8.0,
-          "195801522#6": 0.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 973.0
+        "time": 2273.0
       },
       {
         "per_edge": {
-          "-195801522#10": 8.0,
-          "195801522#6": 0.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 974.0
+        "time": 2274.0
       },
       {
         "per_edge": {
-          "-195801522#10": 8.0,
-          "195801522#6": 0.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 975.0
+        "time": 2275.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
-          "195801522#6": 0.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 6.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 976.0
+        "time": 2276.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
+          "-195801522#10": 0.0,
           "195801522#6": 4.0
         },
-        "avg_gst": 8.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 977.0
+        "time": 2277.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
+          "-195801522#10": 0.0,
           "195801522#6": 4.0
         },
-        "avg_gst": 8.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 978.0
+        "time": 2278.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
-          "195801522#6": 8.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 10.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 979.0
+        "time": 2279.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
-          "195801522#6": 8.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 10.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 980.0
+        "time": 2280.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 8.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 981.0
+        "time": 2281.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
-          "195801522#6": 8.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 10.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 982.0
+        "time": 2282.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
-          "195801522#6": 8.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 10.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 983.0
+        "time": 2283.0
       },
       {
         "per_edge": {
-          "-195801522#10": 16.0,
-          "195801522#6": 12.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 14.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 984.0
+        "time": 2284.0
       },
       {
         "per_edge": {
-          "-195801522#10": 16.0,
-          "195801522#6": 12.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 14.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 985.0
+        "time": 2285.0
       },
       {
         "per_edge": {
-          "-195801522#10": 16.0,
-          "195801522#6": 12.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 14.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 986.0
+        "time": 2286.0
       },
       {
         "per_edge": {
-          "-195801522#10": 16.0,
-          "195801522#6": 8.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 12.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 987.0
+        "time": 2287.0
       },
       {
         "per_edge": {
-          "-195801522#10": 16.0,
-          "195801522#6": 8.0
+          "-195801522#10": 0.0,
+          "195801522#6": 4.0
         },
-        "avg_gst": 12.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 988.0
+        "time": 2288.0
       },
       {
         "per_edge": {
-          "-195801522#10": 16.0,
+          "-195801522#10": 0.0,
           "195801522#6": 4.0
         },
-        "avg_gst": 10.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 989.0
+        "time": 2289.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
+          "-195801522#10": 0.0,
           "195801522#6": 4.0
         },
-        "avg_gst": 8.0,
+        "avg_gst": 2.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 990.0
+        "time": 2290.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 8.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 991.0
+        "time": 2291.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 6.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 992.0
+        "time": 2292.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 6.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 993.0
+        "time": 2293.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 6.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 994.0
+        "time": 2294.0
       },
       {
         "per_edge": {
-          "-195801522#10": 12.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 6.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 995.0
+        "time": 2295.0
       },
       {
         "per_edge": {
-          "-195801522#10": 8.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 996.0
+        "time": 2296.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 2.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 997.0
+        "time": 2297.0
       },
       {
         "per_edge": {
-          "-195801522#10": 8.0,
+          "-195801522#10": 0.0,
           "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 998.0
+        "time": 2298.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 999.0
+        "time": 2299.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 1000.0
+        "time": 2300.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 1000.0
+        "time": 2300.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 1000.0
+        "time": 2300.0
       },
       {
         "per_edge": {
-          "-195801522#10": 4.0,
-          "195801522#6": 4.0
+          "-195801522#10": 0.0,
+          "195801522#6": 0.0
         },
-        "avg_gst": 4.0,
+        "avg_gst": 0.0,
         "num_lanes": 2,
         "min_green_time": 5.0,
         "max_green_time": 30.0,
-        "time": 1000.0
+        "time": 2300.0
       }
     ],
-    "total_reward": 182.88687755831532
+    "total_reward": 1473.062460193026
   }
 }

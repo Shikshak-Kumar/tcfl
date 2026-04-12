@@ -144,7 +144,7 @@ class AdaptFlowTrainer:
             print("AdaptFlow-TSC: GUI Mode (SUMO Simulation)")
             for i in range(self.num_nodes):
                 config = self.sumo_configs[i % len(self.sumo_configs)]
-                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=True)
+                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=True, max_steps=self.steps)
                 print(f"  node_{i} -> {config}")
             return
 
@@ -163,7 +163,7 @@ class AdaptFlowTrainer:
             print("AdaptFlow-TSC: Headless SUMO (real microsimulation, no GUI)")
             for i in range(self.num_nodes):
                 config = self.sumo_configs[i % len(self.sumo_configs)]
-                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=False)
+                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=False, max_steps=self.steps)
                 print(f"  node_{i} -> {config}")
             return
 
