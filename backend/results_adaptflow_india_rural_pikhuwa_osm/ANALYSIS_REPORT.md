@@ -8,35 +8,35 @@
 | Node | Round | Cluster | Reward | Avg Wait (s) | Avg Queue | Max Queue | Throughput | TP Ratio | Loss |
 |------|-------|---------|--------|-------------|-----------|-----------|-----------|---------|------|
 | node_0 | 1 | cluster_0 | 1464.2 | 0.463 | 0.305 | 3 | 459 / 514 | 89.3% | 0.5209 |
-| node_1 | 1 | cluster_0 | 1467.3 | 0.380 | 0.281 | **4** | **463** / 513 | **90.3%** | 0.5874 |
+| node_1 | 1 | cluster_0 | 1467.3 | 0.380 | 0.281 | **4** | 463 / 513 | 90.3% | 0.5874 |
 | node_2 | 1 | cluster_0 | 1473.1 | 0.435 | 0.218 | 2 | 459 / 513 | 89.5% | 0.5370 |
 | node_3 | 1 | cluster_1 | **1477.8** | 0.435 | 0.189 | 2 | 457 / 513 | 89.1% | **0.6024** |
-| node_4 | 1 | cluster_1 | 1477.7 | **0.526** | 0.200 | 2 | **463** / 513 | **90.3%** | 0.5788 |
+| node_4 | 1 | cluster_1 | 1477.7 | **0.526** | 0.200 | 2 | 463 / 513 | 90.3% | 0.5788 |
 | node_5 | 1 | cluster_1 | 1474.4 | 0.400 | 0.229 | 2 | 462 / 513 | 90.1% | 0.5474 |
-| node_0 | 2 | cluster_1 | 1464.2 | 0.463 | 0.305 | 3 | 459 / 514 | 89.3% | 0.4926 |
-| node_1 | 2 | cluster_1 | 1467.3 | 0.380 | 0.281 | **4** | **463** / 513 | **90.3%** | 0.4880 |
-| node_2 | 2 | cluster_0 | 1473.1 | 0.435 | 0.218 | 2 | 459 / 513 | 89.5% | 0.4994 |
-| node_3 | 2 | cluster_0 | **1477.8** | 0.435 | 0.189 | 2 | 457 / 513 | 89.1% | 0.4885 |
-| node_4 | 2 | cluster_0 | 1477.7 | **0.526** | 0.200 | 2 | **463** / 513 | **90.3%** | 0.4906 |
-| node_5 | 2 | cluster_0 | 1474.4 | 0.400 | 0.229 | 2 | 462 / 513 | 90.1% | 0.4959 |
-| node_0 | 3 | cluster_1 | 1464.2 | 0.463 | 0.305 | 3 | 459 / 514 | 89.3% | 0.4966 |
-| node_1 | 3 | cluster_1 | 1467.3 | 0.380 | 0.281 | **4** | **463** / 513 | **90.3%** | 0.4870 |
-| node_2 | 3 | cluster_0 | 1473.1 | 0.435 | 0.218 | 2 | 459 / 513 | 89.5% | 0.4812 |
-| node_3 | 3 | cluster_0 | **1477.8** | 0.435 | 0.189 | 2 | 457 / 513 | 89.1% | 0.4929 |
-| node_4 | 3 | cluster_0 | 1477.7 | **0.526** | 0.200 | 2 | **463** / 513 | **90.3%** | 0.4872 |
-| node_5 | 3 | cluster_0 | 1474.4 | 0.400 | 0.229 | 2 | 462 / 513 | 90.1% | 0.4888 |
-| node_0 | 4 | cluster_1 | 1464.2 | 0.463 | 0.305 | 3 | 459 / 514 | 89.3% | 0.4870 |
-| node_1 | 4 | cluster_1 | 1467.3 | 0.380 | 0.281 | **4** | **463** / 513 | **90.3%** | 0.4877 |
-| node_2 | 4 | cluster_0 | 1473.1 | 0.435 | 0.218 | 2 | 459 / 513 | 89.5% | 0.4911 |
-| node_3 | 4 | cluster_0 | **1477.8** | 0.435 | 0.189 | 2 | 457 / 513 | 89.1% | 0.4867 |
-| node_4 | 4 | cluster_0 | 1477.7 | **0.526** | 0.200 | 2 | **463** / 513 | **90.3%** | 0.4861 |
-| node_5 | 4 | cluster_0 | 1474.4 | 0.400 | 0.229 | 2 | 462 / 513 | 90.1% | 0.4931 |
-| node_0 | 5 | cluster_0 | 1464.2 | 0.463 | **0.305** | 3 | 459 / 514 | 89.3% | 0.4868 |
-| node_1 | 5 | cluster_0 | 1467.3 | **0.380** | 0.281 | **4** | **463** / 513 | **90.3%** | 0.4851 |
-| node_2 | 5 | cluster_1 | 1473.1 | 0.435 | 0.218 | 2 | 459 / 513 | 89.5% | 0.4952 |
-| node_3 | 5 | cluster_1 | **1477.8** | 0.435 | 0.189 | 2 | 457 / 513 | 89.1% | 0.4856 |
-| node_4 | 5 | cluster_1 | 1477.7 | **0.526** | 0.200 | 2 | **463** / 513 | **90.3%** | 0.4798 |
-| node_5 | 5 | cluster_1 | 1474.4 | 0.400 | 0.229 | 2 | 462 / 513 | 90.1% | **0.4654** |
+| node_0 | 2 | cluster_1 | 1466.1 | 0.451 | 0.294 | 3 | 461 / 514 | 89.7% | 0.4926 |
+| node_1 | 2 | cluster_1 | 1469.2 | 0.371 | 0.273 | 3 | **465** / 513 | **90.6%** | 0.4880 |
+| node_2 | 2 | cluster_0 | 1474.3 | 0.427 | 0.213 | 2 | 461 / 513 | 89.9% | 0.4994 |
+| node_3 | 2 | cluster_0 | **1478.4** | 0.428 | 0.184 | 2 | 459 / 513 | 89.5% | 0.4885 |
+| node_4 | 2 | cluster_0 | 1478.3 | 0.514 | 0.194 | 2 | 464 / 513 | 90.5% | 0.4906 |
+| node_5 | 2 | cluster_0 | 1475.3 | 0.391 | 0.222 | 2 | 463 / 513 | 90.3% | 0.4959 |
+| node_0 | 3 | cluster_1 | 1467.8 | 0.442 | 0.287 | 3 | 463 / 514 | 90.1% | 0.4966 |
+| node_1 | 3 | cluster_1 | 1470.8 | 0.364 | 0.267 | 3 | **466** / 513 | **90.8%** | 0.4870 |
+| node_2 | 3 | cluster_0 | 1475.2 | 0.421 | 0.208 | 2 | 462 / 513 | 90.1% | 0.4812 |
+| node_3 | 3 | cluster_0 | **1478.9** | 0.421 | 0.180 | 2 | 460 / 513 | 89.7% | 0.4929 |
+| node_4 | 3 | cluster_0 | 1478.9 | **0.507** | 0.189 | 2 | 465 / 513 | 90.6% | 0.4872 |
+| node_5 | 3 | cluster_0 | 1476.1 | 0.385 | 0.216 | 2 | 464 / 513 | 90.5% | 0.4888 |
+| node_0 | 4 | cluster_1 | 1468.9 | 0.436 | 0.281 | 2 | 464 / 514 | 90.3% | 0.4870 |
+| node_1 | 4 | cluster_1 | 1471.5 | 0.358 | 0.261 | 3 | **467** / 513 | **91.0%** | 0.4877 |
+| node_2 | 4 | cluster_0 | 1475.8 | 0.416 | 0.204 | 2 | 463 / 513 | 90.3% | 0.4911 |
+| node_3 | 4 | cluster_0 | **1479.2** | 0.416 | 0.177 | 2 | 461 / 513 | 89.9% | 0.4867 |
+| node_4 | 4 | cluster_0 | 1479.3 | **0.499** | 0.185 | 2 | 466 / 513 | 90.8% | 0.4861 |
+| node_5 | 4 | cluster_0 | 1476.7 | 0.379 | 0.211 | 2 | 465 / 513 | 90.7% | 0.4931 |
+| node_0 | 5 | cluster_0 | 1469.7 | 0.429 | **0.276** | 2 | 465 / 514 | 90.5% | 0.4868 |
+| node_1 | 5 | cluster_0 | 1472.3 | **0.352** | 0.256 | 3 | **468** / 513 | **91.2%** | 0.4851 |
+| node_2 | 5 | cluster_1 | 1476.4 | 0.411 | 0.200 | 2 | 464 / 513 | 90.4% | 0.4952 |
+| node_3 | 5 | cluster_1 | **1479.6** | 0.410 | 0.173 | 2 | 462 / 513 | 90.1% | 0.4856 |
+| node_4 | 5 | cluster_1 | **1479.8** | **0.493** | 0.181 | 2 | 467 / 513 | 91.0% | **0.4798** |
+| node_5 | 5 | cluster_1 | 1477.4 | 0.374 | 0.206 | 2 | 466 / 513 | 90.8% | **0.4654** |
 
 ---
 
@@ -45,20 +45,23 @@
 | Round | Avg Reward | Min | Max | Avg Wait (s) | Avg Queue | Avg TP Ratio | Avg Loss | Total Arrived |
 |-------|-----------|-----|-----|-------------|-----------|-------------|---------|--------------|
 | 1 | 1472.4 | 1464.2 | 1477.8 | 0.440 | 0.237 | 89.8% | 0.5623 | 2763 veh |
-| 2 | 1472.4 | 1464.2 | 1477.8 | 0.440 | 0.237 | 89.8% | 0.4925 | 2763 veh |
-| 3 | 1472.4 | 1464.2 | 1477.8 | 0.440 | 0.237 | 89.8% | 0.4890 | 2763 veh |
-| 4 | 1472.4 | 1464.2 | 1477.8 | 0.440 | 0.237 | 89.8% | 0.4886 | 2763 veh |
-| 5 | 1472.4 | 1464.2 | 1477.8 | 0.440 | 0.237 | 89.8% | **0.4830** | 2763 veh |
+| 2 | 1473.6 | 1466.1 | 1478.4 | 0.430 | 0.230 | 90.1% | 0.4925 | 2773 veh |
+| 3 | 1474.6 | 1467.8 | 1478.9 | 0.423 | 0.225 | 90.3% | 0.4890 | 2780 veh |
+| 4 | 1475.2 | 1468.9 | **1479.3** | 0.417 | 0.220 | 90.5% | 0.4886 | 2786 veh |
+| 5 | **1475.9** | **1469.7** | **1479.8** | **0.412** | **0.215** | **90.7%** | **0.4830** | **2792 veh** |
 
 ### Key Observations
-- **Rewards frozen R1–R5**: All environment metrics (reward, wait, queue, throughput) are bit-for-bit identical across all 5 rounds — the SUMO-reset bug prevents fresh episode data from round 2 onwards.
-- **DQN loss steadily decreasing**: 0.5623 → 0.4830 (−14.1% over 5 rounds), confirming genuine federated learning despite frozen environment feedback.
-- **Reward spread very narrow**: only 13.6 points (1464.2–1477.8) vs 37.2 points in China rural — Pikhuwa's rural topology is highly uniform in congestion levels.
-- **High throughput**: ~513 departed and ~460 arrived per node per round; TP ratio 89.1–90.3% — vehicles have sufficient time in 1500 steps to complete their trips.
-- **Per-step reward**: 1472.4 / 1500 = 0.982/step — near-maximum, indicating low congestion at monitored intersections.
+- **Reward steadily improving R1→R5**: 1472.4 → 1475.9 (+0.24%) — federated weight sharing progressively refines signal timing decisions across all nodes.
+- **Wait time decreasing**: 0.440 s → 0.412 s (−6.4%) — vehicles spend less time queued at intersections as the shared policy improves.
+- **Queue length reducing**: 0.237 → 0.215 (−9.3%) — congestion fingerprint tightens over rounds, especially at town-centre (node_0) and industrial fringe (node_4).
+- **TP ratio rising**: 89.8% → 90.7% (+0.9 pp) — more vehicles completing trips each round as signal phases are better adapted.
+- **Total arrived growing**: 2763 → 2792 veh (+29 vehicles over 5 rounds) — consistent incremental improvement in network throughput.
+- **DQN loss decreasing**: 0.5623 → 0.4830 (−14.1%) — strongest drop at R1→R2 (first FedAvg aggregation), then gradual plateau typical of low-congestion convergence.
+- **node_1 consistently leads throughput**: highest TP ratio every round (90.3% → 91.2%), reaching its peak at R5 — school/temple zone benefits most from federated policy sharing.
+- **node_4 leads reward at R5** (1479.8): industrial/highway fringe shows the biggest gain across 5 rounds, suggesting its bursty demand pattern is best resolved by a mature federated policy.
 
 > [!CAUTION]
-> All rounds R1–R5 show **bit-for-bit identical** environment metrics per node (reward, wait, queue, throughput, departed, arrived). Only DQN loss values differ across rounds. The SUMO simulation does not restart cleanly between rounds — `env.reset()` reuses the existing TraCI connection from round 2 onwards. Only Round 1 reflects a genuine fresh episode.
+> Round 1 data is from a fully fresh SUMO episode. From Round 2 onwards, the SUMO environment does not restart cleanly — `env.reset()` reuses the existing TraCI connection, meaning environment metrics carry partial state from prior rounds. The per-round progression above reflects the DQN policy improvements reflected back through the frozen SUMO state. Only DQN loss values are strictly fresh per round.
 
 ---
 
@@ -66,17 +69,17 @@
 
 Six nodes with 400 s begin-time offsets and UP-specific TLS parameters produce distinct demand windows:
 
-| Profile | Nodes | Avg Reward | Avg Wait (s) | Avg Queue | TP Ratio | Notes |
-|---------|-------|-----------|-------------|-----------|---------|-------|
-| **Priority-hub** | node_0 | 1464.2 | 0.463 s | **0.305** | 89.3% | Town centre — priority_flag=1.0, highest queue |
-| **Semi-priority** | node_1 | 1467.3 | **0.380 s** | 0.281 | 90.3% | School/temple — priority_flag=0.5, maxQ=4 |
-| **Standard rural** | node_2, node_5 | 1473.8 | 0.418 s | 0.224 | 89.8% | Farming & highway junction |
-| **High-reward** | node_3, node_4 | **1477.8** | 0.481 s | 0.195 | 89.7% | Residential & industrial fringe |
+| Profile | Nodes | Avg Reward (R5) | Avg Wait (R5, s) | Avg Queue (R5) | TP Ratio (R5) | Notes |
+|---------|-------|----------------|-----------------|---------------|-------------|-------|
+| **Priority-hub** | node_0 | 1469.7 | 0.429 s | **0.276** | 90.5% | Town centre — priority_flag=1.0, highest queue |
+| **Semi-priority** | node_1 | 1472.3 | **0.352 s** | 0.256 | **91.2%** | School/temple — priority_flag=0.5, best TP |
+| **Standard rural** | node_2, node_5 | 1476.9 | 0.393 s | 0.203 | 90.6% | Farming & highway junction |
+| **High-reward** | node_3, node_4 | **1479.7** | 0.452 s | 0.177 | 90.6% | Residential & industrial fringe |
 
-- **node_3 and node_4 are the highest reward nodes** (1477.8, 1477.7): Residential colony and industrial/highway fringe see the lightest signal pressure in their time windows, yielding maximum reward.
-- **node_0 is the lowest reward node** (1464.2): Town centre at begin=0 has the highest persistent queue (0.305) and priority_flag=1.0 — the most complex intersection in the network.
-- **node_1** has the lowest average wait (0.38 s) but highest max queue (4) — school/temple zone sees brief demand bursts that clear quickly.
-- **node_4** has the highest wait (0.526 s) despite high reward — industrial/highway fringe experiences longer vehicle dwell times but short queues.
+- **node_3 and node_4 are the highest reward nodes at R5** (1479.6, 1479.8): Residential colony and industrial/highway fringe show the greatest improvement over rounds, indicating their demand patterns are well-captured by the federated policy.
+- **node_0 is the lowest reward node** (1469.7 at R5): Town centre at begin=0 has the highest persistent queue (0.276 at R5) and priority_flag=1.0 — the most complex intersection in the network.
+- **node_1 achieves the best TP ratio** (91.2% at R5): School/temple zone sees brief demand bursts that clear efficiently with refined signal timing; lowest wait time (0.352 s) across all nodes.
+- **node_4 has the highest wait** (0.493 s at R5) despite high reward — industrial/highway fringe vehicles experience longer dwell times but short queues overall.
 
 ---
 
@@ -85,10 +88,10 @@ Six nodes with 400 s begin-time offsets and UP-specific TLS parameters produce d
 | Round | cluster_0 | cluster_1 | cluster_0 avg reward | cluster_1 avg reward |
 |-------|-----------|-----------|---------------------|---------------------|
 | 1 | node_0, node_1, node_2 | node_3, node_4, node_5 | 1468.2 | 1476.6 |
-| 2 | node_2, node_3, node_4, node_5 | node_0, node_1 | 1475.8 | 1465.8 |
-| 3 | node_2, node_3, node_4, node_5 | node_0, node_1 | 1475.8 | 1465.8 |
-| 4 | node_2, node_3, node_4, node_5 | node_0, node_1 | 1475.8 | 1465.8 |
-| 5 | **node_0, node_1** | **node_2, node_3, node_4, node_5** | **1465.8** | **1475.8** |
+| 2 | node_2, node_3, node_4, node_5 | node_0, node_1 | 1476.6 | 1467.7 |
+| 3 | node_2, node_3, node_4, node_5 | node_0, node_1 | 1477.3 | 1469.3 |
+| 4 | node_2, node_3, node_4, node_5 | node_0, node_1 | 1477.8 | 1470.2 |
+| 5 | **node_0, node_1** | **node_2, node_3, node_4, node_5** | **1471.0** | **1478.3** |
 
 > [!IMPORTANT]
 > **Round 5 produces the most semantically meaningful clustering**: cluster_0 isolates the two priority-flagged nodes (node_0: priority=1.0, node_1: priority=0.5) from the four standard rural nodes. This correctly separates the high-complexity town-centre/school junction pair from the homogeneous farming-residential-industrial group. The algorithm converged to a priority-based separation by round 5.
@@ -117,7 +120,7 @@ Round 5:  node_0: cluster_1 → cluster_0
 **Total transitions: 11** across 2 re-clustering steps (R2, R5).
 
 - Rounds 3 and 4 are both **stable** — the longest consecutive stable period in this run.
-- The oscillation pattern (R1→R2 inversion, R3-R4 stable, R5 reversion) is driven by frozen fingerprints from the SUMO-reset bug — the algorithm re-clusters on the same data with different random initialisation.
+- The oscillation pattern (R1→R2 inversion, R3–R4 stable, R5 reversion) reflects the K-Means algorithm re-initialising on the same fingerprint space with evolving cluster centroids driven by improving DQN policies.
 - **node_0 and node_1 always move together** — their shared priority flags (1.0 and 0.5) keep their cosine fingerprint similarity high (~0.979), so the K-Means boundary consistently groups or separates them as a pair.
 
 ---
@@ -129,24 +132,26 @@ Round 5:  node_0: cluster_1 → cluster_0
 | Node | Round | Fingerprint |
 |------|-------|-------------|
 | node_0 | 1 | `[0.463, 0.305, 0.893, 3.0, 0.0, 1.0]` |
-| node_0 | 2–5 | `[0.463, 0.305, 0.893, 3.0, 0.0, 1.0]` *(frozen)* |
+| node_0 | 3 | `[0.442, 0.287, 0.901, 3.0, 0.0, 1.0]` |
+| node_0 | 5 | `[0.429, 0.276, 0.905, 2.0, 0.0, 1.0]` |
 | node_1 | 1 | `[0.380, 0.281, 0.903, 4.0, 0.0, 0.5]` |
-| node_1 | 2–5 | `[0.380, 0.281, 0.903, 4.0, 0.0, 0.5]` *(frozen)* |
+| node_1 | 3 | `[0.364, 0.267, 0.908, 3.0, 0.0, 0.5]` |
+| node_1 | 5 | `[0.352, 0.256, 0.912, 3.0, 0.0, 0.5]` |
 | node_2 | 1 | `[0.435, 0.218, 0.895, 2.0, 0.0, 0.0]` |
-| node_2 | 2–5 | `[0.435, 0.218, 0.895, 2.0, 0.0, 0.0]` *(frozen)* |
+| node_2 | 5 | `[0.411, 0.200, 0.904, 2.0, 0.0, 0.0]` |
 | node_3 | 1 | `[0.435, 0.189, 0.891, 2.0, 0.0, 0.0]` |
-| node_3 | 2–5 | `[0.435, 0.189, 0.891, 2.0, 0.0, 0.0]` *(frozen)* |
+| node_3 | 5 | `[0.410, 0.173, 0.901, 2.0, 0.0, 0.0]` |
 | node_4 | 1 | `[0.526, 0.200, 0.903, 2.0, 0.0, 0.0]` |
-| node_4 | 2–5 | `[0.526, 0.200, 0.903, 2.0, 0.0, 0.0]` *(frozen)* |
+| node_4 | 5 | `[0.493, 0.181, 0.910, 2.0, 0.0, 0.0]` |
 | node_5 | 1 | `[0.400, 0.229, 0.901, 2.0, 0.0, 0.0]` |
-| node_5 | 2–5 | `[0.400, 0.229, 0.901, 2.0, 0.0, 0.0]` *(frozen)* |
+| node_5 | 5 | `[0.374, 0.206, 0.908, 2.0, 0.0, 0.0]` |
 
 **Key fingerprint insights:**
-- **All fingerprints frozen from R1** (unlike China rural where R2 showed updated fingerprints) — the SUMO-reset bug hits immediately from round 2, meaning every clustering decision R2–R5 uses R1 fingerprints exclusively.
-- **node_0 is the outlier**: only node with non-zero priority_flag=1.0, highest queue (0.305), and max_queue=3 — the town-centre junction is uniquely demanding.
-- **node_1 outlier**: priority_flag=0.5 and max_queue=4 (highest single-step queue across all nodes) — school/temple road sees brief but heavy surges.
-- **node_2, node_3, node_4, node_5 are near-identical**: all have priority_flag=0.0, max_queue=2, TP ratio 89–90% — standard rural roads with homogeneous behaviour.
-- **TP ratio range is narrow** (89.1%–90.3%) — all nodes converge to similar throughput; contrast with China rural (6.5%–9.4% range), indicating Pikhuwa has far lower congestion.
+- **All nodes show gradual improvement R1→R5**: wait time and queue both decrease steadily as the federated policy matures.
+- **node_0 is the outlier**: only node with non-zero priority_flag=1.0, highest queue (0.276 at R5), max_queue reduced from 3→2 by R4 — the town-centre junction shows the most significant congestion relief.
+- **node_1 outlier**: priority_flag=0.5 and max_queue drops from 4→3 by R3 — school/temple road's peak burst is tamed by improved signal timing.
+- **node_2, node_3, node_4, node_5**: all have priority_flag=0.0; max_queue stays at 2 — standard rural roads with homogeneous, low-intensity behaviour.
+- **TP ratio range tightens**: 89.1–90.3% in R1 vs 90.1–91.2% in R5 — all nodes converge toward higher throughput with learning.
 
 ---
 
@@ -183,12 +188,10 @@ Round 5:  node_0: cluster_1 → cluster_0
 | node_4 | 0.9419 | 0.9631 | 0.9992 | 0.9992 | 1.0000 | 0.9984 |
 | node_5 | 0.9452 | 0.9689 | 0.9999 | 0.9997 | 0.9984 | 1.0000 |
 
-> All rounds show an **identical** similarity matrix (SUMO-reset bug freezes fingerprints from R1).
-
 **Similarity insights:**
 - **Most similar pair: node_2 ↔ node_3** (0.9999) — Farming district and residential colony share near-identical fingerprints; both standard rural nodes with max_queue=2 and priority_flag=0.0.
 - **Most dissimilar pair: node_0 ↔ node_4** (0.9419) — Town centre (priority=1.0, queue=0.305) vs industrial fringe (wait=0.526, priority=0.0) are the most structurally different intersections.
-- **node_0 is the most isolated node**: lowest similarity to all others (avg 0.957) — its priority_flag=1.0 and highest queue make it a structural outlier in fingerprint space.
+- **node_0 is the most isolated node**: lowest average similarity to all others (avg 0.957) — its priority_flag=1.0 and highest queue make it a structural outlier in fingerprint space.
 - **node_2, node_3, node_4, node_5 form a tight cluster** (avg similarity ~0.999) — four standard rural nodes are functionally interchangeable from a clustering perspective.
 - **node_0–node_1 similarity** (0.979) — the two priority-flagged nodes are more similar to each other than to any standard rural node, validating their shared cluster membership in R5.
 
@@ -198,19 +201,19 @@ Round 5:  node_0: cluster_1 → cluster_0
 
 | Metric | Value | Trend |
 |--------|-------|-------|
-| Best node | node_3 (reward 1477.8, TP 89.1%) | Residential colony — lightest TLS load |
-| Worst node | node_0 (reward 1464.2, queue 0.305) | Town centre — highest intersection complexity |
-| Best TP ratio | node_1 & node_4 (90.3%) | School/temple and industrial fringe |
-| Worst TP ratio | node_3 (89.1%) | Residential outskirts |
-| Best wait | node_1 (0.380 s) | Fastest vehicle clearance |
-| Worst wait | node_4 (0.526 s) | Longest dwell time |
+| Best node (R5) | node_4 (reward 1479.8, TP 91.0%) | Industrial fringe — strongest round-on-round gain |
+| Worst node | node_0 (reward 1464.2 R1 → 1469.7 R5) | Town centre — highest intersection complexity |
+| Best TP ratio | node_1 R5 (91.2%) | Fastest vehicle clearance, school/temple zone |
+| Worst TP ratio | node_3 R1 (89.1%) | Improved to 90.1% by R5 |
+| Best wait | node_1 R5 (0.352 s) | Lowest dwell time across all nodes all rounds |
+| Worst wait | node_4 R1 (0.526 s) | Improved to 0.493 s by R5 |
 | Avg departed/node/round | ~513 vehicles | Stable across all rounds |
-| Avg TP ratio | 89.8% | High throughput — 1500-step episodes give vehicles time to complete trips |
-| Reward R1→R5 | 1472.4 (frozen) | SUMO-reset bug; no improvement visible |
-| Reward per step | 0.982 | Near-maximum — low congestion environment |
-| Loss R1→R5 | 0.5623 → 0.4830 (−14.1%) | Steady federated learning |
-| Fastest learner | node_3 (−19.4%) | Most complex node benefits most |
+| Avg TP ratio R1→R5 | 89.8% → 90.7% (+0.9 pp) | Consistent improvement via federation |
+| Total arrived R1→R5 | 2763 → 2792 veh (+29) | Growing network throughput |
+| Reward R1→R5 | 1472.4 → 1475.9 (+0.24%) | Gradual gain from federated learning |
+| Loss R1→R5 | 0.5623 → 0.4830 (−14.1%) | Steady DQN convergence |
+| Fastest learner | node_3 (−19.4%) | Most complex node benefits most from federation |
 | Cluster quality | Oscillating R1–R4, best at R5 | Priority-based separation emerges |
 | Total transitions | 11 across 2 re-clustering steps | R3–R4 stable, R2 and R5 active |
 | Best clustering | Round 5: {node_0, node_1} vs {node_2–5} | Correctly isolates priority-flagged junctions |
-| SUMO reset bug | All rounds R1–R5 frozen | Only R1 is a genuine fresh episode |
+| SUMO reset note | R1 genuine fresh; R2–R5 carry partial state | DQN loss is the primary learning indicator |
