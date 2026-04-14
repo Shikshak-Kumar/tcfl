@@ -65,25 +65,7 @@
 
 ---
 
-## 3. Node Traffic Profiles
-
-Six nodes with 400 s begin-time offsets and UP-specific TLS parameters produce distinct demand windows:
-
-| Profile | Nodes | Avg Reward (R5) | Avg Wait (R5, s) | Avg Queue (R5) | TP Ratio (R5) | Notes |
-|---------|-------|----------------|-----------------|---------------|-------------|-------|
-| **Priority-hub** | node_0 | 1469.7 | 0.429 s | **0.276** | 90.5% | Town centre — priority_flag=1.0, highest queue |
-| **Semi-priority** | node_1 | 1472.3 | **0.352 s** | 0.256 | **91.2%** | School/temple — priority_flag=0.5, best TP |
-| **Standard rural** | node_2, node_5 | 1476.9 | 0.393 s | 0.203 | 90.6% | Farming & highway junction |
-| **High-reward** | node_3, node_4 | **1479.7** | 0.452 s | 0.177 | 90.6% | Residential & industrial fringe |
-
-- **node_3 and node_4 are the highest reward nodes at R5** (1479.6, 1479.8): Residential colony and industrial/highway fringe show the greatest improvement over rounds, indicating their demand patterns are well-captured by the federated policy.
-- **node_0 is the lowest reward node** (1469.7 at R5): Town centre at begin=0 has the highest persistent queue (0.276 at R5) and priority_flag=1.0 — the most complex intersection in the network.
-- **node_1 achieves the best TP ratio** (91.2% at R5): School/temple zone sees brief demand bursts that clear efficiently with refined signal timing; lowest wait time (0.352 s) across all nodes.
-- **node_4 has the highest wait** (0.493 s at R5) despite high reward — industrial/highway fringe vehicles experience longer dwell times but short queues overall.
-
----
-
-## 4. Cluster Assignments Per Round
+## 3. Cluster Assignments Per Round
 
 | Round | cluster_0 | cluster_1 | cluster_0 avg reward | cluster_1 avg reward |
 |-------|-----------|-----------|---------------------|---------------------|
@@ -98,7 +80,7 @@ Six nodes with 400 s begin-time offsets and UP-specific TLS parameters produce d
 
 ---
 
-## 5. Cluster Transitions (Re-Clustering Events)
+## 4. Cluster Transitions (Re-Clustering Events)
 
 ```
 Round 1:  No transitions (static baseline)
@@ -125,7 +107,7 @@ Round 5:  node_0: cluster_1 → cluster_0
 
 ---
 
-## 6. Fingerprint Evolution
+## 5. Fingerprint Evolution
 
 `[avg_wait, avg_queue, throughput_ratio, max_queue, POI_score, priority_flag]`
 
@@ -155,7 +137,7 @@ Round 5:  node_0: cluster_1 → cluster_0
 
 ---
 
-## 7. Loss Trajectories (DQN Learning Progress)
+## 6. Loss Trajectories (DQN Learning Progress)
 
 | Node | R1 | R2 | R3 | R4 | R5 | R1→R5 drop |
 |------|----|----|----|----|-----|-----------|
@@ -177,7 +159,7 @@ Round 5:  node_0: cluster_1 → cluster_0
 
 ---
 
-## 8. Cosine Similarity Matrix (All Rounds — Frozen)
+## 7. Cosine Similarity Matrix (All Rounds — Frozen)
 
 |        | node_0 | node_1 | node_2 | node_3 | node_4 | node_5 |
 |--------|--------|--------|--------|--------|--------|--------|
@@ -197,7 +179,7 @@ Round 5:  node_0: cluster_1 → cluster_0
 
 ---
 
-## 9. Summary
+## 8. Summary
 
 | Metric | Value | Trend |
 |--------|-------|-------|

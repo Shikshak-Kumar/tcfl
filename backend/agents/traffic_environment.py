@@ -44,6 +44,7 @@ class SUMOTrafficEnvironment:
         tl_id: Optional[str] = None,
         show_phase_console: bool = False,
         show_gst_gui: bool = False,
+        max_steps: int = 400,
     ):
         self.sumo_config_path = sumo_config_path
         self.gui = gui
@@ -51,7 +52,7 @@ class SUMOTrafficEnvironment:
         self.show_gst_gui = show_gst_gui
         self.episode_count = 0
         self.step_count = 0
-        self.max_steps = 1000
+        self.max_steps = max_steps
         self.min_phase_duration_s: float = 5.0
         self.yellow_duration_s: float = 3.0
         self.last_phase_switch_time: float = 0.0
@@ -425,10 +426,7 @@ class SUMOTrafficEnvironment:
 
             reward = self._calculate_reward()
 
-            done = (
-                self.step_count >= self.max_steps
-                or traci.simulation.getMinExpectedNumber() == 0
-            )
+            done = self.step_count >= self.max_steps
 
             phase_info = self.get_current_phase_info()
             gst_snapshot = self._compute_green_signal_times()
