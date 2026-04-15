@@ -186,6 +186,10 @@ class SUMOTrafficEnvironment:
         except Exception:
             pass
 
+    def close(self):
+        """Standard alias for stop_simulation to match cleanup interface."""
+        self.stop_simulation()
+
     def reset(self) -> np.ndarray:
         if self.episode_count > 0:
             self.stop_simulation()

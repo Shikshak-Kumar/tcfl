@@ -39,6 +39,7 @@ function App() {
   const [poiResults, setPoiResults] = useState(null);
   const [statusMessage, setStatusMessage] = useState('');
   const wsRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   // Persistence & Routing Effects
   useEffect(() => {
@@ -89,6 +90,7 @@ function App() {
   const toggleSimulation = async () => {
     if (isRunning) {
       if (wsRef.current) wsRef.current.close();
+      if (abortControllerRef.current) abortControllerRef.current.abort();
       setIsRunning(false);
       setStatusMessage('Simulation stopped.');
       return;
@@ -105,6 +107,9 @@ function App() {
     setStatusMessage('Detecting POIs...');
 
     try {
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
       const poiResponse = await fetch(`${API_BASE}/api/detect-pois`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -112,6 +117,7 @@ function App() {
           intersections: simConfig.intersections,
           radius_km: 1.0,
         }),
+        signal: controller.signal,
       });
       const poiData = await poiResponse.json();
       setPoiResults(poiData.intersections);

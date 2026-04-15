@@ -2,8 +2,14 @@ import httpx
 import json
 import asyncio
 
-# Semaphore to strictly limit concurrent requests to Overpass API (rate limit protection)
-overpass_semaphore = asyncio.Semaphore(1)
+# Global semaphore placeholder to be lazily initialized on the running event loop
+_overpass_semaphore = None
+
+def _get_semaphore():
+    global _overpass_semaphore
+    if _overpass_semaphore is None:
+        _overpass_semaphore = asyncio.Semaphore(1)
+    return _overpass_semaphore
 
 
 async def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict:
@@ -23,7 +29,7 @@ async def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict
 
     # Query for standard traffic generators/attractors
     query = f"""
-    [out:json][timeout:25];
+    [out:json][timeout:50];
     (
       nwr["amenity"]({min_lat},{min_lon},{max_lat},{max_lon});
       nwr["leisure"]({min_lat},{min_lon},{max_lat},{max_lon});
@@ -34,21 +40,28 @@ async def get_osm_pois(lat: float, lon: float, radius_deg: float = 0.05) -> dict
     """
 
     try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            # Retry logic for 429 and other transient errors
+        # Increased timeout to 60s to handle slow Overpass responses
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            # Retry logic for 429 (Rate Limit) and 504 (Gateway Timeout)
             max_retries = 3
             for attempt in range(max_retries):
-                response = await client.post(overpass_url, data={"data": query})
-                
-                if response.status_code == 429:
-                    wait_time = (attempt * 2) + 2  # 2, 4, 6 seconds
-                    print(f"[OSM API] Rate limited (429). Retrying in {wait_time}s...")
-                    await asyncio.sleep(wait_time)
+                try:
+                    response = await client.post(overpass_url, data={"data": query})
+                    
+                    if response.status_code in [429, 504]:
+                        wait_time = (attempt * 3) + 2  # 2, 5, 8 seconds
+                        reason = "Rate limited" if response.status_code == 429 else "Gateway Timeout"
+                        print(f"[OSM API] {reason} (code {response.status_code}). Retrying in {wait_time}s...")
+                        await asyncio.sleep(wait_time)
+                        continue
+                    
+                    response.raise_for_status()
+                    data = response.json()
+                    break
+                except (httpx.ConnectTimeout, httpx.ReadTimeout) as e:
+                    print(f"[OSM API] Timeout error: {e}. Retry {attempt+1}/{max_retries}...")
+                    await asyncio.sleep(2)
                     continue
-                
-                response.raise_for_status()
-                data = response.json()
-                break
             else:
                 print(f"[OSM API] Failed after {max_retries} retries.")
                 return {}
@@ -154,22 +167,34 @@ async def detect_priority_for_intersection(
     }
 
 
-async def detect_pois_for_intersections(intersections: list, radius_km: float = 1.0) -> list:
+async def detect_pois_for_intersections(
+    intersections: list, radius_km: float = 1.0, check_cancellation=None
+) -> list:
     """
     For a list of intersections, detect POI priority for each in parallel.
+    check_cancellation: optional async function that returns True if we should stop.
     """
     tasks = []
+    sem = _get_semaphore()
+
     for ix in intersections:
+
         async def wrapped_detect(lat, lon, r):
-            async with overpass_semaphore:
+            if check_cancellation and await check_cancellation():
+                return None
+            async with sem:
+                if check_cancellation and await check_cancellation():
+                    return None
                 return await detect_priority_for_intersection(lat, lon, r)
-        
+
         tasks.append(wrapped_detect(ix["lat"], ix["lon"], radius_km))
-    
+
     priorities = await asyncio.gather(*tasks)
-    
+
     results = []
     for ix, priority in zip(intersections, priorities):
+        if priority is None:
+            continue
         results.append({**ix, **priority})
         print(
             f"[OSM] {ix.get('name', 'Pin')}: Tier {priority['tier']} ({priority['tier_label']}) — "

@@ -4,7 +4,7 @@ load_dotenv()
 import json
 import asyncio
 from typing import List, Optional
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -115,17 +115,66 @@ class DetectPoisRequest(BaseModel):
     radius_km: float = 1.0
 
 
+@app.get("/api/adaptflow/sessions")
+async def get_adaptflow_sessions():
+    """Returns a list of all available simulation sessions."""
+    try:
+        sessions = []
+        runs = glob.glob(os.path.join("simulation_results", "run_*"))
+        runs.sort(reverse=True)
+        
+        for run_dir in runs:
+            sim_id = os.path.basename(run_dir)
+            raw_data_path = os.path.join(run_dir, "raw_data.json")
+            meta = {"id": sim_id, "algorithm": "Unknown", "city": "Unknown", "timestamp": sim_id.replace("run_", "")}
+            
+            if os.path.exists(raw_data_path):
+                try:
+                    with open(raw_data_path, 'r') as f:
+                        data = json.load(f)
+                        meta["algorithm"] = data.get("config", {}).get("algorithm", "Unknown")
+                        meta["city"] = data.get("config", {}).get("city", "Unknown")
+                except:
+                    pass
+            sessions.append(meta)
+        return sessions
+    except Exception as e:
+        print(f"Error listing sessions: {e}")
+        return []
+
 @app.get("/api/adaptflow/analytics")
-async def get_adaptflow_analytics(source: str = "sim"):
+async def get_adaptflow_analytics(source: str = "sim", dataset: str = "india_urban", sim_id: str = "latest"):
     """
     Returns clustering history, fingerprints, and similarities for AdaptFlow.
-    Query param 'source' can be 'sim' or 'train'.
+    Query params:
+    - source: 'sim' or 'train'
+    - dataset: 'india_rural_pikhuwa' | 'china_rural' | 'india_urban' | 'china_urban'
+    - sim_id: Specific folder name (run_XXXX) or 'latest'
     """
     if source == "train":
-        history_path = os.path.join("results_adaptflow", "training_cluster_history.json")
+        train_map = {
+            "india_rural_pikhuwa": "results_adaptflow_india_rural_pikhuwa_osm",
+            "china_rural": "results_adaptflow_china_rural_osm",
+            "india_urban": "results_adaptflow",
+            "china_urban": "results_adaptflow_china_osm"
+        }
+        folder = train_map.get(dataset, "results_adaptflow")
+        history_path = os.path.join(folder, "training_cluster_history.json")
+        # Fallback to cluster_history.json if training version not found
+        if not os.path.exists(history_path):
+            history_path = os.path.join(folder, "cluster_history.json")
     else:
-        history_path = os.path.join("results_adaptflow", "sim_cluster_history.json")
-    
+        # Simulation Logic
+        if sim_id == "latest":
+            history_path = os.path.join("results_adaptflow", "sim_cluster_history.json")
+        else:
+            history_path = os.path.join("simulation_results", sim_id, "cluster_history.json")
+            # If cluster_history doesn't exist in the folder, we might try to derive metrics from raw_data
+            if not os.path.exists(history_path):
+                raw_path = os.path.join("simulation_results", sim_id, "raw_data.json")
+                if os.path.exists(raw_path):
+                    return derive_analytics_from_raw(raw_path)
+
     # 1. Try to load from requested file
     if os.path.exists(history_path):
         try:
@@ -141,8 +190,60 @@ async def get_adaptflow_analytics(source: str = "sim"):
         "transitions": [],
         "fingerprints": [],
         "similarity_matrices": [],
-        "message": f"No {source} history found. Run a session first."
+        "message": f"No {source} data found for selection."
     }
+
+def derive_analytics_from_raw(raw_path):
+    """Fallback: derives basic scalar metrics from raw_data.json if cluster_history.json is missing."""
+    try:
+        with open(raw_path, 'r') as f:
+            data = json.load(f)
+            history = data.get("history", [])
+            if not history: return {"num_rounds": 0}
+            
+            # Group into 'windows' of 50 steps each
+            window_size = 50
+            num_windows = (len(history) + window_size - 1) // window_size
+            
+            reward_history = []
+            queue_history = []
+            wait_history = []
+            throughput_history = []
+            
+            for w in range(num_windows):
+                window = history[w*window_size : (w+1)*window_size]
+                if not window: continue
+                reward_history.append(float(np.mean([s["global"]["avg_reward"] for s in window])))
+                queue_history.append(float(np.mean([s["global"]["total_queue"] for s in window])) / max(1, len(window[0]["intersections"])))
+                
+                # Wait and Throughput need per-node aggregation
+                total_wait = 0
+                total_tp = 0
+                count = 0
+                for s in window:
+                    for ix in s["intersections"].values():
+                        total_wait += ix.get("avg_wait", 0)
+                        # Throughput isn't always in raw_data, estimate if missing
+                        total_tp += ix.get("throughput_ratio", 0.7) 
+                        count += 1
+                
+                wait_history.append(total_wait / max(1, count))
+                throughput_history.append(total_tp / max(1, count))
+            
+            return {
+                "num_rounds": num_windows,
+                "reward_history": reward_history,
+                "queue_history": queue_history,
+                "wait_history": wait_history,
+                "throughput_history": throughput_history,
+                "cluster_history": [{} for _ in range(num_windows)],
+                "fingerprints": [{} for _ in range(num_windows)],
+                "similarity_matrices": [[] for _ in range(num_windows)],
+                "transitions": [{"round": i+1, "transitions": {}} for i in range(num_windows)]
+            }
+    except Exception as e:
+        print(f"Error deriving analytics: {e}")
+        return {"num_rounds": 0}
 
 
 @app.get("/api/config")
@@ -234,11 +335,17 @@ async def get_comparison_data():
     return results
 
 @app.post("/api/detect-pois")
-async def detect_pois(request: DetectPoisRequest):
+async def detect_pois(request: Request, data: DetectPoisRequest):
     """Detect POIs within radius_km of each intersection and assign priority tiers."""
-    print(f"[API] POST /api/detect-pois for {len(request.intersections)} intersections")
-    intersections = [ix.model_dump() for ix in request.intersections]
-    results = await detect_pois_for_intersections(intersections, radius_km=request.radius_km)
+    print(f"[API] POST /api/detect-pois for {len(data.intersections)} intersections")
+    intersections = [ix.model_dump() for ix in data.intersections]
+    
+    results = await detect_pois_for_intersections(
+        intersections, 
+        radius_km=data.radius_km,
+        check_cancellation=request.is_disconnected
+    )
+    
     # Strip full POI data for the response (only send summaries)
     clean_results = []
     for r in results:
@@ -420,54 +527,57 @@ async def run_demo_simulation(websocket, config):
     for nid, env in envs.items():
         env.reset()
 
-    session_history = []
-    session_dir = viz_manager.create_session_folder()
+    try:
+        session_history = []
+        session_dir = viz_manager.create_session_folder()
 
-    for step in range(200):
-        action = 0 if step % 30 < 15 else 2
+        for step in range(200):
+            action = 0 if step % 30 < 15 else 2
 
-        node_data = {}
-        total_reward = 0
-        total_queue_all = 0
+            node_data = {}
+            total_reward = 0
+            total_queue_all = 0
 
-        for nid, env in envs.items():
-            _, reward, done, info = env.step(action)
-            total_queue = sum(env.lane_queues.values())
-            avg_wait = sum(env.lane_waiting_times.values()) / max(
-                1, len(env.lane_waiting_times)
-            )
+            for nid, env in envs.items():
+                _, reward, done, info = env.step(action)
+                total_queue = sum(env.lane_queues.values())
+                avg_wait = sum(env.lane_waiting_times.values()) / max(
+                    1, len(env.lane_waiting_times)
+                )
 
-            ix = intersections[int(nid.split("_")[1])]
-            node_data[nid] = {
-                "name": ix.get("name", nid),
-                "tier": ix.get("tier", 3),
-                "tier_label": ix.get("tier_label", "Normal"),
-                "reward": round(reward, 2),
-                "total_queue": total_queue,
-                "avg_wait": round(avg_wait, 1),
-                "total_vehicles": env.total_vehicles,
-                "accidents": env.total_accidents,
-                "congestion": round(getattr(env, "congestion_multiplier", 1.0), 2),
+                ix = intersections[int(nid.split("_")[1])]
+                node_data[nid] = {
+                    "name": ix.get("name", nid),
+                    "tier": ix.get("tier", 3),
+                    "tier_label": ix.get("tier_label", "Normal"),
+                    "reward": round(reward, 2),
+                    "total_queue": total_queue,
+                    "avg_wait": round(avg_wait, 1),
+                    "total_vehicles": env.total_vehicles,
+                    "accidents": env.total_accidents,
+                    "congestion": round(getattr(env, "congestion_multiplier", 1.0), 2),
+                }
+                total_reward += reward
+                total_queue_all += total_queue
+
+            payload = {
+                "step": step,
+                "intersections": node_data,
+                "global": {
+                    "avg_reward": round(total_reward / max(1, len(envs)), 2),
+                    "total_queue": total_queue_all,
+                },
             }
-            total_reward += reward
-            total_queue_all += total_queue
+            session_history.append(payload)
+            await websocket.send_json(payload)
+            await asyncio.sleep(0.1)
 
-        payload = {
-            "step": step,
-            "intersections": node_data,
-            "global": {
-                "avg_reward": round(total_reward / max(1, len(envs)), 2),
-                "total_queue": total_queue_all,
-            },
-        }
-        session_history.append(payload)
-        await websocket.send_json(payload)
-        await asyncio.sleep(0.1)
-
-    # After simulation, save and generate plots
-    viz_manager.save_session_data(session_dir, config, session_history)
-    summary = viz_manager._compute_summary(session_history)
-    viz_manager.generate_plots(session_dir, "Demo", summary)
+        # After simulation, save and generate plots
+        viz_manager.save_session_data(session_dir, config, session_history)
+        summary = viz_manager._compute_summary(session_history)
+        viz_manager.generate_plots(session_dir, "Demo", summary)
+    finally:
+        _cleanup_simulation(envs)
 
 
 async def run_multi_inference(websocket, envs_agents, intersections, config, max_steps=200):
@@ -475,70 +585,90 @@ async def run_multi_inference(websocket, envs_agents, intersections, config, max
     Generic multi-intersection inference loop.
     envs_agents: dict of {nid: (env, agent)}
     """
-    states = {}
-    for nid, (env, agent) in envs_agents.items():
-        states[nid] = env.reset()
-
-    session_history = []
-    session_dir = viz_manager.create_session_folder()
-
-    for step in range(max_steps):
-        node_data = {}
-        total_reward = 0
-        total_queue_all = 0
-
+    try:
         for nid, (env, agent) in envs_agents.items():
-            action = agent.act(states[nid], training=False)
-            next_state, reward, done, info = env.step(action)
-            states[nid] = next_state
+            states[nid] = env.reset()
 
-            if done:
-                states[nid] = env.reset()
+        session_history = []
+        session_dir = viz_manager.create_session_folder()
 
-            total_queue = sum(env.lane_queues.values())
-            avg_wait = sum(env.lane_waiting_times.values()) / max(
-                1, len(env.lane_waiting_times)
-            )
+        for step in range(max_steps):
+            node_data = {}
+            total_reward = 0
+            total_queue_all = 0
 
-            ix_idx = int(nid.split("_")[1])
-            ix = intersections[ix_idx] if ix_idx < len(intersections) else {}
+            for nid, (env, agent) in envs_agents.items():
+                action = agent.act(states[nid], training=False)
+                next_state, reward, done, info = env.step(action)
+                states[nid] = next_state
 
-            node_data[nid] = {
-                "name": ix.get("name", nid),
-                "tier": ix.get("tier", 3),
-                "tier_label": ix.get("tier_label", "Normal"),
-                "reward": round(reward, 2),
-                "total_queue": total_queue,
-                "avg_wait": round(avg_wait, 1),
-                "total_vehicles": env.total_vehicles,
-                "accidents": env.total_accidents,
-                "congestion": round(getattr(env, "congestion_multiplier", 1.0), 2),
+                if done:
+                    states[nid] = env.reset()
+
+                total_queue = sum(env.lane_queues.values())
+                avg_wait = sum(env.lane_waiting_times.values()) / max(
+                    1, len(env.lane_waiting_times)
+                )
+
+                ix_idx = int(nid.split("_")[1])
+                ix = intersections[ix_idx] if ix_idx < len(intersections) else {}
+
+                node_data[nid] = {
+                    "name": ix.get("name", nid),
+                    "tier": ix.get("tier", 3),
+                    "tier_label": ix.get("tier_label", "Normal"),
+                    "reward": round(reward, 2),
+                    "total_queue": total_queue,
+                    "avg_wait": round(avg_wait, 1),
+                    "total_vehicles": env.total_vehicles,
+                    "accidents": env.total_accidents,
+                    "congestion": round(getattr(env, "congestion_multiplier", 1.0), 2),
+                }
+                total_reward += reward
+                total_queue_all += total_queue
+
+            payload = {
+                "step": step,
+                "intersections": node_data,
+                "global": {
+                    "avg_reward": round(total_reward / max(1, len(envs_agents)), 2),
+                    "total_queue": total_queue_all,
+                },
             }
-            total_reward += reward
-            total_queue_all += total_queue
 
-        payload = {
-            "step": step,
-            "intersections": node_data,
-            "global": {
-                "avg_reward": round(total_reward / max(1, len(envs_agents)), 2),
-                "total_queue": total_queue_all,
-            },
-        }
+            session_history.append(payload)
+            try:
+                await websocket.send_json(payload)
+            except Exception as e:
+                print(f"[MultiInference] WebSocket send failed: {e}")
+                break
+            await asyncio.sleep(0.1)
+        
+        # After simulation, save and generate plots
+        algo_name = config.get("algorithm", "Unknown")
+        viz_manager.save_session_data(session_dir, config, session_history)
+        summary = viz_manager._compute_summary(session_history)
+        viz_manager.generate_plots(session_dir, algo_name, summary)
+    finally:
+        # Extract envs from envs_agents dict
+        envs = {nid: env for nid, (env, agent) in envs_agents.items()}
+        _cleanup_simulation(envs)
 
-        session_history.append(payload)
-        try:
-            await websocket.send_json(payload)
-        except Exception as e:
-            print(f"[MultiInference] WebSocket send failed: {e}")
-            break
-        await asyncio.sleep(0.1)
+
+def _cleanup_simulation(envs):
+    """Ensures all environment processes (like SUMO) are properly closed."""
+    if not envs:
+        return
     
-    # After simulation, save and generate plots
-    algo_name = config.get("algorithm", "Unknown")
-    viz_manager.save_session_data(session_dir, config, session_history)
-    summary = viz_manager._compute_summary(session_history)
-    viz_manager.generate_plots(session_dir, algo_name, summary)
+    print(f"[Cleanup] Terminating {len(envs)} simulation environments...")
+    for nid, env in envs.items():
+        try:
+            if hasattr(env, "close"):
+                env.close()
+            elif hasattr(env, "stop_simulation"):
+                env.stop_simulation()
+        except Exception as e:
+            print(f"[Cleanup] Error closing environment {nid}: {e}")
 
 
 def _create_envs_for_intersections(intersections, use_tomtom, target_pois=None, sumo_scenario=None):
@@ -821,177 +951,188 @@ async def run_adaptflow_simulation(websocket: WebSocket, config: dict):
         table_rows.append([f"cluster_{c}", ", ".join(members)])
     logger.table(table_headers, table_rows)
 
-    states = {}
-    for nid, env in envs.items():
-        states[nid] = env.reset()
+    try:
+        states = {}
+        for nid, env in envs.items():
+            states[nid] = env.reset()
 
-    # Track window metrics for dynamic re-clustering
-    window_metrics = {nid: {"rewards": [], "wait_times": [], "throughput": [], "queues": [], "max_queues": [], "congested": []} for nid in trainer.agents}
+        # Track window metrics for dynamic re-clustering
+        window_metrics = {nid: {"rewards": [], "wait_times": [], "throughput": [], "queues": [], "max_queues": [], "congested": []} for nid in trainer.agents}
 
-    session_history = []
-    session_dir = viz_manager.create_session_folder()
+        session_history = []
+        session_dir = viz_manager.create_session_folder()
 
-    # Simulation loop
-    for step in range(200):
-        node_data = {}
-        total_reward = 0
-        total_queue_all = 0
+        # Simulation loop
+        for step in range(200):
+            node_data = {}
+            total_reward = 0
+            total_queue_all = 0
 
-        for nid in list(trainer.agents.keys())[:num_nodes]:
-            if nid not in states:
-                continue
-            
-            agent = trainer.agents[nid]
-            env = envs[nid]
-
-            # 1. Get Spatio-Temporal state (sequence)
-            state_graph, adj_node = trainer._get_node_graph_state(nid, states[nid])
-            state_seq = agent._get_sequence(state_graph)
-            
-            # 2. Get Action
-            action = agent.get_action(state_graph, adj_node, training=False)
-
-            # --- ADAPTIVE HYBRID GUARDRAIL ---
-            # Eliminates "Mode Collapse" from under-trained neural networks.
-            # Forces the agent to balance traffic if a lane is actively starving.
-            ns_q = env.lane_queues.get("edge_n", 0) + env.lane_queues.get("edge_s", 0)
-            ew_q = env.lane_queues.get("edge_e", 0) + env.lane_queues.get("edge_w", 0)
-            
-            if env.current_phase == 0 and ew_q > 4 and ew_q > ns_q:
-                action = 1  # Force Yellow -> switch to E/W
-            elif env.current_phase == 2 and ns_q > 4 and ns_q > ew_q:
-                action = 3  # Force Yellow -> switch to N/S
-            elif env.current_phase in [1, 3]:
-                action = (env.current_phase + 1) % 4  # Transit through yellow smoothly
-            # ---------------------------------
-            
-            # 3. Step environment
-            next_state, reward, done, info = env.step(action)
-            states[nid] = next_state
-
-            if done:
-                states[nid] = env.reset()
-
-            total_queue = sum(env.lane_queues.values())
-            avg_wait = sum(env.lane_waiting_times.values()) / max(
-                1, len(env.lane_waiting_times)
-            )
-
-            ix_idx = int(nid.split("_")[1])
-            ix = intersections[ix_idx] if ix_idx < len(intersections) else {}
-            
-            p_rews = info.get("pareto_rewards", {})
-
-            node_data[nid] = {
-                "name": ix.get("name", nid),
-                "tier": ix.get("tier", 3),
-                "tier_label": ix.get("tier_label", "Normal"),
-                "reward": round(reward, 2),
-                "pareto_rewards": p_rews,
-                "total_queue": total_queue,
-                "avg_wait": round(avg_wait, 1),
-                "total_vehicles": env.total_vehicles,
-                "accidents": env.total_accidents,
-                "congestion": round(getattr(env, "congestion_multiplier", 1.0), 2),
-            }
-            total_reward += reward
-            total_queue_all += total_queue
-
-            # Track metrics for re-clustering window
-            window_metrics[nid]["rewards"].append(reward)
-            window_metrics[nid]["wait_times"].append(avg_wait)
-            window_metrics[nid]["throughput"].append(info.get("throughput_ratio", 0.5))
-            window_metrics[nid]["queues"].append(total_queue)
-            window_metrics[nid]["max_queues"].append(info.get("max_queue_length", 0))
-            window_metrics[nid]["congested"].append(info.get("lane_summary", {}).get("num_congested_lanes", 0))
-
-        payload = {
-            "step": step,
-            "intersections": node_data,
-            "global": {
-                "avg_reward": round(total_reward / max(1, num_nodes), 2),
-                "total_queue": total_queue_all,
-            },
-        }
-        session_history.append(payload)
-        await websocket.send_json(payload)
-        
-        if step % 50 == 0:
-            logger.info(f"Step {step}/200: Global Avg Reward: {payload['global']['avg_reward']}", prefix="PROGRESS")
-            # --- DYNAMIC RE-CLUSTERING (The Novelty) ---
-            if step > 0:
-                logger.section(f"Step {step}: Dynamic Re-Clustering Analysis")
+            for nid in list(trainer.agents.keys())[:num_nodes]:
+                if nid not in states:
+                    continue
                 
-                # 1. Aggregate window metrics
-                node_metrics_window = {}
-                for mnid in trainer.agents:
-                    node_metrics_window[mnid] = {
-                        "total_reward": sum(window_metrics[mnid]["rewards"]),
-                        "avg_waiting_time_per_vehicle": float(np.mean(window_metrics[mnid]["wait_times"])) if window_metrics[mnid]["wait_times"] else 0.0,
-                        "average_queue_length": float(np.mean(window_metrics[mnid]["queues"])) if window_metrics[mnid]["queues"] else 0.0,
-                        "throughput_ratio": float(np.mean(window_metrics[mnid]["throughput"])) if window_metrics[mnid]["throughput"] else 0.5,
-                        "max_queue_length": float(np.max(window_metrics[mnid]["max_queues"])) if window_metrics[mnid]["max_queues"] else 0.0,
-                        "lane_summary": {"num_congested_lanes": float(np.mean(window_metrics[mnid]["congested"])) if window_metrics[mnid]["congested"] else 0.0}
-                    }
+                agent = trainer.agents[nid]
+                env = envs[nid]
+
+                # 1. Get Spatio-Temporal state (sequence)
+                state_graph, adj_node = trainer._get_node_graph_state(nid, states[nid])
+                state_seq = agent._get_sequence(state_graph)
                 
-                # 2. Re-cluster
-                assignments = trainer.cluster_manager.recluster(
-                    node_metrics_window, round_idx=(step // 50) + 1, priority_tiers=trainer.priority_tiers
+                # 2. Get Action
+                action = agent.get_action(state_graph, adj_node, training=False)
+
+                # --- ADAPTIVE HYBRID GUARDRAIL ---
+                # Eliminates "Mode Collapse" from under-trained neural networks.
+                # Forces the agent to balance traffic if a lane is actively starving.
+                ns_q = env.lane_queues.get("edge_n", 0) + env.lane_queues.get("edge_s", 0)
+                ew_q = env.lane_queues.get("edge_e", 0) + env.lane_queues.get("edge_w", 0)
+                
+                if env.current_phase == 0 and ew_q > 4 and ew_q > ns_q:
+                    action = 1  # Force Yellow -> switch to E/W
+                elif env.current_phase == 2 and ns_q > 4 and ns_q > ew_q:
+                    action = 3  # Force Yellow -> switch to N/S
+                elif env.current_phase in [1, 3]:
+                    action = (env.current_phase + 1) % 4  # Transit through yellow smoothly
+                # ---------------------------------
+                
+                # 3. Step environment
+                next_state, reward, done, info = env.step(action)
+                states[nid] = next_state
+
+                if done:
+                    states[nid] = env.reset()
+
+                total_queue = sum(env.lane_queues.values())
+                avg_wait = sum(env.lane_waiting_times.values()) / max(
+                    1, len(env.lane_waiting_times)
                 )
-                
-                # 3. Log transitions
-                transitions = trainer.cluster_manager.get_latest_transitions()
-                if transitions["transitions"]:
-                    for tnid, change in transitions["transitions"].items():
-                        logger.warning(
-                            f"Dynamic Transition: {tnid} moved from cluster_{change['from']} to cluster_{change['to']}",
-                            prefix="REFRESH"
-                        )
-                
-                # 4. Display Updated Table
-                cluster_groups = trainer.cluster_manager.get_cluster_groups(assignments)
-                table_headers = ["Cluster ID", "Members", "Avg Reward (Window)", "Avg Wait (s)"]
-                table_rows = []
-                for cid, members in sorted(cluster_groups.items()):
-                    avg_rew = np.mean([node_metrics_window[m]["total_reward"] for m in members])
-                    avg_wait_w = np.mean([node_metrics_window[m]["avg_waiting_time_per_vehicle"] for m in members])
-                    table_rows.append([f"cluster_{cid}", ", ".join(members), f"{avg_rew:.1f}", f"{avg_wait_w:.2f}"])
-                
-                logger.table(table_headers, table_rows)
 
-                # Reset window metrics
-                for rnid in window_metrics:
-                    window_metrics[rnid] = {"rewards": [], "wait_times": [], "throughput": [], "queues": [], "max_queues": [], "congested": []}
+                ix_idx = int(nid.split("_")[1])
+                ix = intersections[ix_idx] if ix_idx < len(intersections) else {}
                 
-                # NEW: Save cluster history for real-time analytics view
-                try:
-                    from train_adaptflow import convert_to_json_serializable
-                    history = trainer.cluster_manager.get_history_summary()
-                    history_file = os.path.join("results_adaptflow", "cluster_history.json")
-                    os.makedirs("results_adaptflow", exist_ok=True)
-                    with open(history_file, "w") as f:
-                        json.dump(convert_to_json_serializable(history), f, indent=2)
-                except Exception as e:
-                    print(f"[AdaptFlow] Warning: Failed to save periodic history: {e}")
+                p_rews = info.get("pareto_rewards", {})
+
+                node_data[nid] = {
+                    "name": ix.get("name", nid),
+                    "tier": ix.get("tier", 3),
+                    "tier_label": ix.get("tier_label", "Normal"),
+                    "reward": round(reward, 2),
+                    "pareto_rewards": p_rews,
+                    "total_queue": total_queue,
+                    "avg_wait": round(avg_wait, 1),
+                    "total_vehicles": env.total_vehicles,
+                    "accidents": env.total_accidents,
+                    "congestion": round(getattr(env, "congestion_multiplier", 1.0), 2),
+                }
+                total_reward += reward
+                total_queue_all += total_queue
+
+                # Track metrics for re-clustering window
+                window_metrics[nid]["rewards"].append(reward)
+                window_metrics[nid]["wait_times"].append(avg_wait)
+                window_metrics[nid]["throughput"].append(info.get("throughput_ratio", 0.5))
+                window_metrics[nid]["queues"].append(total_queue)
+                window_metrics[nid]["max_queues"].append(info.get("max_queue_length", 0))
+                window_metrics[nid]["congested"].append(info.get("lane_summary", {}).get("num_congested_lanes", 0))
+
+            payload = {
+                "step": step,
+                "intersections": node_data,
+                "global": {
+                    "avg_reward": round(total_reward / max(1, num_nodes), 2),
+                    "total_queue": total_queue_all,
+                },
+            }
+            session_history.append(payload)
+            await websocket.send_json(payload)
+            
+            if step % 50 == 0:
+                logger.info(f"Step {step}/200: Global Avg Reward: {payload['global']['avg_reward']}", prefix="PROGRESS")
+                # --- DYNAMIC RE-CLUSTERING (The Novelty) ---
+                if step > 0:
+                    logger.section(f"Step {step}: Dynamic Re-Clustering Analysis")
+                    
+                    # 1. Aggregate window metrics
+                    node_metrics_window = {}
+                    for mnid in trainer.agents:
+                        node_metrics_window[mnid] = {
+                            "total_reward": sum(window_metrics[mnid]["rewards"]),
+                            "avg_waiting_time_per_vehicle": float(np.mean(window_metrics[mnid]["wait_times"])) if window_metrics[mnid]["wait_times"] else 0.0,
+                            "average_queue_length": float(np.mean(window_metrics[mnid]["queues"])) if window_metrics[mnid]["queues"] else 0.0,
+                            "throughput_ratio": float(np.mean(window_metrics[mnid]["throughput"])) if window_metrics[mnid]["throughput"] else 0.5,
+                            "max_queue_length": float(np.max(window_metrics[mnid]["max_queues"])) if window_metrics[mnid]["max_queues"] else 0.0,
+                            "lane_summary": {"num_congested_lanes": float(np.mean(window_metrics[mnid]["congested"])) if window_metrics[mnid]["congested"] else 0.0}
+                        }
+                    
+                    # 2. Re-cluster
+                    assignments = trainer.cluster_manager.recluster(
+                        node_metrics_window, round_idx=(step // 50) + 1, priority_tiers=trainer.priority_tiers
+                    )
+                    
+                    # 3. Log transitions
+                    transitions = trainer.cluster_manager.get_latest_transitions()
+                    if transitions["transitions"]:
+                        for tnid, change in transitions["transitions"].items():
+                            logger.warning(
+                                f"Dynamic Transition: {tnid} moved from cluster_{change['from']} to cluster_{change['to']}",
+                                prefix="REFRESH"
+                            )
+                    
+                    # 4. Display Updated Table
+                    cluster_groups = trainer.cluster_manager.get_cluster_groups(assignments)
+                    table_headers = ["Cluster ID", "Members", "Avg Reward (Window)", "Avg Wait (s)"]
+                    table_rows = []
+                    for cid, members in sorted(cluster_groups.items()):
+                        avg_rew = np.mean([node_metrics_window[m]["total_reward"] for m in members])
+                        avg_wait_w = np.mean([node_metrics_window[m]["avg_waiting_time_per_vehicle"] for m in members])
+                        table_rows.append([f"cluster_{cid}", ", ".join(members), f"{avg_rew:.1f}", f"{avg_wait_w:.2f}"])
+                    
+                    logger.table(table_headers, table_rows)
+
+                    # Reset window metrics
+                    for rnid in window_metrics:
+                        window_metrics[rnid] = {"rewards": [], "wait_times": [], "throughput": [], "queues": [], "max_queues": [], "congested": []}
+                    
+                    # NEW: Save cluster history for real-time analytics view
+                    try:
+                        from train_adaptflow import convert_to_json_serializable
+                        history = trainer.cluster_manager.get_history_summary()
+                        history_file = os.path.join("results_adaptflow", "cluster_history.json")
+                        os.makedirs("results_adaptflow", exist_ok=True)
+                        with open(history_file, "w") as f:
+                            json.dump(convert_to_json_serializable(history), f, indent=2)
+                    except Exception as e:
+                        print(f"[AdaptFlow] Warning: Failed to save periodic history: {e}")
             
         await asyncio.sleep(0.1)
 
-    # Save and Plot
-    viz_manager.save_session_data(session_dir, config, session_history)
-    summary = viz_manager._compute_summary(session_history)
-    viz_manager.generate_plots(session_dir, "AdaptFlow", summary)
+        # Save and Plot
+        viz_manager.save_session_data(session_dir, config, session_history)
+        summary = viz_manager._compute_summary(session_history)
+        viz_manager.generate_plots(session_dir, "AdaptFlow", summary)
 
-    # NEW: Save cluster history for analytics view
-    try:
-        from train_adaptflow import convert_to_json_serializable
-        history = trainer.cluster_manager.get_history_summary()
-        history_file = os.path.join("results_adaptflow", "sim_cluster_history.json")
-        os.makedirs("results_adaptflow", exist_ok=True)
-        with open(history_file, "w") as f:
-            json.dump(convert_to_json_serializable(history), f, indent=2)
-        print(f"[AdaptFlow] Clustering analytics history saved to {history_file}")
-    except Exception as e:
-        print(f"[AdaptFlow] Warning: Failed to save clustering history: {e}")
+        # NEW: Save cluster history for analytics view
+        try:
+            from train_adaptflow import convert_to_json_serializable
+            history = trainer.cluster_manager.get_history_summary()
+            
+            # 1. Save globally for 'latest' view
+            history_file_latest = os.path.join("results_adaptflow", "sim_cluster_history.json")
+            os.makedirs("results_adaptflow", exist_ok=True)
+            with open(history_file_latest, "w") as f:
+                json.dump(convert_to_json_serializable(history), f, indent=2)
+                
+            # 2. Save inside session folder for historical review
+            history_file_session = os.path.join(session_dir, "cluster_history.json")
+            with open(history_file_session, "w") as f:
+                json.dump(convert_to_json_serializable(history), f, indent=2)
+                
+            print(f"[AdaptFlow] Clustering analytics history saved to {history_file_session}")
+        except Exception as e:
+            print(f"[AdaptFlow] Warning: Failed to save clustering history: {e}")
+    finally:
+        _cleanup_simulation(envs)
 
 
 @app.websocket("/api/simulate")

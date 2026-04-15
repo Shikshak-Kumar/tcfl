@@ -1,0 +1,23 @@
+- [x] Update Backend to support multiple data sources
+    - [x] Add `GET /api/adaptflow/sessions` endpoint to list simulation runs
+    - [x] Add `GET /api/adaptflow/analytics` to support `dataset` (train) and `sim_id` (test)
+    - [x] Update `run_adaptflow_simulation` to persist clustering history per session
+- [x] UI: Overhaul AdaptFlow Analytics Frontend
+    - [x] Reorganize layout into 5 specific metric sections
+    - [x] Add Terminology Glossary with brief definitions
+    - [x] Enhance graph detail and visual contrast
+    - [x] Remove secondary metrics (Stability, Distro) as requested
+- [x] Bug Fix: OSM API Loop Error
+    - [x] Lazy initialize `overpass_semaphore` in `osm_api.py`
+    - [x] Increase httpx timeout and add 504 retry logic
+- [x] Feature: Robust Simulation Termination (Simulation Loop)
+    - [x] Standardize `close()` method in all TrafficEnvironment classes
+    - [x] Implement `_cleanup_simulation` helper in `server.py`
+    - [x] Wrap simulation loops in `try/finally` blocks
+- [/] Feature: Interruptible POI Detection (Pre-simulation)
+    - [ ] Frontend: Add `AbortController` to `App.jsx` for `detect-pois`
+    - [ ] Backend: Update `detect_pois_for_intersections` in `osm_api.py` to support cancellation
+    - [ ] Backend: Update `detect_pois` in `server.py` to monitor for disconnect
+- [ ] Verification
+    - [ ] Start detection -> Click Stop -> Verify OSM requests stop
+    - [ ] Start simulation -> Click Stop -> Verify SUMO process ends
