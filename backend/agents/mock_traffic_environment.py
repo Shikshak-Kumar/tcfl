@@ -52,6 +52,7 @@ class MockTrafficEnvironment:
         self.queue_lengths = []
         self.total_accidents = 0
         self.near_misses = 0
+        self.total_passed = 0 
 
         print(f"initialized MockTrafficEnvironment (config={sumo_config_path})")
 
@@ -82,6 +83,7 @@ class MockTrafficEnvironment:
         self.total_accidents = 0
         self.near_misses = 0
         self.episode_count += 1
+        self.total_passed = 0
 
         # Reset internal state
         self.lane_queues = {edge: random.randint(0, 5) for edge in self.incoming_edges}
@@ -144,6 +146,7 @@ class MockTrafficEnvironment:
                 avg_wait_per_veh = self.lane_waiting_times[edge] / max(1, self.lane_queues[edge] + actual_flux)
                 removed_wait = avg_wait_per_veh * actual_flux
                 self.lane_waiting_times[edge] = max(0, self.lane_waiting_times[edge] - removed_wait)
+                self.total_passed += actual_flux # Track successfully departed vehicles
 
             # 2.1 Transition to neighbors (Graph Coupling)
             # This makes the graph attention meaningful
@@ -303,7 +306,7 @@ class MockTrafficEnvironment:
             "average_queue_length": np.mean(self.queue_lengths)
             if self.queue_lengths
             else 0,
-            "throughput_ratio": float(np.mean(self.queue_lengths)) / 20.0 if self.queue_lengths else 0.5, # Realistic mock TP
+            "throughput_ratio": float(self.total_passed) / max(1, self.total_vehicles), # Real TP Ratio
             "max_queue_length": max(self.queue_lengths) if self.queue_lengths else 0,
             "steps": self.step_count,
             "avg_waiting_time_per_vehicle": (
