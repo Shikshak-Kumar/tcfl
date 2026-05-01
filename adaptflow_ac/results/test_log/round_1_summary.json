@@ -1,0 +1,176 @@
+{
+  "round": 1,
+  "mode": "Mock",
+  "clustering": {
+    "assignments": {
+      "node_0": 0,
+      "node_1": 0,
+      "node_2": 1,
+      "node_3": 1
+    },
+    "groups": {
+      "0": [
+        "node_0",
+        "node_1"
+      ],
+      "1": [
+        "node_2",
+        "node_3"
+      ]
+    },
+    "fingerprints": {
+      "node_0": [
+        0.6818463303976212,
+        0.0,
+        1.1300000000000001,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "node_1": [
+        0.6817761303550003,
+        0.0,
+        1.13,
+        0.0,
+        0.0,
+        0.5
+      ],
+      "node_2": [
+        0.9692761307258767,
+        0.19999999999999996,
+        1.128,
+        0.19999999999999996,
+        0.0,
+        0.0
+      ],
+      "node_3": [
+        0.6817761304685052,
+        0.0,
+        1.13,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "similarity_matrix": [
+      [
+        0.9999999999999998,
+        0.9593064348103199,
+        0.7721231530213172,
+        0.7970432940797888
+      ],
+      [
+        0.9593064348103199,
+        0.9999999999999999,
+        0.9058918158314432,
+        0.9351364960300109
+      ],
+      [
+        0.7721231530213172,
+        0.9058918158314432,
+        0.9999999999999998,
+        0.968726832594517
+      ],
+      [
+        0.7970432940797888,
+        0.9351364960300109,
+        0.968726832594517,
+        1.0
+      ]
+    ],
+    "similarity_node_order": [
+      "node_0",
+      "node_1",
+      "node_2",
+      "node_3"
+    ]
+  },
+  "cluster_info": {
+    "cluster_0": {
+      "avg_flow": 1.13,
+      "members": [
+        "node_0",
+        "node_1"
+      ],
+      "congestion": 0.6818112303763108
+    },
+    "cluster_1": {
+      "avg_flow": 1.129,
+      "members": [
+        "node_2",
+        "node_3"
+      ],
+      "congestion": 0.8255261305971909
+    }
+  },
+  "nodes": {
+    "node_0": {
+      "node_id": "node_0",
+      "cluster_id": "cluster_0",
+      "total_reward": -12.137181536696025,
+      "avg_waiting_time": 0.6818463303976212,
+      "loss": -0.634646937251091,
+      "metrics": {
+        "avg_waiting_time_per_vehicle": 0.6818463303976212,
+        "average_queue_length": 0.0,
+        "throughput_ratio": 1.1300000000000001,
+        "max_queue_length": 0.0,
+        "lane_summary": {
+          "num_congested_lanes": 0
+        },
+        "total_reward": -12.137181536696025
+      }
+    },
+    "node_1": {
+      "node_id": "node_1",
+      "cluster_id": "cluster_0",
+      "total_reward": -12.26918223869645,
+      "avg_waiting_time": 0.6817761303550003,
+      "loss": -1.7868871688842773,
+      "metrics": {
+        "avg_waiting_time_per_vehicle": 0.6817761303550003,
+        "average_queue_length": 0.0,
+        "throughput_ratio": 1.13,
+        "max_queue_length": 0.0,
+        "lane_summary": {
+          "num_congested_lanes": 0
+        },
+        "total_reward": -12.26918223869645
+      }
+    },
+    "node_2": {
+      "node_id": "node_2",
+      "cluster_id": "cluster_1",
+      "total_reward": -9.206307238692743,
+      "avg_waiting_time": 0.9692761307258767,
+      "loss": -0.6978195980191231,
+      "metrics": {
+        "avg_waiting_time_per_vehicle": 0.9692761307258767,
+        "average_queue_length": 0.19999999999999996,
+        "throughput_ratio": 1.128,
+        "max_queue_length": 0.19999999999999996,
+        "lane_summary": {
+          "num_congested_lanes": 0
+        },
+        "total_reward": -9.206307238692743
+      }
+    },
+    "node_3": {
+      "node_id": "node_3",
+      "cluster_id": "cluster_1",
+      "total_reward": -9.953182238695316,
+      "avg_waiting_time": 0.6817761304685052,
+      "loss": 0.6056933104991913,
+      "metrics": {
+        "avg_waiting_time_per_vehicle": 0.6817761304685052,
+        "average_queue_length": 0.0,
+        "throughput_ratio": 1.13,
+        "max_queue_length": 0.0,
+        "lane_summary": {
+          "num_congested_lanes": 0
+        },
+        "total_reward": -9.953182238695316
+      }
+    }
+  }
+}

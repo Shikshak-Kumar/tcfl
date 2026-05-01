@@ -3,12 +3,12 @@ import numpy as np
 import torch
 import os
 from collections import deque
-from adaptflow_ac.env.mock_env import MockEnv
-from adaptflow_ac.env.sumo_env import SumoEnv
-from adaptflow_ac.agents.adaptflow import AdaptFlowAgent
-from adaptflow_ac.agents.fedlight import FedLightAgent
-from adaptflow_ac.utils.federated import federated_aggregate, get_congestion_weights
-from adaptflow_ac.utils.plotting import plot_results
+from env.mock_env import MockEnv
+from env.sumo_env import SumoEnv
+from agents.adaptflow import AdaptFlowAgent
+from agents.fedlight import FedLightAgent
+from utils.federated import federated_aggregate, get_congestion_weights
+from utils.plotting import plot_results
 
 def train_adaptflow(env, num_episodes=50, batch_size=32, aggregation_freq=5):
     state_dim = 3 # queue, wait, phase

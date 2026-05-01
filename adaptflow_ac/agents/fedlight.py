@@ -3,7 +3,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import numpy as np
 import random
-from ..models.fedlight_ac import FedLightAC
+from models.fedlight_ac import FedLightAC
 
 class FedLightAgent:
     def __init__(self, node_id, state_dim, action_dim, lr=1e-4, gamma=0.99, capacity=10000):
@@ -14,6 +14,9 @@ class FedLightAgent:
         
         self.model = FedLightAC(state_dim, action_dim)
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
+        
+        # Consistent with AdaptFlow
+        self.state_history = [] 
         
         self.memory = []
         self.capacity = capacity
@@ -34,6 +37,9 @@ class FedLightAgent:
             self.memory.pop(0)
         self.memory.append((state, action, reward, next_state, done))
 
+    def replay(self, batch_size=32):
+        return self.train(batch_size)
+
     def train(self, batch_size=32):
         if len(self.memory) < batch_size:
             return 0
@@ -50,9 +56,9 @@ class FedLightAgent:
         _, next_values = self.model(next_states)
         
         # Select local node values
-        values = values[:, self.node_id]
-        next_values = next_values[:, self.node_id]
-        probs = probs[:, self.node_id, :]
+        values = values[:, 0]
+        next_values = next_values[:, 0]
+        probs = probs[:, 0, :]
         
         targets = rewards + (1 - dones) * self.gamma * next_values.detach()
         advantages = (targets - values).detach()

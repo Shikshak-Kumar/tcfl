@@ -2,6 +2,9 @@ import numpy as np
 import random
 
 class SumTree:
+    """
+    SumTree for efficient sampling in PER. O(log n).
+    """
     def __init__(self, capacity):
         self.capacity = capacity
         self.tree = np.zeros(2 * capacity - 1)
@@ -49,27 +52,35 @@ class SumTree:
         return (idx, self.tree[idx], self.data[data_idx])
 
 class PERBuffer:
-    def __init__(self, capacity, alpha=0.6, beta=0.4, beta_increment=0.001):
+    """
+    Prioritized Experience Replay Buffer.
+    """
+    def __init__(self, capacity, alpha=0.6, beta=0.4):
         self.tree = SumTree(capacity)
         self.alpha = alpha
         self.beta = beta
-        self.beta_increment = beta_increment
         self.epsilon = 0.01
 
     def _get_priority(self, error):
+        # priority = (|TD_error| + ε)^α
         return (np.abs(error) + self.epsilon) ** self.alpha
 
     def add(self, error, sample):
         p = self._get_priority(error)
         self.tree.add(p, sample)
 
-    def sample(self, n):
+    def sample(self, n, beta=None):
+        """
+        Sample a batch of transitions.
+        beta: annealed from 0.4 to 1.0 externally or via training loop.
+        """
+        if beta is not None:
+            self.beta = beta
+            
         batch = []
         idxs = []
         segment = self.tree.total() / n
         priorities = []
-
-        self.beta = np.min([1., self.beta + self.beta_increment])
 
         for i in range(n):
             a = segment * i
@@ -80,9 +91,11 @@ class PERBuffer:
             batch.append(data)
             idxs.append(idx)
 
-        sampling_probabilities = priorities / self.tree.total()
+        sampling_probabilities = np.array(priorities) / (self.tree.total() + 1e-10)
+        # IS weights: w = (1 / (N * P(i)))^β
         is_weights = np.power(self.tree.n_entries * sampling_probabilities, -self.beta)
-        is_weights /= is_weights.max()
+        # Normalize weights by max weight in batch
+        is_weights /= (is_weights.max() + 1e-10)
 
         return batch, idxs, is_weights
 
