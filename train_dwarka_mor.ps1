@@ -150,6 +150,25 @@ if ($RunAdaptFlow) {
         Write-Host "  [WARN] AdaptFlow exited with code $LASTEXITCODE" -ForegroundColor Yellow
     } else {
         Write-Host "  AdaptFlow-TSC complete. Results in $AdaptFlowResults" -ForegroundColor Green
+
+        # Run deployed evaluation: all 6 trained agents in ONE multi-TLS sim
+        # This is the correct evaluation for FL algorithms (fair vs FedDQN/MA2C)
+        if (-not $Mock) {
+            Write-Section "[DEPLOY EVAL] AdaptFlow - All 6 agents in one multi-TLS sim"
+            $evalCmd = "python train\eval_adaptflow_deployed.py " +
+                       "--results-dir `"$AdaptFlowResults`" " +
+                       "--sumo-scenario dwarka_mor " +
+                       "--episodes 3 " +
+                       "--steps $Steps"
+            if ($Gui) { $evalCmd += " --gui" }
+            Write-Host "  CMD: $evalCmd" -ForegroundColor Gray
+            Invoke-Expression $evalCmd
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "  [WARN] Deployed eval exited with code $LASTEXITCODE" -ForegroundColor Yellow
+            } else {
+                Write-Host "  Deployed eval complete. deployed_eval.json saved." -ForegroundColor Green
+            }
+        }
     }
 }
 

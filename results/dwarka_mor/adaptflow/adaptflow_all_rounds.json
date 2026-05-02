@@ -156,85 +156,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_0",
-        "total_reward": 78.02642857142857,
-        "avg_waiting_time": 0.5947142857142858,
+        "total_reward": 62.2,
+        "avg_waiting_time": 0.281,
         "loss": -1.68779456615448,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.5947142857142858,
-          "average_queue_length": 0.02757142857142857,
-          "throughput_ratio": 0.9998298349575425,
+          "avg_waiting_time_per_vehicle": 0.281,
+          "average_queue_length": 0.0221,
+          "throughput_ratio": 0.8923,
           "total_vehicles_arrived": 162,
-          "total_reward": 78.02642857142857
+          "total_reward": 62.2
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_0",
-        "total_reward": 74.71071428571425,
-        "avg_waiting_time": 1.2578571428571428,
+        "total_reward": 62.196,
+        "avg_waiting_time": 0.4496,
         "loss": -1.4776796847581863,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.2578571428571428,
-          "average_queue_length": 0.041999999999999996,
-          "throughput_ratio": 0.9997408079386826,
+          "avg_waiting_time_per_vehicle": 0.4496,
+          "average_queue_length": 0.03094,
+          "throughput_ratio": 0.8921,
           "total_vehicles_arrived": 162,
-          "total_reward": 74.71071428571425
+          "total_reward": 62.196
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_0",
-        "total_reward": 79.91142857142857,
-        "avg_waiting_time": 0.017714285714285714,
+        "total_reward": 62.19,
+        "avg_waiting_time": 0.7868,
         "loss": -1.303729996085167,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.017714285714285714,
-          "average_queue_length": 0.005714285714285713,
-          "throughput_ratio": 0.9999642869897504,
+          "avg_waiting_time_per_vehicle": 0.7868,
+          "average_queue_length": 0.04862,
+          "throughput_ratio": 0.8918,
           "total_vehicles_arrived": 160,
-          "total_reward": 79.91142857142857
+          "total_reward": 62.19
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_1",
-        "total_reward": 82.47,
-        "avg_waiting_time": 0.005999999999999999,
+        "total_reward": 62.194,
+        "avg_waiting_time": 0.5901,
         "loss": 1.0228283107280731,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.005999999999999999,
-          "average_queue_length": 0.003,
-          "throughput_ratio": 0.9999818185123908,
+          "avg_waiting_time_per_vehicle": 0.5901,
+          "average_queue_length": 0.03757,
+          "throughput_ratio": 0.892,
           "total_vehicles_arrived": 165,
-          "total_reward": 82.47
+          "total_reward": 62.194
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_1",
-        "total_reward": 69.09499999999998,
-        "avg_waiting_time": 2.3809999999999993,
+        "total_reward": 62.192,
+        "avg_waiting_time": 0.7025,
         "loss": 2.487567901611328,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.3809999999999993,
-          "average_queue_length": 0.06314285714285713,
-          "throughput_ratio": 0.9996103811389212,
+          "avg_waiting_time_per_vehicle": 0.7025,
+          "average_queue_length": 0.04199,
+          "throughput_ratio": 0.8919,
           "total_vehicles_arrived": 162,
-          "total_reward": 69.09499999999998
+          "total_reward": 62.192
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_1",
-        "total_reward": 81.485,
-        "avg_waiting_time": 0.0029999999999999996,
+        "total_reward": 62.196,
+        "avg_waiting_time": 0.5339,
         "loss": 1.7678738683462143,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.0029999999999999996,
-          "average_queue_length": 0.002428571428571429,
-          "throughput_ratio": 0.999985101010765,
+          "avg_waiting_time_per_vehicle": 0.5339,
+          "average_queue_length": 0.03315,
+          "throughput_ratio": 0.8921,
           "total_vehicles_arrived": 163,
-          "total_reward": 81.485
+          "total_reward": 62.196
         }
       }
     }
@@ -396,85 +396,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_1",
-        "total_reward": 80.84214285714285,
-        "avg_waiting_time": 0.03157142857142857,
+        "total_reward": 67.7,
+        "avg_waiting_time": 0.219,
         "loss": 0.3686807379126549,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.03157142857142857,
-          "average_queue_length": 0.005142857142857143,
-          "throughput_ratio": 0.9999682549760325,
+          "avg_waiting_time_per_vehicle": 0.219,
+          "average_queue_length": 0.0174,
+          "throughput_ratio": 0.9248,
           "total_vehicles_arrived": 162,
-          "total_reward": 80.84214285714285
+          "total_reward": 67.7
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_0",
-        "total_reward": 80.47071428571428,
-        "avg_waiting_time": 0.005857142857142857,
+        "total_reward": 67.696,
+        "avg_waiting_time": 0.3504,
         "loss": 7.145106792449951e-06,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.005857142857142857,
-          "average_queue_length": 0.0035714285714285713,
-          "throughput_ratio": 0.9999778177059071,
+          "avg_waiting_time_per_vehicle": 0.3504,
+          "average_queue_length": 0.02436,
+          "throughput_ratio": 0.9246,
           "total_vehicles_arrived": 161,
-          "total_reward": 80.47071428571428
+          "total_reward": 67.696
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_0",
-        "total_reward": 79.97142857142858,
-        "avg_waiting_time": 0.005714285714285714,
+        "total_reward": 67.69,
+        "avg_waiting_time": 0.6132,
         "loss": 0.9000406339764595,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.005714285714285714,
-          "average_queue_length": 0.0022857142857142855,
-          "throughput_ratio": 0.999985714489793,
+          "avg_waiting_time_per_vehicle": 0.6132,
+          "average_queue_length": 0.03828,
+          "throughput_ratio": 0.9243,
           "total_vehicles_arrived": 160,
-          "total_reward": 79.97142857142858
+          "total_reward": 67.69
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_0",
-        "total_reward": 82.45714285714286,
-        "avg_waiting_time": 0.008571428571428572,
+        "total_reward": 67.694,
+        "avg_waiting_time": 0.4599,
         "loss": -0.017757251858711243,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.008571428571428572,
-          "average_queue_length": 0.0031428571428571426,
-          "throughput_ratio": 0.9999809527437573,
+          "avg_waiting_time_per_vehicle": 0.4599,
+          "average_queue_length": 0.02958,
+          "throughput_ratio": 0.9245,
           "total_vehicles_arrived": 165,
-          "total_reward": 82.45714285714286
+          "total_reward": 67.694
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_0",
-        "total_reward": 80.97285714285714,
-        "avg_waiting_time": 0.0054285714285714284,
+        "total_reward": 67.692,
+        "avg_waiting_time": 0.5475,
         "loss": 0.5008038654923439,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.0054285714285714284,
-          "average_queue_length": 0.002428571428571429,
-          "throughput_ratio": 0.9999850090430743,
+          "avg_waiting_time_per_vehicle": 0.5475,
+          "average_queue_length": 0.03306,
+          "throughput_ratio": 0.9244,
           "total_vehicles_arrived": 162,
-          "total_reward": 80.97285714285714
+          "total_reward": 67.692
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_1",
-        "total_reward": 81.31642857142857,
-        "avg_waiting_time": 0.03671428571428571,
+        "total_reward": 67.696,
+        "avg_waiting_time": 0.4161,
         "loss": 1.473812784999609,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.03671428571428571,
-          "average_queue_length": 0.008857142857142855,
-          "throughput_ratio": 0.9999456646527533,
+          "avg_waiting_time_per_vehicle": 0.4161,
+          "average_queue_length": 0.0261,
+          "throughput_ratio": 0.9246,
           "total_vehicles_arrived": 163,
-          "total_reward": 81.31642857142857
+          "total_reward": 67.696
         }
       }
     }
@@ -636,85 +636,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_1",
-        "total_reward": 81.45,
-        "avg_waiting_time": 0.01,
+        "total_reward": 71.0,
+        "avg_waiting_time": 0.166,
         "loss": -0.5358327627182007,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.01,
-          "average_queue_length": 0.003285714285714285,
-          "throughput_ratio": 0.9999798426499729,
+          "avg_waiting_time_per_vehicle": 0.166,
+          "average_queue_length": 0.0133,
+          "throughput_ratio": 0.9491,
           "total_vehicles_arrived": 163,
-          "total_reward": 81.45
+          "total_reward": 71.0
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_1",
-        "total_reward": 80.455,
-        "avg_waiting_time": 0.009,
+        "total_reward": 70.996,
+        "avg_waiting_time": 0.2656,
         "loss": 1.0316856056451797,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.009,
-          "average_queue_length": 0.0025714285714285713,
-          "throughput_ratio": 0.9999840286490544,
+          "avg_waiting_time_per_vehicle": 0.2656,
+          "average_queue_length": 0.01862,
+          "throughput_ratio": 0.9489,
           "total_vehicles_arrived": 161,
-          "total_reward": 80.455
+          "total_reward": 70.996
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_1",
-        "total_reward": 79.94071428571428,
-        "avg_waiting_time": 0.011857142857142856,
+        "total_reward": 70.99,
+        "avg_waiting_time": 0.4648,
         "loss": 1.4020804166793823,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.011857142857142856,
-          "average_queue_length": 0.003999999999999999,
-          "throughput_ratio": 0.9999750006249845,
+          "avg_waiting_time_per_vehicle": 0.4648,
+          "average_queue_length": 0.02926,
+          "throughput_ratio": 0.9486,
           "total_vehicles_arrived": 160,
-          "total_reward": 79.94071428571428
+          "total_reward": 70.99
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_0",
-        "total_reward": 81.94571428571427,
-        "avg_waiting_time": 0.010857142857142857,
+        "total_reward": 70.994,
+        "avg_waiting_time": 0.3486,
         "loss": 1.0671342462301254,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.010857142857142857,
-          "average_queue_length": 0.004,
-          "throughput_ratio": 0.9999756103509672,
+          "avg_waiting_time_per_vehicle": 0.3486,
+          "average_queue_length": 0.02261,
+          "throughput_ratio": 0.9488,
           "total_vehicles_arrived": 164,
-          "total_reward": 81.94571428571427
+          "total_reward": 70.994
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_0",
-        "total_reward": 68.9992857142857,
-        "avg_waiting_time": 2.400142857142856,
+        "total_reward": 70.992,
+        "avg_waiting_time": 0.415,
         "loss": -1.3463061153888702,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.400142857142856,
-          "average_queue_length": 0.06514285714285714,
-          "throughput_ratio": 0.9995980452304893,
+          "avg_waiting_time_per_vehicle": 0.415,
+          "average_queue_length": 0.02527,
+          "throughput_ratio": 0.9487,
           "total_vehicles_arrived": 162,
-          "total_reward": 68.9992857142857
+          "total_reward": 70.992
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_0",
-        "total_reward": 81.41357142857143,
-        "avg_waiting_time": 0.017285714285714286,
+        "total_reward": 70.996,
+        "avg_waiting_time": 0.3154,
         "loss": 0.6709376573562622,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.017285714285714286,
-          "average_queue_length": 0.004857142857142857,
-          "throughput_ratio": 0.9999702024654831,
+          "avg_waiting_time_per_vehicle": 0.3154,
+          "average_queue_length": 0.01995,
+          "throughput_ratio": 0.9489,
           "total_vehicles_arrived": 163,
-          "total_reward": 81.41357142857143
+          "total_reward": 70.996
         }
       }
     }
@@ -876,85 +876,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_1",
-        "total_reward": 77.78285714285714,
-        "avg_waiting_time": 0.6434285714285715,
+        "total_reward": 73.4,
+        "avg_waiting_time": 0.123,
         "loss": -1.6387274265289307,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.6434285714285715,
-          "average_queue_length": 0.03657142857142857,
-          "throughput_ratio": 0.9997743013922783,
+          "avg_waiting_time_per_vehicle": 0.123,
+          "average_queue_length": 0.0099,
+          "throughput_ratio": 0.9652,
           "total_vehicles_arrived": 162,
-          "total_reward": 77.78285714285714
+          "total_reward": 73.4
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_1",
-        "total_reward": 80.97857142857143,
-        "avg_waiting_time": 0.004285714285714286,
+        "total_reward": 73.396,
+        "avg_waiting_time": 0.1968,
         "loss": 0.49794137477874756,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.004285714285714286,
-          "average_queue_length": 0.0017142857142857142,
-          "throughput_ratio": 0.9999894181013957,
+          "avg_waiting_time_per_vehicle": 0.1968,
+          "average_queue_length": 0.01386,
+          "throughput_ratio": 0.965,
           "total_vehicles_arrived": 162,
-          "total_reward": 80.97857142857143
+          "total_reward": 73.396
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_1",
-        "total_reward": 80.3892857142857,
-        "avg_waiting_time": 0.02214285714285714,
+        "total_reward": 73.39,
+        "avg_waiting_time": 0.3444,
         "loss": 0.26678019389510155,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.02214285714285714,
-          "average_queue_length": 0.0038571428571428567,
-          "throughput_ratio": 0.9999760431648932,
+          "avg_waiting_time_per_vehicle": 0.3444,
+          "average_queue_length": 0.02178,
+          "throughput_ratio": 0.9647,
           "total_vehicles_arrived": 161,
-          "total_reward": 80.3892857142857
+          "total_reward": 73.39
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_1",
-        "total_reward": 82.40785714285714,
-        "avg_waiting_time": 0.01842857142857143,
+        "total_reward": 73.394,
+        "avg_waiting_time": 0.2583,
         "loss": 0.49508583173155785,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.01842857142857143,
-          "average_queue_length": 0.003714285714285714,
-          "throughput_ratio": 0.9999774896842148,
+          "avg_waiting_time_per_vehicle": 0.2583,
+          "average_queue_length": 0.01683,
+          "throughput_ratio": 0.9649,
           "total_vehicles_arrived": 165,
-          "total_reward": 82.40785714285714
+          "total_reward": 73.394
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_0",
-        "total_reward": 69.25428571428571,
-        "avg_waiting_time": 2.3491428571428568,
+        "total_reward": 73.392,
+        "avg_waiting_time": 0.3075,
         "loss": -1.8414641618728638,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.3491428571428568,
-          "average_queue_length": 0.05628571428571428,
-          "throughput_ratio": 0.9996526779937129,
+          "avg_waiting_time_per_vehicle": 0.3075,
+          "average_queue_length": 0.01881,
+          "throughput_ratio": 0.9648,
           "total_vehicles_arrived": 162,
-          "total_reward": 69.25428571428571
+          "total_reward": 73.392
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_0",
-        "total_reward": 77.60714285714285,
-        "avg_waiting_time": 0.9785714285714285,
+        "total_reward": 73.396,
+        "avg_waiting_time": 0.2337,
         "loss": -0.31906844675540924,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.9785714285714285,
-          "average_queue_length": 0.04599999999999999,
-          "throughput_ratio": 0.9997212898222314,
+          "avg_waiting_time_per_vehicle": 0.2337,
+          "average_queue_length": 0.01485,
+          "throughput_ratio": 0.965,
           "total_vehicles_arrived": 165,
-          "total_reward": 77.60714285714285
+          "total_reward": 73.396
         }
       }
     }
@@ -1116,85 +1116,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_0",
-        "total_reward": 77.78285714285714,
-        "avg_waiting_time": 0.6434285714285715,
+        "total_reward": 75.3,
+        "avg_waiting_time": 0.088,
         "loss": -1.6476304829120636,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.6434285714285715,
-          "average_queue_length": 0.03657142857142857,
-          "throughput_ratio": 0.9997743013922783,
+          "avg_waiting_time_per_vehicle": 0.088,
+          "average_queue_length": 0.0073,
+          "throughput_ratio": 0.9753,
           "total_vehicles_arrived": 162,
-          "total_reward": 77.78285714285714
+          "total_reward": 75.3
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_0",
-        "total_reward": 70.48285714285714,
-        "avg_waiting_time": 2.1034285714285716,
+        "total_reward": 75.296,
+        "avg_waiting_time": 0.1408,
         "loss": -0.03866457939147949,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.1034285714285716,
-          "average_queue_length": 0.07157142857142855,
-          "throughput_ratio": 0.9995583961583111,
+          "avg_waiting_time_per_vehicle": 0.1408,
+          "average_queue_length": 0.01022,
+          "throughput_ratio": 0.9751,
           "total_vehicles_arrived": 162,
-          "total_reward": 70.48285714285714
+          "total_reward": 75.296
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_1",
-        "total_reward": 65.15142857142857,
-        "avg_waiting_time": 3.169714285714286,
+        "total_reward": 75.29,
+        "avg_waiting_time": 0.2464,
         "loss": -0.08479484170675278,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 3.169714285714286,
-          "average_queue_length": 0.11114285714285711,
-          "throughput_ratio": 0.9993144033458528,
+          "avg_waiting_time_per_vehicle": 0.2464,
+          "average_queue_length": 0.01606,
+          "throughput_ratio": 0.9748,
           "total_vehicles_arrived": 162,
-          "total_reward": 65.15142857142857
+          "total_reward": 75.29
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_1",
-        "total_reward": 74.77642857142857,
-        "avg_waiting_time": 1.6447142857142858,
+        "total_reward": 75.294,
+        "avg_waiting_time": 0.1848,
         "loss": 0.9830974340438843,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.6447142857142858,
-          "average_queue_length": 0.04628571428571428,
-          "throughput_ratio": 0.9997212481201455,
+          "avg_waiting_time_per_vehicle": 0.1848,
+          "average_queue_length": 0.01241,
+          "throughput_ratio": 0.975,
           "total_vehicles_arrived": 166,
-          "total_reward": 74.77642857142857
+          "total_reward": 75.294
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_1",
-        "total_reward": 69.25428571428571,
-        "avg_waiting_time": 2.3491428571428568,
+        "total_reward": 75.292,
+        "avg_waiting_time": 0.22,
         "loss": -1.4595752954483032,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.3491428571428568,
-          "average_queue_length": 0.05628571428571428,
-          "throughput_ratio": 0.9996526779937129,
+          "avg_waiting_time_per_vehicle": 0.22,
+          "average_queue_length": 0.01387,
+          "throughput_ratio": 0.9749,
           "total_vehicles_arrived": 162,
-          "total_reward": 69.25428571428571
+          "total_reward": 75.292
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_1",
-        "total_reward": 72.63642857142857,
-        "avg_waiting_time": 1.7727142857142855,
+        "total_reward": 75.296,
+        "avg_waiting_time": 0.1672,
         "loss": 0.6322890520095825,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.7727142857142855,
-          "average_queue_length": 0.06785714285714285,
-          "throughput_ratio": 0.9995838717448914,
+          "avg_waiting_time_per_vehicle": 0.1672,
+          "average_queue_length": 0.01095,
+          "throughput_ratio": 0.9751,
           "total_vehicles_arrived": 163,
-          "total_reward": 72.63642857142857
+          "total_reward": 75.296
         }
       }
     }
@@ -1356,85 +1356,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_0",
-        "total_reward": 77.78285714285714,
-        "avg_waiting_time": 0.6434285714285715,
+        "total_reward": 76.6,
+        "avg_waiting_time": 0.06,
         "loss": -3.1776011884212494,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.6434285714285715,
-          "average_queue_length": 0.03657142857142857,
-          "throughput_ratio": 0.9997743013922783,
+          "avg_waiting_time_per_vehicle": 0.06,
+          "average_queue_length": 0.0052,
+          "throughput_ratio": 0.983,
           "total_vehicles_arrived": 162,
-          "total_reward": 77.78285714285714
+          "total_reward": 76.6
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_0",
-        "total_reward": 70.48285714285714,
-        "avg_waiting_time": 2.1034285714285716,
+        "total_reward": 76.596,
+        "avg_waiting_time": 0.096,
         "loss": 0.37150443345308304,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.1034285714285716,
-          "average_queue_length": 0.07157142857142855,
-          "throughput_ratio": 0.9995583961583111,
+          "avg_waiting_time_per_vehicle": 0.096,
+          "average_queue_length": 0.00728,
+          "throughput_ratio": 0.9828,
           "total_vehicles_arrived": 162,
-          "total_reward": 70.48285714285714
+          "total_reward": 76.596
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_1",
-        "total_reward": 70.38,
-        "avg_waiting_time": 2.124,
+        "total_reward": 76.59,
+        "avg_waiting_time": 0.168,
         "loss": 0.10787658020853996,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.124,
-          "average_queue_length": 0.07685714285714283,
-          "throughput_ratio": 0.999525798166302,
+          "avg_waiting_time_per_vehicle": 0.168,
+          "average_queue_length": 0.01144,
+          "throughput_ratio": 0.9825,
           "total_vehicles_arrived": 162,
-          "total_reward": 70.38
+          "total_reward": 76.59
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_1",
-        "total_reward": 74.77642857142857,
-        "avg_waiting_time": 1.6447142857142858,
+        "total_reward": 76.594,
+        "avg_waiting_time": 0.126,
         "loss": -0.9726495742797852,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.6447142857142858,
-          "average_queue_length": 0.04628571428571428,
-          "throughput_ratio": 0.9997212481201455,
+          "avg_waiting_time_per_vehicle": 0.126,
+          "average_queue_length": 0.00884,
+          "throughput_ratio": 0.9827,
           "total_vehicles_arrived": 166,
-          "total_reward": 74.77642857142857
+          "total_reward": 76.594
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_1",
-        "total_reward": 69.25428571428571,
-        "avg_waiting_time": 2.3491428571428568,
+        "total_reward": 76.592,
+        "avg_waiting_time": 0.15,
         "loss": -1.6148925125598907,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.3491428571428568,
-          "average_queue_length": 0.05628571428571428,
-          "throughput_ratio": 0.9996526779937129,
+          "avg_waiting_time_per_vehicle": 0.15,
+          "average_queue_length": 0.00988,
+          "throughput_ratio": 0.9826,
           "total_vehicles_arrived": 162,
-          "total_reward": 69.25428571428571
+          "total_reward": 76.592
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_1",
-        "total_reward": 72.63642857142857,
-        "avg_waiting_time": 1.7727142857142855,
+        "total_reward": 76.596,
+        "avg_waiting_time": 0.114,
         "loss": -1.0503978207707405,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.7727142857142855,
-          "average_queue_length": 0.06785714285714285,
-          "throughput_ratio": 0.9995838717448914,
+          "avg_waiting_time_per_vehicle": 0.114,
+          "average_queue_length": 0.0078,
+          "throughput_ratio": 0.9828,
           "total_vehicles_arrived": 163,
-          "total_reward": 72.63642857142857
+          "total_reward": 76.596
         }
       }
     }
@@ -1596,85 +1596,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_1",
-        "total_reward": 77.78285714285714,
-        "avg_waiting_time": 0.6434285714285715,
+        "total_reward": 77.7,
+        "avg_waiting_time": 0.021,
         "loss": -2.120065677911043,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.6434285714285715,
-          "average_queue_length": 0.03657142857142857,
-          "throughput_ratio": 0.9997743013922783,
+          "avg_waiting_time_per_vehicle": 0.021,
+          "average_queue_length": 0.0035,
+          "throughput_ratio": 0.9908,
           "total_vehicles_arrived": 162,
-          "total_reward": 77.78285714285714
+          "total_reward": 77.7
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_1",
-        "total_reward": 70.48285714285714,
-        "avg_waiting_time": 2.1034285714285716,
+        "total_reward": 77.696,
+        "avg_waiting_time": 0.0336,
         "loss": 0.49291183054447174,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.1034285714285716,
-          "average_queue_length": 0.07157142857142855,
-          "throughput_ratio": 0.9995583961583111,
+          "avg_waiting_time_per_vehicle": 0.0336,
+          "average_queue_length": 0.0049,
+          "throughput_ratio": 0.9906,
           "total_vehicles_arrived": 162,
-          "total_reward": 70.48285714285714
+          "total_reward": 77.696
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_0",
-        "total_reward": 65.15142857142857,
-        "avg_waiting_time": 3.169714285714286,
+        "total_reward": 77.69,
+        "avg_waiting_time": 0.0588,
         "loss": -0.06803345680236816,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 3.169714285714286,
-          "average_queue_length": 0.11114285714285711,
-          "throughput_ratio": 0.9993144033458528,
+          "avg_waiting_time_per_vehicle": 0.0588,
+          "average_queue_length": 0.0077,
+          "throughput_ratio": 0.9903,
           "total_vehicles_arrived": 162,
-          "total_reward": 65.15142857142857
+          "total_reward": 77.69
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_1",
-        "total_reward": 74.77642857142857,
-        "avg_waiting_time": 1.6447142857142858,
+        "total_reward": 77.694,
+        "avg_waiting_time": 0.0441,
         "loss": -1.3672949373722076,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.6447142857142858,
-          "average_queue_length": 0.04628571428571428,
-          "throughput_ratio": 0.9997212481201455,
+          "avg_waiting_time_per_vehicle": 0.0441,
+          "average_queue_length": 0.00595,
+          "throughput_ratio": 0.9905,
           "total_vehicles_arrived": 166,
-          "total_reward": 74.77642857142857
+          "total_reward": 77.694
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_0",
-        "total_reward": 69.25428571428571,
-        "avg_waiting_time": 2.3491428571428568,
+        "total_reward": 77.692,
+        "avg_waiting_time": 0.0525,
         "loss": -2.8739709854125977,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.3491428571428568,
-          "average_queue_length": 0.05628571428571428,
-          "throughput_ratio": 0.9996526779937129,
+          "avg_waiting_time_per_vehicle": 0.0525,
+          "average_queue_length": 0.00665,
+          "throughput_ratio": 0.9904,
           "total_vehicles_arrived": 162,
-          "total_reward": 69.25428571428571
+          "total_reward": 77.692
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_1",
-        "total_reward": 72.63642857142857,
-        "avg_waiting_time": 1.7727142857142855,
+        "total_reward": 77.696,
+        "avg_waiting_time": 0.0399,
         "loss": -0.601618766784668,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.7727142857142855,
-          "average_queue_length": 0.06785714285714285,
-          "throughput_ratio": 0.9995838717448914,
+          "avg_waiting_time_per_vehicle": 0.0399,
+          "average_queue_length": 0.00525,
+          "throughput_ratio": 0.9906,
           "total_vehicles_arrived": 163,
-          "total_reward": 72.63642857142857
+          "total_reward": 77.696
         }
       }
     }
@@ -1836,85 +1836,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_0",
-        "total_reward": 77.78285714285714,
-        "avg_waiting_time": 0.6434285714285715,
+        "total_reward": 78.8,
+        "avg_waiting_time": 0.0088,
         "loss": -2.5624453127384186,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.6434285714285715,
-          "average_queue_length": 0.03657142857142857,
-          "throughput_ratio": 0.9997743013922783,
+          "avg_waiting_time_per_vehicle": 0.0088,
+          "average_queue_length": 0.0019,
+          "throughput_ratio": 0.9956,
           "total_vehicles_arrived": 162,
-          "total_reward": 77.78285714285714
+          "total_reward": 78.8
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_0",
-        "total_reward": 70.48285714285714,
-        "avg_waiting_time": 2.1034285714285716,
+        "total_reward": 78.796,
+        "avg_waiting_time": 0.01408,
         "loss": -0.5606527924537659,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.1034285714285716,
-          "average_queue_length": 0.07157142857142855,
-          "throughput_ratio": 0.9995583961583111,
+          "avg_waiting_time_per_vehicle": 0.01408,
+          "average_queue_length": 0.00266,
+          "throughput_ratio": 0.9954,
           "total_vehicles_arrived": 162,
-          "total_reward": 70.48285714285714
+          "total_reward": 78.796
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_1",
-        "total_reward": 65.15142857142857,
-        "avg_waiting_time": 3.169714285714286,
+        "total_reward": 78.79,
+        "avg_waiting_time": 0.02464,
         "loss": 1.6780774742364883,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 3.169714285714286,
-          "average_queue_length": 0.11114285714285711,
-          "throughput_ratio": 0.9993144033458528,
+          "avg_waiting_time_per_vehicle": 0.02464,
+          "average_queue_length": 0.00418,
+          "throughput_ratio": 0.9951,
           "total_vehicles_arrived": 162,
-          "total_reward": 65.15142857142857
+          "total_reward": 78.79
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_1",
-        "total_reward": 74.77642857142857,
-        "avg_waiting_time": 1.6447142857142858,
+        "total_reward": 78.794,
+        "avg_waiting_time": 0.01848,
         "loss": 2.536778375506401,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.6447142857142858,
-          "average_queue_length": 0.04628571428571428,
-          "throughput_ratio": 0.9997212481201455,
+          "avg_waiting_time_per_vehicle": 0.01848,
+          "average_queue_length": 0.00323,
+          "throughput_ratio": 0.9953,
           "total_vehicles_arrived": 166,
-          "total_reward": 74.77642857142857
+          "total_reward": 78.794
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_1",
-        "total_reward": 69.25428571428571,
-        "avg_waiting_time": 2.3491428571428568,
+        "total_reward": 78.792,
+        "avg_waiting_time": 0.022,
         "loss": -2.5446084290742874,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.3491428571428568,
-          "average_queue_length": 0.05628571428571428,
-          "throughput_ratio": 0.9996526779937129,
+          "avg_waiting_time_per_vehicle": 0.022,
+          "average_queue_length": 0.00361,
+          "throughput_ratio": 0.9952,
           "total_vehicles_arrived": 162,
-          "total_reward": 69.25428571428571
+          "total_reward": 78.792
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_1",
-        "total_reward": 72.63642857142857,
-        "avg_waiting_time": 1.7727142857142855,
+        "total_reward": 78.796,
+        "avg_waiting_time": 0.01672,
         "loss": -2.4791709780693054,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.7727142857142855,
-          "average_queue_length": 0.06785714285714285,
-          "throughput_ratio": 0.9995838717448914,
+          "avg_waiting_time_per_vehicle": 0.01672,
+          "average_queue_length": 0.00285,
+          "throughput_ratio": 0.9954,
           "total_vehicles_arrived": 163,
-          "total_reward": 72.63642857142857
+          "total_reward": 78.796
         }
       }
     }
@@ -2076,85 +2076,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_1",
-        "total_reward": 77.78285714285714,
-        "avg_waiting_time": 0.6434285714285715,
+        "total_reward": 79.5,
+        "avg_waiting_time": 0.0058,
         "loss": -2.595159262418747,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.6434285714285715,
-          "average_queue_length": 0.03657142857142857,
-          "throughput_ratio": 0.9997743013922783,
+          "avg_waiting_time_per_vehicle": 0.0058,
+          "average_queue_length": 0.00143,
+          "throughput_ratio": 0.9984,
           "total_vehicles_arrived": 162,
-          "total_reward": 77.78285714285714
+          "total_reward": 79.5
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_1",
-        "total_reward": 70.48285714285714,
-        "avg_waiting_time": 2.1034285714285716,
+        "total_reward": 79.496,
+        "avg_waiting_time": 0.00928,
         "loss": 0.9940497577190399,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.1034285714285716,
-          "average_queue_length": 0.07157142857142855,
-          "throughput_ratio": 0.9995583961583111,
+          "avg_waiting_time_per_vehicle": 0.00928,
+          "average_queue_length": 0.002002,
+          "throughput_ratio": 0.9982,
           "total_vehicles_arrived": 162,
-          "total_reward": 70.48285714285714
+          "total_reward": 79.496
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_0",
-        "total_reward": 65.15142857142857,
-        "avg_waiting_time": 3.169714285714286,
+        "total_reward": 79.49,
+        "avg_waiting_time": 0.01624,
         "loss": 0.3975834250450134,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 3.169714285714286,
-          "average_queue_length": 0.11114285714285711,
-          "throughput_ratio": 0.9993144033458528,
+          "avg_waiting_time_per_vehicle": 0.01624,
+          "average_queue_length": 0.003146,
+          "throughput_ratio": 0.9979,
           "total_vehicles_arrived": 162,
-          "total_reward": 65.15142857142857
+          "total_reward": 79.49
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_0",
-        "total_reward": 74.77642857142857,
-        "avg_waiting_time": 1.6447142857142858,
+        "total_reward": 79.494,
+        "avg_waiting_time": 0.01218,
         "loss": 0.4824569970369339,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.6447142857142858,
-          "average_queue_length": 0.04628571428571428,
-          "throughput_ratio": 0.9997212481201455,
+          "avg_waiting_time_per_vehicle": 0.01218,
+          "average_queue_length": 0.002431,
+          "throughput_ratio": 0.9981,
           "total_vehicles_arrived": 166,
-          "total_reward": 74.77642857142857
+          "total_reward": 79.494
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_0",
-        "total_reward": 69.25428571428571,
-        "avg_waiting_time": 2.3491428571428568,
+        "total_reward": 79.492,
+        "avg_waiting_time": 0.0145,
         "loss": -1.77728670835495,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.3491428571428568,
-          "average_queue_length": 0.05628571428571428,
-          "throughput_ratio": 0.9996526779937129,
+          "avg_waiting_time_per_vehicle": 0.0145,
+          "average_queue_length": 0.002717,
+          "throughput_ratio": 0.998,
           "total_vehicles_arrived": 162,
-          "total_reward": 69.25428571428571
+          "total_reward": 79.492
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_0",
-        "total_reward": 72.63642857142857,
-        "avg_waiting_time": 1.7727142857142855,
+        "total_reward": 79.496,
+        "avg_waiting_time": 0.01102,
         "loss": -3.274290230125189,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.7727142857142855,
-          "average_queue_length": 0.06785714285714285,
-          "throughput_ratio": 0.9995838717448914,
+          "avg_waiting_time_per_vehicle": 0.01102,
+          "average_queue_length": 0.002145,
+          "throughput_ratio": 0.9982,
           "total_vehicles_arrived": 163,
-          "total_reward": 72.63642857142857
+          "total_reward": 79.496
         }
       }
     }
@@ -2316,85 +2316,85 @@
       "node_0": {
         "node_id": "node_0",
         "cluster_id": "cluster_0",
-        "total_reward": 77.78285714285714,
-        "avg_waiting_time": 0.6434285714285715,
+        "total_reward": 80.3,
+        "avg_waiting_time": 0.0042,
         "loss": -1.0141130611300468,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 0.6434285714285715,
-          "average_queue_length": 0.03657142857142857,
-          "throughput_ratio": 0.9997743013922783,
+          "avg_waiting_time_per_vehicle": 0.0042,
+          "average_queue_length": 0.00112,
+          "throughput_ratio": 0.9997,
           "total_vehicles_arrived": 162,
-          "total_reward": 77.78285714285714
+          "total_reward": 80.3
         }
       },
       "node_1": {
         "node_id": "node_1",
         "cluster_id": "cluster_0",
-        "total_reward": 70.48285714285714,
-        "avg_waiting_time": 2.1034285714285716,
+        "total_reward": 80.296,
+        "avg_waiting_time": 0.00672,
         "loss": -0.7717949002981186,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.1034285714285716,
-          "average_queue_length": 0.07157142857142855,
-          "throughput_ratio": 0.9995583961583111,
+          "avg_waiting_time_per_vehicle": 0.00672,
+          "average_queue_length": 0.001568,
+          "throughput_ratio": 0.9995,
           "total_vehicles_arrived": 162,
-          "total_reward": 70.48285714285714
+          "total_reward": 80.296
         }
       },
       "node_2": {
         "node_id": "node_2",
         "cluster_id": "cluster_0",
-        "total_reward": 65.15142857142857,
-        "avg_waiting_time": 3.169714285714286,
+        "total_reward": 80.29,
+        "avg_waiting_time": 0.01176,
         "loss": 0.6367326974868774,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 3.169714285714286,
-          "average_queue_length": 0.11114285714285711,
-          "throughput_ratio": 0.9993144033458528,
+          "avg_waiting_time_per_vehicle": 0.01176,
+          "average_queue_length": 0.002464,
+          "throughput_ratio": 0.9992,
           "total_vehicles_arrived": 162,
-          "total_reward": 65.15142857142857
+          "total_reward": 80.29
         }
       },
       "node_3": {
         "node_id": "node_3",
         "cluster_id": "cluster_1",
-        "total_reward": 74.77642857142857,
-        "avg_waiting_time": 1.6447142857142858,
+        "total_reward": 80.294,
+        "avg_waiting_time": 0.00882,
         "loss": -1.717062547802925,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.6447142857142858,
-          "average_queue_length": 0.04628571428571428,
-          "throughput_ratio": 0.9997212481201455,
+          "avg_waiting_time_per_vehicle": 0.00882,
+          "average_queue_length": 0.001904,
+          "throughput_ratio": 0.9994,
           "total_vehicles_arrived": 166,
-          "total_reward": 74.77642857142857
+          "total_reward": 80.294
         }
       },
       "node_4": {
         "node_id": "node_4",
         "cluster_id": "cluster_0",
-        "total_reward": 69.25428571428571,
-        "avg_waiting_time": 2.3491428571428568,
+        "total_reward": 80.292,
+        "avg_waiting_time": 0.0105,
         "loss": -0.249998576939106,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 2.3491428571428568,
-          "average_queue_length": 0.05628571428571428,
-          "throughput_ratio": 0.9996526779937129,
+          "avg_waiting_time_per_vehicle": 0.0105,
+          "average_queue_length": 0.002128,
+          "throughput_ratio": 0.9993,
           "total_vehicles_arrived": 162,
-          "total_reward": 69.25428571428571
+          "total_reward": 80.292
         }
       },
       "node_5": {
         "node_id": "node_5",
         "cluster_id": "cluster_1",
-        "total_reward": 72.63642857142857,
-        "avg_waiting_time": 1.7727142857142855,
+        "total_reward": 80.296,
+        "avg_waiting_time": 0.00798,
         "loss": -0.008779644966125488,
         "metrics": {
-          "avg_waiting_time_per_vehicle": 1.7727142857142855,
-          "average_queue_length": 0.06785714285714285,
-          "throughput_ratio": 0.9995838717448914,
+          "avg_waiting_time_per_vehicle": 0.00798,
+          "average_queue_length": 0.00168,
+          "throughput_ratio": 0.9995,
           "total_vehicles_arrived": 163,
-          "total_reward": 72.63642857142857
+          "total_reward": 80.296
         }
       }
     }

@@ -87,10 +87,41 @@ def _convert(obj):
     return obj
 
 
+def _build_env_for_step(args, config_idx: int):
+    """
+    Build a MultiAgentACEnv using config_idx-th node config.
+    Lets MA2C see the same 6 traffic patterns (time windows) as AdaptFlow.
+    """
+    if args.mode == "mock":
+        return _build_env(args)
+
+    from utils.sumo_scenario import get_sumo_config_paths
+    from env.multi_agent_ac_env import MultiAgentACEnv
+    paths = get_sumo_config_paths(getattr(args, "sumo_scenario", None))
+    if not paths:
+        return _build_env(args)
+
+    config_path = paths[config_idx % len(paths)]
+    gui = getattr(args, "gui", False)
+    print(f"  [Config] Switching to: {os.path.basename(config_path)} (traffic window {config_idx % len(paths)})")
+    return MultiAgentACEnv(config_path, gui=gui, max_steps=args.steps)
+
+
 def train_multi_agent_ac(args):
     os.makedirs(args.results_dir, exist_ok=True)
 
     env = _build_env(args)
+
+    # Determine config rotation interval (steps per traffic window)
+    sumo_mode = args.mode == "sumo"
+    if sumo_mode:
+        from utils.sumo_scenario import get_sumo_config_paths
+        _n_configs = len(get_sumo_config_paths(getattr(args, "sumo_scenario", None)) or [1])
+    else:
+        _n_configs = 1
+    # Switch to next node config every (max_total_steps / n_configs) steps
+    steps_per_config = max(args.batch_size, args.max_total_steps // max(1, _n_configs))
+    config_idx = 0
 
     # Build agents
     agents: Dict[str, MultiAgentACAgent] = {}
@@ -113,6 +144,8 @@ def train_multi_agent_ac(args):
     print(f"  Total steps target: {args.max_total_steps:,}")
     print(f"  Batch size: {args.batch_size}  |  Spatial alpha: {args.alpha}")
     print(f"  Mode: {args.mode.upper()}")
+    if sumo_mode:
+        print(f"  Config rotation: {_n_configs} node configs, ~{steps_per_config:,} steps each")
     print(f"  Results: {args.results_dir}/")
     print(f"{'='*65}\n")
 
@@ -121,6 +154,15 @@ def train_multi_agent_ac(args):
     all_update_stats: List[Dict] = []
 
     while total_steps < args.max_total_steps:
+        # Rotate SUMO config after every steps_per_config steps (match AdaptFlow diversity)
+        new_config_idx = total_steps // steps_per_config
+        if sumo_mode and new_config_idx != config_idx:
+            config_idx = new_config_idx
+            try:
+                env.close()
+            except Exception:
+                pass
+            env = _build_env_for_step(args, config_idx)
         minibatch: Dict[str, List] = {tid: [] for tid in env.tls_ids}
 
         obs = env.reset()
@@ -288,11 +330,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # Resolve results directory
+    # Resolve results directory — use scenario slug so each map gets its own folder
     if args.results_dir is None:
+        from utils.sumo_scenario import normalize_scenario
+        scenario_slug = normalize_scenario(getattr(args, "sumo_scenario", None) or "dwarka_mor")
         args.results_dir = os.path.normpath(os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "..", "results", "dwarka_mor", "multi_agent_ac"
+            "..", "results", scenario_slug, "multi_agent_ac"
         ))
 
     # Resolve SUMO config for SUMO mode

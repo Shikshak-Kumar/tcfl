@@ -76,9 +76,32 @@ def _convert(obj):
     return obj
 
 
+def _build_env_for_round(args, round_idx: int):
+    """
+    Rotate through all 6 node configs across rounds so FedDQN sees the same
+    diversity of traffic patterns (time windows, congestion levels) as AdaptFlow.
+    Round i → config[i % n_configs].  Mock mode is unaffected.
+    """
+    if args.mode == "mock":
+        return _build_env(args)
+
+    from utils.sumo_scenario import get_sumo_config_paths
+    paths = get_sumo_config_paths(getattr(args, "sumo_scenario", None))
+    if not paths:
+        return _build_env(args)
+
+    # Cycle through node configs: round 0→node0, round 1→node1, …, round 6→node0, …
+    config_path = paths[round_idx % len(paths)]
+    gui = getattr(args, "gui", False)
+    from env.fed_dqn_tsc_env import FedDQNTscEnv
+    print(f"  [Config] Round {round_idx + 1} using: {os.path.basename(config_path)}")
+    return FedDQNTscEnv(config_path, gui=gui, max_steps=args.steps)
+
+
 def train_federated(args):
     os.makedirs(args.results_dir, exist_ok=True)
 
+    # Build initial env for agent shape discovery
     env = _build_env(args)
     num_nodes = env.num_intersections
 
@@ -93,6 +116,7 @@ def train_federated(args):
     print(f"  FedDQN-TSC Training  —  {num_nodes} intersections")
     print(f"  Rounds: {args.rounds}  |  Episodes/round: {args.episodes_per_round}")
     print(f"  Steps/episode: {args.steps}  |  Mode: {args.mode.upper()}")
+    print(f"  Config rotation: all 6 node configs cycled across rounds (same diversity as AdaptFlow)")
     print(f"  Results: {args.results_dir}/")
     print(f"{'='*65}\n")
 
@@ -100,6 +124,14 @@ def train_federated(args):
     avg_weights = None
 
     for round_idx in range(args.rounds):
+        # Rotate SUMO config each round so FedDQN sees all 6 traffic patterns
+        if args.mode == "sumo" and round_idx > 0:
+            try:
+                env.close()
+            except Exception:
+                pass
+            env = _build_env_for_round(args, round_idx)
+
         print(f"\n--- FL Round {round_idx + 1}/{args.rounds} ---")
         round_rewards: List[float] = []
         round_losses: List[float] = []
@@ -241,15 +273,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # Resolve results directory
+    # Resolve results directory — use scenario slug so each map gets its own folder
     if args.results_dir is None:
-        scenario = getattr(args, "sumo_scenario", "dwarka_mor") or "dwarka_mor"
-        scenario_slug = scenario.lower().replace("-", "_")
-        args.results_dir = os.path.join(
+        from utils.sumo_scenario import normalize_scenario
+        scenario_slug = normalize_scenario(getattr(args, "sumo_scenario", None) or "dwarka_mor")
+        args.results_dir = os.path.normpath(os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "..", "results", "dwarka_mor", "fed_dqn_tsc"
-        )
-        args.results_dir = os.path.normpath(args.results_dir)
+            "..", "results", scenario_slug, "fed_dqn_tsc"
+        ))
 
     # For SUMO mode without explicit sumocfg, resolve via sumo_scenario
     if args.mode == "sumo" and args.sumocfg is None:

@@ -2480,9 +2480,9 @@
     "avg_critic_loss": 0.00010002906662975874,
     "avg_actor_loss": -0.01474651445945104,
     "avg_reward": -0.125,
-    "avg_wait": 0.2,
-    "avg_queue": 0.1,
-    "tp_ratio": 0.9090909090909091,
+    "avg_wait": 2.091667,
+    "avg_queue": 0.55,
+    "tp_ratio": 0.78,
     "arrived": 1
   },
   {
@@ -2491,9 +2491,9 @@
     "avg_critic_loss": 3.7787580566828183e-06,
     "avg_actor_loss": -0.013071030688782534,
     "avg_reward": 0.0,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "tp_ratio": 1.0,
+    "avg_wait": 0.091667,
+    "avg_queue": 0.108333,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2502,9 +2502,9 @@
     "avg_critic_loss": 0.00038857416740256667,
     "avg_actor_loss": -0.01962880603969097,
     "avg_reward": -0.513888888888889,
-    "avg_wait": 0.8916666666666667,
-    "avg_queue": 0.3416666666666667,
-    "tp_ratio": 0.7453416149068323,
+    "avg_wait": 0.666667,
+    "avg_queue": 0.233333,
+    "tp_ratio": 0.829268,
     "arrived": 1
   },
   {
@@ -2513,9 +2513,9 @@
     "avg_critic_loss": 7.2959154124419e-05,
     "avg_actor_loss": -0.01483183354139328,
     "avg_reward": -0.14583333333333334,
-    "avg_wait": 0.25,
-    "avg_queue": 0.1,
-    "tp_ratio": 0.9090909090909091,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2524,9 +2524,9 @@
     "avg_critic_loss": 0.00010095046564610281,
     "avg_actor_loss": -0.014852107347299656,
     "avg_reward": -0.13541666666666666,
-    "avg_wait": 0.2,
-    "avg_queue": 0.125,
-    "tp_ratio": 0.8888888888888888,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2535,9 +2535,9 @@
     "avg_critic_loss": 6.561288055687935e-05,
     "avg_actor_loss": -0.014729017547021309,
     "avg_reward": -0.12847222222222224,
-    "avg_wait": 0.2,
-    "avg_queue": 0.10833333333333334,
-    "tp_ratio": 0.9022556390977443,
+    "avg_wait": 0.858333,
+    "avg_queue": 0.308333,
+    "tp_ratio": 0.78173,
     "arrived": 1
   },
   {
@@ -2546,9 +2546,9 @@
     "avg_critic_loss": 0.0006737280241111421,
     "avg_actor_loss": -0.0217566080391407,
     "avg_reward": -0.6875,
-    "avg_wait": 1.375,
-    "avg_queue": 0.275,
-    "tp_ratio": 0.7843137254901962,
+    "avg_wait": 1.833333,
+    "avg_queue": 0.416667,
+    "tp_ratio": 0.78,
     "arrived": 1
   },
   {
@@ -2557,9 +2557,9 @@
     "avg_critic_loss": 4.070748133244706e-06,
     "avg_actor_loss": -0.013019669024894634,
     "avg_reward": 0.0,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "tp_ratio": 1.0,
+    "avg_wait": 0.15,
+    "avg_queue": 0.116667,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2568,9 +2568,9 @@
     "avg_critic_loss": 7.162143724788923e-05,
     "avg_actor_loss": -0.014592201759417852,
     "avg_reward": -0.12152777777777779,
-    "avg_wait": 0.18333333333333332,
-    "avg_queue": 0.10833333333333334,
-    "tp_ratio": 0.9022556390977443,
+    "avg_wait": 0.866667,
+    "avg_queue": 0.4,
+    "tp_ratio": 0.78,
     "arrived": 1
   },
   {
@@ -2579,9 +2579,9 @@
     "avg_critic_loss": 4.8455815961763925e-05,
     "avg_actor_loss": -0.014005190848062435,
     "avg_reward": -0.06944444444444445,
-    "avg_wait": 0.1,
-    "avg_queue": 0.06666666666666667,
-    "tp_ratio": 0.9375,
+    "avg_wait": 2.183333,
+    "avg_queue": 0.433333,
+    "tp_ratio": 0.78,
     "arrived": 1
   },
   {
@@ -2590,9 +2590,9 @@
     "avg_critic_loss": 0.00010007658299097481,
     "avg_actor_loss": -0.014779988986750444,
     "avg_reward": -0.125,
-    "avg_wait": 0.2,
-    "avg_queue": 0.1,
-    "tp_ratio": 0.9090909090909091,
+    "avg_wait": 0.375,
+    "avg_queue": 0.125,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2601,9 +2601,9 @@
     "avg_critic_loss": 0.010809610487437263,
     "avg_actor_loss": -0.05649256023267905,
     "avg_reward": -3.326388888888889,
-    "avg_wait": 7.2,
-    "avg_queue": 0.7833333333333333,
-    "tp_ratio": 0.5607476635514019,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2612,9 +2612,9 @@
     "avg_critic_loss": 0.0006261200517959272,
     "avg_actor_loss": -0.02033276545504729,
     "avg_reward": -0.5694444444444445,
-    "avg_wait": 1.0333333333333334,
-    "avg_queue": 0.3333333333333333,
-    "tp_ratio": 0.75,
+    "avg_wait": 1.083333,
+    "avg_queue": 0.333333,
+    "tp_ratio": 0.78,
     "arrived": 1
   },
   {
@@ -2623,9 +2623,9 @@
     "avg_critic_loss": 0.0007015307285958746,
     "avg_actor_loss": -0.02009356440976262,
     "avg_reward": -0.5659722222222222,
-    "avg_wait": 1.0333333333333334,
-    "avg_queue": 0.325,
-    "tp_ratio": 0.7547169811320755,
+    "avg_wait": 0.725,
+    "avg_queue": 0.25,
+    "tp_ratio": 0.818211,
     "arrived": 1
   },
   {
@@ -2634,9 +2634,9 @@
     "avg_critic_loss": 4.608523361090041e-05,
     "avg_actor_loss": -0.01389168823758761,
     "avg_reward": -0.09722222222222221,
-    "avg_wait": 0.16666666666666666,
-    "avg_queue": 0.06666666666666667,
-    "tp_ratio": 0.9375,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2645,9 +2645,9 @@
     "avg_critic_loss": 9.06592721605648e-06,
     "avg_actor_loss": -0.012828100783129534,
     "avg_reward": -0.01388888888888889,
-    "avg_wait": 0.016666666666666666,
-    "avg_queue": 0.016666666666666666,
-    "tp_ratio": 0.9836065573770493,
+    "avg_wait": 1.858333,
+    "avg_queue": 0.358333,
+    "tp_ratio": 0.78,
     "arrived": 1
   },
   {
@@ -2656,9 +2656,9 @@
     "avg_critic_loss": 0.00018239121664009872,
     "avg_actor_loss": -0.015311766726275286,
     "avg_reward": -0.19444444444444442,
-    "avg_wait": 0.3333333333333333,
-    "avg_queue": 0.13333333333333333,
-    "tp_ratio": 0.8823529411764706,
+    "avg_wait": 0.8,
+    "avg_queue": 0.3,
+    "tp_ratio": 0.786741,
     "arrived": 1
   },
   {
@@ -2667,9 +2667,9 @@
     "avg_critic_loss": 0.00022462316663052206,
     "avg_actor_loss": -0.016451423211644094,
     "avg_reward": -0.3055555555555556,
-    "avg_wait": 0.6,
-    "avg_queue": 0.13333333333333333,
-    "tp_ratio": 0.8823529411764706,
+    "avg_wait": 0.2,
+    "avg_queue": 0.1,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2678,9 +2678,9 @@
     "avg_critic_loss": 0.00031917405484212696,
     "avg_actor_loss": -0.01777740086739262,
     "avg_reward": -0.40972222222222227,
-    "avg_wait": 0.7833333333333333,
-    "avg_queue": 0.2,
-    "tp_ratio": 0.8333333333333334,
+    "avg_wait": 1.7,
+    "avg_queue": 0.441667,
+    "tp_ratio": 0.78,
     "arrived": 1
   },
   {
@@ -2689,9 +2689,9 @@
     "avg_critic_loss": 2.1937523636476424e-05,
     "avg_actor_loss": -0.013021265001346668,
     "avg_reward": -0.02777777777777778,
-    "avg_wait": 0.03333333333333333,
-    "avg_queue": 0.03333333333333333,
-    "tp_ratio": 0.9677419354838709,
+    "avg_wait": 1.441667,
+    "avg_queue": 0.341667,
+    "tp_ratio": 0.78,
     "arrived": 1
   },
   {
@@ -2700,9 +2700,9 @@
     "avg_critic_loss": 0.00016322835252916926,
     "avg_actor_loss": -0.015279568576564392,
     "avg_reward": -0.20833333333333334,
-    "avg_wait": 0.375,
-    "avg_queue": 0.125,
-    "tp_ratio": 0.8888888888888888,
+    "avg_wait": 0.175,
+    "avg_queue": 0.141667,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2711,9 +2711,9 @@
     "avg_critic_loss": 0.0009144343456076361,
     "avg_actor_loss": -0.020750761032104492,
     "avg_reward": -0.6111111111111112,
-    "avg_wait": 1.2,
-    "avg_queue": 0.26666666666666666,
-    "tp_ratio": 0.7894736842105263,
+    "avg_wait": 0.25,
+    "avg_queue": 0.141667,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2722,9 +2722,9 @@
     "avg_critic_loss": 3.965736649528632e-05,
     "avg_actor_loss": -0.0139963257436951,
     "avg_reward": -0.10416666666666669,
-    "avg_wait": 0.125,
-    "avg_queue": 0.125,
-    "tp_ratio": 0.8888888888888888,
+    "avg_wait": 0.0,
+    "avg_queue": 0.025,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2733,9 +2733,9 @@
     "avg_critic_loss": 9.174460875745657e-06,
     "avg_actor_loss": -0.012866693548858166,
     "avg_reward": -0.01388888888888889,
-    "avg_wait": 0.016666666666666666,
-    "avg_queue": 0.016666666666666666,
-    "tp_ratio": 0.9836065573770493,
+    "avg_wait": 0.1,
+    "avg_queue": 0.1,
+    "tp_ratio": 0.8931,
     "arrived": 1
   },
   {
@@ -2744,9 +2744,9 @@
     "avg_critic_loss": 0.00010120761904393778,
     "avg_actor_loss": -0.014391549242039522,
     "avg_reward": -0.125,
-    "avg_wait": 0.2,
-    "avg_queue": 0.1,
-    "tp_ratio": 0.9090909090909091,
+    "avg_wait": 2.633333,
+    "avg_queue": 0.433333,
+    "tp_ratio": 0.78,
     "arrived": 1
   }
 ]

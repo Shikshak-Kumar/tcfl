@@ -1,0 +1,14 @@
+{
+  "node_id": "node_1",
+  "cluster_id": "cluster_0",
+  "total_reward": 90.66666666666666,
+  "avg_waiting_time": 0.16666666666666663,
+  "loss": 0.05581100285053253,
+  "metrics": {
+    "avg_waiting_time_per_vehicle": 0.16666666666666663,
+    "average_queue_length": 0.05466666666666666,
+    "throughput_ratio": 0.9997239819309147,
+    "total_vehicles_arrived": 198,
+    "total_reward": 90.66666666666666
+  }
+}

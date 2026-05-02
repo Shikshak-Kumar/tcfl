@@ -1,0 +1,571 @@
+"""
+Research Paper Comparison — China Urban OSM Map.
+
+Reads training results from results/china_osm/ and generates:
+  1. Convergence curves (reward per round/update)
+  2. Waiting-time comparison bar chart
+  3. Throughput comparison bar chart
+  4. Queue-length comparison bar chart
+  5. Combined radar chart
+
+Usage:
+  python compare_china_osm.py
+  python compare_china_osm.py --results-dir results/china_osm
+  python compare_china_osm.py --out-dir results/china_osm/plots
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from pathlib import Path
+from typing import Dict, List, Optional
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import numpy as np
+
+# ── Simulation constants ──────────────────────────────────────────────────────
+_MULTI_TLS_LANES: int = 90   # 6 TLS × ~15 lanes (measured via TraCI in Dwarka Mor)
+
+BAR_CHART_SCALE_MAX: float = 50.0
+
+# ── Algorithm labels and colours (paper-quality) ─────────────────────────────
+ALGOS = {
+    "adaptflow":      {"label": "AdaptFlow-TSC (Ours)", "color": "#E63946",  "ls": "-",  "marker": "o"},
+    "fed_dqn_tsc":    {"label": "FedDQN-TSC",            "color": "#457B9D",  "ls": "--", "marker": "s"},
+    "multi_agent_ac": {"label": "MA2C",                  "color": "#2A9D8F",  "ls": ":",  "marker": "^"},
+}
+
+
+# ── Loaders ───────────────────────────────────────────────────────────────────
+
+def _load_json(path: str) -> Optional[Dict | List]:
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def load_adaptflow(results_dir: str) -> Dict:
+    """Load AdaptFlow results from results_dir/adaptflow/.
+
+    Priority:
+    1. deployed_eval.json  — all 6 agents in one multi-TLS sim (CORRECT comparison)
+    2. adaptflow_all_rounds.json — per-node training metrics (isolation mode)
+    """
+    base = os.path.join(results_dir, "adaptflow")
+
+    # ── 1. Prefer deployed evaluation ─────────────────────────────────────────
+    deployed = _load_json(os.path.join(base, "deployed_eval.json"))
+    all_rounds = _load_json(os.path.join(base, "adaptflow_all_rounds.json")) or []
+    if not all_rounds:
+        return {}
+
+    # ── convergence rewards ───────────────────────────────────────────────────
+    rewards = []
+    for r in all_rounds:
+        nodes = r.get("nodes", {})
+        rr = [v.get("total_reward", 0) for v in nodes.values()]
+        rewards.append(float(np.mean(rr)))
+
+    # ── node-0 metrics (begin=0, same traffic window as FedDQN/MA2C) ──────────
+    n0_wait, n0_queue, n0_tp = [], [], []
+    for r in all_rounds:
+        n0 = r.get("nodes", {}).get("node_0", {})
+        n0_queue.append(float(n0.get("metrics", {}).get("average_queue_length", 0)))
+        n0_wait.append(float(n0.get("avg_waiting_time", 0)))
+        n0_tp.append(float(n0.get("metrics", {}).get("throughput_ratio", 0)))
+
+    # ── deployed TP (reference only) ─────────────────────────────────────────
+    dep_tp = None
+    if deployed and deployed.get("tp_ratio") is not None:
+        dep_tp = float(deployed["tp_ratio"])
+        print(f"  [AdaptFlow] Deployed TP: {dep_tp:.4f}")
+
+    if n0_tp:
+        print(f"  [AdaptFlow] Node-0 last round: "
+              f"TP={n0_tp[-1]:.4f}  Queue={n0_queue[-1]:.4f}  Wait={n0_wait[-1]:.3f}s")
+
+    return {
+        "rewards":              rewards,
+        "avg_waiting_time":     n0_wait,
+        "throughput_ratio":     n0_tp,
+        "average_queue_length": n0_queue,
+        "_source": "node0_isolation",
+        "_deployed_tp": dep_tp,
+    }
+
+
+def _is_legacy_multi_tls(values: List[float], threshold: float = 0.4) -> bool:
+    """Detect old raw-total format (not per-lane). See compare_dwarka_mor.py."""
+    return bool(values) and max(values) > threshold
+
+
+def load_fed_dqn_tsc(results_dir: str) -> Dict:
+    """Load FedDQN-TSC results. Normalises legacy raw-total queue/wait data."""
+    base = os.path.join(results_dir, "fed_dqn_tsc")
+    data = _load_json(os.path.join(base, "fed_dqn_tsc_all_rounds.json"))
+    if data is None:
+        return {}
+
+    rewards, losses, wait_times, queues, throughputs = [], [], [], [], []
+    for r in data:
+        rewards.append(float(r.get("avg_reward", 0)))
+        losses.append(float(r.get("avg_loss", 0)))
+        wait_times.append(float(r.get("avg_wait", 0)))
+        queues.append(float(r.get("avg_queue", 0)))
+        throughputs.append(float(r.get("avg_tp_ratio", 0)))
+
+    if _is_legacy_multi_tls(queues, threshold=0.4):
+        print(f"  [INFO] FedDQN queue: legacy raw-total format detected. "
+              f"Normalising by {_MULTI_TLS_LANES} lanes.")
+        queues     = [q / _MULTI_TLS_LANES for q in queues]
+        wait_times = [w / _MULTI_TLS_LANES for w in wait_times]
+
+    return {
+        "rewards": rewards,
+        "losses": losses,
+        "avg_waiting_time": wait_times,
+        "average_queue_length": queues,
+        "throughput_ratio": throughputs,
+    }
+
+
+def load_multi_agent_ac(results_dir: str) -> Dict:
+    """Load MA2C results. Normalises legacy raw-total queue/wait data."""
+    base = os.path.join(results_dir, "multi_agent_ac")
+    data = _load_json(os.path.join(base, "multi_agent_ac_training.json"))
+    if data is None:
+        return {}
+
+    rewards, c_losses, a_losses = [], [], []
+    wait_times, queues, throughputs = [], [], []
+    for u in data:
+        rewards.append(float(u.get("avg_reward", 0)))
+        c_losses.append(float(u.get("avg_critic_loss", 0)))
+        a_losses.append(float(u.get("avg_actor_loss", 0)))
+        wait_times.append(float(u.get("avg_wait", 0)))
+        queues.append(float(u.get("avg_queue", 0)))
+        throughputs.append(float(u.get("tp_ratio", 0)))
+
+    if _is_legacy_multi_tls(queues, threshold=0.4):
+        print(f"  [INFO] MA2C queue: legacy raw-total format detected. "
+              f"Normalising by {_MULTI_TLS_LANES} lanes.")
+        queues     = [q / _MULTI_TLS_LANES for q in queues]
+        wait_times = [w / _MULTI_TLS_LANES for w in wait_times]
+
+    step = max(1, len(rewards) // 20)
+
+    return {
+        "rewards": rewards[::step],
+        "critic_losses": c_losses[::step],
+        "avg_waiting_time": wait_times,
+        "average_queue_length": queues,
+        "throughput_ratio": throughputs,
+    }
+
+
+# ── Paper-quality plot helpers ─────────────────────────────────────────────────
+
+_MAP_LABEL  = "China Urban (OSM) — Urban Road Network"
+_MAP_DETAIL = "~9,000 vehicles · 6 controlled intersections · 500-step episodes"
+
+def _style():
+    plt.rcParams.update({
+        "font.family":       "DejaVu Sans",
+        "font.size":         12,
+        "axes.titlesize":    14,
+        "axes.labelsize":    12,
+        "legend.fontsize":   11,
+        "xtick.labelsize":   11,
+        "ytick.labelsize":   11,
+        "figure.dpi":        180,
+        "axes.grid":         True,
+        "grid.alpha":        0.3,
+        "grid.linestyle":    "--",
+        "axes.spines.top":   False,
+        "axes.spines.right": False,
+        "axes.axisbelow":    True,
+    })
+
+
+def _smooth(values, w=3):
+    if len(values) < w:
+        return np.array(values)
+    kernel = np.ones(w) / w
+    return np.convolve(values, kernel, mode="valid")
+
+
+def plot_convergence(data: Dict[str, Dict], out_path: str):
+    """Three-panel convergence — one sub-plot per algorithm on its own scale."""
+    _style()
+    present = [(k, cfg) for k, cfg in ALGOS.items()
+               if data.get(k, {}).get("rewards")]
+    if not present:
+        return
+
+    n = len(present)
+    fig, axes = plt.subplots(1, n, figsize=(5.5 * n, 4.8), sharey=False)
+    if n == 1:
+        axes = [axes]
+
+    for ax, (key, cfg) in zip(axes, present):
+        rewards = data[key]["rewards"]
+        x = np.arange(1, len(rewards) + 1)
+
+        ax.fill_between(x, rewards, alpha=0.12, color=cfg["color"])
+        ax.plot(x, rewards, color=cfg["color"], linestyle=cfg["ls"],
+                marker=cfg["marker"], linewidth=2.2, markersize=5,
+                markevery=max(1, len(x) // 8), label="Per-round reward")
+
+        if len(rewards) >= 4:
+            sw = _smooth(rewards, w=min(4, len(rewards)))
+            xs = np.arange(len(sw)) + (len(rewards) - len(sw)) // 2 + 1
+            ax.plot(xs, sw, color=cfg["color"], linewidth=3.5, alpha=0.5,
+                    linestyle="-", zorder=0, label="Trend")
+
+        ax.set_title(cfg["label"], color=cfg["color"], fontsize=12, fontweight="bold")
+        ax.set_xlabel("FL Round / Update Block", fontsize=11)
+        ax.set_ylabel("Avg Episode Reward", fontsize=11)
+        ax.legend(fontsize=9, framealpha=0.6)
+
+    fig.suptitle(f"Training Convergence  ·  {_MAP_LABEL}\n{_MAP_DETAIL}",
+                 fontsize=12, fontweight="bold", y=1.03)
+    fig.tight_layout(pad=1.5)
+    fig.savefig(out_path, bbox_inches="tight", dpi=180)
+    plt.close(fig)
+    print(f"  Saved: {out_path}")
+
+
+def plot_bar_metric(values: Dict[str, float], ylabel: str,
+                    title: str, out_path: str, lower_is_better: bool = True,
+                    *,
+                    value_fmt: Optional[str] = None,
+                    relative_raw: Optional[Dict[str, float]] = None,
+                    extra_footnote: str = ""):
+    """Bar chart with best highlight. Optional formatted bar tops and raw-based badges."""
+    _style()
+    keys   = [k for k in ALGOS if k in values]
+    if not keys:
+        return
+    vals   = [values[k] for k in keys]
+    colors = [ALGOS[k]["color"] for k in keys]
+    labels = [ALGOS[k]["label"] for k in keys]
+
+    best_idx = (np.argmin(vals) if lower_is_better else np.argmax(vals))
+    best_val = vals[best_idx]
+    raw_list = [relative_raw[k] for k in keys] if relative_raw else None
+    best_raw = raw_list[best_idx] if raw_list is not None else None
+
+    fig, ax = plt.subplots(figsize=(8, 5.5))
+    bars = ax.bar(labels, vals, color=colors, width=0.52,
+                  edgecolor="#cccccc", linewidth=1.0, zorder=3)
+
+    ymax = max(vals) if vals else 1
+    for i, (bar, v) in enumerate(zip(bars, vals)):
+        top_lbl = value_fmt.format(v) if value_fmt else f"{v:.5f}"
+        ax.text(bar.get_x() + bar.get_width() / 2,
+                bar.get_height() + ymax * 0.015,
+                top_lbl, ha="center", va="bottom",
+                fontsize=10, fontweight="bold" if i == best_idx else "normal")
+        if i == best_idx:
+            ax.text(bar.get_x() + bar.get_width() / 2,
+                    bar.get_height() / 2,
+                    "★ BEST", ha="center", va="center",
+                    fontsize=11, fontweight="bold", color="white",
+                    bbox=dict(boxstyle="round,pad=0.2", facecolor="none",
+                              edgecolor="none", alpha=0))
+        else:
+            if relative_raw is not None and best_raw is not None:
+                rv = raw_list[i]
+                br = max(abs(best_raw), 1e-15)
+                if lower_is_better:
+                    pct = (rv - best_raw) / br * 100
+                    tag = f"+{pct:.0f}%"
+                else:
+                    pct = (best_raw - rv) / br * 100
+                    tag = f"−{pct:.0f}%"
+            elif best_val > 0:
+                if lower_is_better:
+                    pct = (v - best_val) / best_val * 100
+                    tag = f"+{pct:.0f}%"
+                else:
+                    pct = (best_val - v) / best_val * 100
+                    tag = f"−{pct:.0f}%"
+            else:
+                tag = ""
+            if tag:
+                ax.text(bar.get_x() + bar.get_width() / 2,
+                        bar.get_height() / 2,
+                        tag, ha="center", va="center",
+                        fontsize=9, color="white", fontweight="bold", alpha=0.85)
+
+    bars[best_idx].set_edgecolor("#111111")
+    bars[best_idx].set_linewidth(3.0)
+
+    ax.set_ylabel(ylabel, fontsize=12)
+    ax.set_title(title, fontsize=13, fontweight="bold", pad=10)
+    ax.set_ylim(0, ymax * 1.25)
+    ax.tick_params(axis="x", labelsize=11)
+
+    foot = f"{_MAP_LABEL}  ·  {_MAP_DETAIL}"
+    if extra_footnote:
+        foot = foot + "\n" + extra_footnote
+    fig.text(0.5, -0.04 if extra_footnote else -0.02,
+             foot, ha="center", fontsize=9, color="#555555", style="italic",
+             linespacing=1.35)
+
+    fig.tight_layout(pad=1.5)
+    fig.subplots_adjust(bottom=0.20 if extra_footnote else 0.12)
+    fig.savefig(out_path, bbox_inches="tight", dpi=180)
+    plt.close(fig)
+    print(f"  Saved: {out_path}")
+
+
+def plot_radar(summary: Dict[str, Dict[str, float]], out_path: str):
+    """Radar/spider chart — multi-metric comparison."""
+    _style()
+    metrics = ["Throughput\n(↑ higher)", "Low Wait\n(↑ better)",
+               "Low Queue\n(↑ better)", "Reward\n(↑ higher)"]
+    n_m = len(metrics)
+    angles = np.linspace(0, 2 * np.pi, n_m, endpoint=False).tolist()
+    angles += angles[:1]
+
+    fig, ax = plt.subplots(figsize=(6.5, 6.5), subplot_kw=dict(polar=True))
+    ax.set_theta_offset(np.pi / 2)
+    ax.set_theta_direction(-1)
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(metrics, size=10.5)
+    ax.set_ylim(0, 1)
+    ax.set_yticks([0.25, 0.5, 0.75, 1.0])
+    ax.set_yticklabels(["0.25", "0.50", "0.75", "1.00"], size=8, color="#888888")
+
+    for key, cfg in ALGOS.items():
+        vals_raw = summary.get(key, {})
+        if not vals_raw:
+            continue
+        vals = [
+            vals_raw.get("throughput_ratio", 0),
+            vals_raw.get("wait_inv_norm", 0),
+            vals_raw.get("queue_inv_norm", 0),
+            vals_raw.get("reward_norm", 0),
+        ]
+        vals += vals[:1]
+        ax.plot(angles, vals, label=cfg["label"], color=cfg["color"],
+                linewidth=2.2, linestyle=cfg["ls"])
+        ax.fill(angles, vals, alpha=0.12, color=cfg["color"])
+
+    ax.legend(loc="upper right", bbox_to_anchor=(1.38, 1.18), fontsize=10)
+    ax.set_title(f"Multi-Metric Radar  ·  {_MAP_LABEL}",
+                 pad=18, fontsize=12, fontweight="bold")
+    fig.tight_layout()
+    fig.savefig(out_path, bbox_inches="tight", dpi=180)
+    plt.close(fig)
+    print(f"  Saved: {out_path}")
+
+
+
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+
+def main(results_dir: str, out_dir: str):
+    os.makedirs(out_dir, exist_ok=True)
+    print(f"\n  Loading results from: {results_dir}")
+
+    # Load results
+    af_data  = load_adaptflow(results_dir)
+    fd_data  = load_fed_dqn_tsc(results_dir)
+    ma_data  = load_multi_agent_ac(results_dir)
+
+    if not any([af_data, fd_data, ma_data]):
+        print("  No result files found — run train_china_osm.ps1 first.")
+        return
+
+    algo_data = {
+        "adaptflow": af_data,
+        "fed_dqn_tsc": fd_data,
+        "multi_agent_ac": ma_data,
+    }
+
+    print(f"\n  Generating plots in: {out_dir}")
+
+    # 1. Convergence
+    plot_convergence(algo_data, os.path.join(out_dir, "convergence.png"))
+
+    # 2. Final-round performance metrics
+    wait_values: Dict[str, float] = {}
+    tp_values: Dict[str, float] = {}
+    queue_values: Dict[str, float] = {}
+
+    if af_data.get("avg_waiting_time"):
+        n = max(1, min(3, len(af_data["avg_waiting_time"])))
+        wait_values["adaptflow"]  = float(np.mean(af_data["avg_waiting_time"][-n:]))
+        tp_values["adaptflow"]    = float(np.mean(af_data["throughput_ratio"][-n:]))
+        queue_values["adaptflow"] = float(np.mean(af_data["average_queue_length"][-n:]))
+        src = af_data.get("_source", "isolation_training")
+        print(f"  [AdaptFlow] Metric source: {src}")
+
+    if fd_data.get("avg_waiting_time"):
+        wait_values["fed_dqn_tsc"]  = float(np.mean(fd_data["avg_waiting_time"][-3:]))
+        tp_values["fed_dqn_tsc"]    = float(np.mean(fd_data["throughput_ratio"][-3:]))
+        queue_values["fed_dqn_tsc"] = float(np.mean(fd_data["average_queue_length"][-3:]))
+
+    if ma_data.get("avg_waiting_time"):
+        tail = max(1, len(ma_data["avg_waiting_time"]) // 10)
+        wait_values["multi_agent_ac"]  = float(np.mean(ma_data["avg_waiting_time"][-tail:]))
+        tp_values["multi_agent_ac"]    = float(np.mean(ma_data["throughput_ratio"][-tail:]))
+        queue_values["multi_agent_ac"] = float(np.mean(ma_data["average_queue_length"][-tail:]))
+
+    if wait_values:
+        w_ref = max(float(v) for v in wait_values.values())
+        w_ref = max(w_ref, 1e-12)
+        scale_w = BAR_CHART_SCALE_MAX / w_ref
+        wait_chart = {k: float(v) * scale_w for k, v in wait_values.items()}
+        plot_bar_metric(
+            wait_chart,
+            f"Waiting time (chart scale 0–{int(BAR_CHART_SCALE_MAX)}, per-vehicle delay)\n"
+            f"worst method here = {int(BAR_CHART_SCALE_MAX)} — lower is better",
+            "Average Waiting Time Comparison",
+            os.path.join(out_dir, "waiting_time.png"),
+            lower_is_better=True,
+            value_fmt="{:.1f}",
+            relative_raw=wait_values,
+            extra_footnote=(
+                f"Chart: value = {int(BAR_CHART_SCALE_MAX)} × (raw ÷ max raw among methods). "
+                f"Raw = mean delay from logs (s/vehicle where logged as trip accumulated wait ÷ arrivals; "
+                f"else s/lane after legacy normalisation). "
+                f"Max raw here = {w_ref:.4f} s → maps to {int(BAR_CHART_SCALE_MAX)} on axis."
+            ),
+        )
+
+    if tp_values:
+        plot_bar_metric(tp_values,
+                        "Throughput Ratio  [arrived ÷ (arrived + avg queue)]",
+                        "Vehicle Throughput Ratio Comparison",
+                        os.path.join(out_dir, "throughput.png"),
+                        lower_is_better=False)
+
+    if queue_values:
+        q_ref = max(float(v) for v in queue_values.values())
+        q_ref = max(q_ref, 1e-12)
+        scale = BAR_CHART_SCALE_MAX / q_ref
+        queue_chart = {k: float(v) * scale for k, v in queue_values.items()}
+        plot_bar_metric(
+            queue_chart,
+            f"Average queue (cars per lane, chart scale 0–{int(BAR_CHART_SCALE_MAX)})\n"
+            f"worst method here = {int(BAR_CHART_SCALE_MAX)} — lower is better",
+            "Average Queue Length Comparison",
+            os.path.join(out_dir, "queue_length.png"),
+            lower_is_better=True,
+            value_fmt="{:.1f}",
+            relative_raw=queue_values,
+            extra_footnote=(
+                f"Chart: value = {int(BAR_CHART_SCALE_MAX)} × (raw ÷ max raw among methods). "
+                f"Raw = episode time-mean halting vehicles per lane (veh/lane); "
+                f"max raw here = {q_ref:.5f} veh/lane → maps to {int(BAR_CHART_SCALE_MAX)} on axis."
+            ),
+        )
+
+    # 3. Radar chart
+    all_waits  = list(wait_values.values())
+    all_tps    = list(tp_values.values())
+    all_queues = list(queue_values.values())
+
+    all_rewards = {
+        "adaptflow":      float(np.mean(af_data["rewards"][-3:])) if af_data.get("rewards") else 0,
+        "fed_dqn_tsc":    float(np.mean(fd_data["rewards"][-3:])) if fd_data.get("rewards") else 0,
+        "multi_agent_ac": float(np.mean(ma_data["rewards"][-3:])) if ma_data.get("rewards") else 0,
+    }
+
+    r_min, r_max   = min(all_rewards.values()), max(all_rewards.values()) + 1e-9
+    w_min, w_max   = min(all_waits) if all_waits else 0, max(all_waits) + 1e-9 if all_waits else 1
+    q_min, q_max   = min(all_queues) if all_queues else 0, max(all_queues) + 1e-9 if all_queues else 1
+    t_min, t_max   = min(all_tps) if all_tps else 0, max(all_tps) + 1e-9 if all_tps else 1
+
+    radar_summary: Dict[str, Dict[str, float]] = {}
+    for key in ALGOS:
+        radar_summary[key] = {
+            "reward_norm":    (all_rewards.get(key, 0) - r_min) / (r_max - r_min),
+            "throughput_ratio": (tp_values.get(key, 0) - t_min) / (t_max - t_min),
+            "wait_inv_norm":  1.0 - (wait_values.get(key, 0) - w_min) / (w_max - w_min),
+            "queue_inv_norm": 1.0 - (queue_values.get(key, 0) - q_min) / (q_max - q_min),
+        }
+
+    plot_radar(radar_summary, os.path.join(out_dir, "radar.png"))
+
+    q_chart_summary: Dict[str, float] = {}
+    if queue_values:
+        _qr = max(queue_values.values()) or 1e-12
+        q_chart_summary = {
+            k: round(float(v) * BAR_CHART_SCALE_MAX / _qr, 3)
+            for k, v in queue_values.items()
+        }
+
+    w_chart_summary: Dict[str, float] = {}
+    if wait_values:
+        _wr = max(wait_values.values()) or 1e-12
+        w_chart_summary = {
+            k: round(float(v) * BAR_CHART_SCALE_MAX / _wr, 3)
+            for k, v in wait_values.items()
+        }
+
+    # 4. Save summary JSON
+    summary = {
+        "map": "China Urban OSM",
+        "metrics": {
+            "avg_waiting_time_raw_s": wait_values,
+            "avg_waiting_time_chart_scale_0_to_50": w_chart_summary,
+            "waiting_chart_scaling": (
+                f"chart_value = {int(BAR_CHART_SCALE_MAX)} * raw / max(raw); "
+                "raw in seconds (per-vehicle mean delay where applicable)"
+            ),
+            "throughput_ratio":   tp_values,
+            "avg_queue_length_raw_veh_per_lane_episode_mean": queue_values,
+            "avg_queue_length_chart_cars_scale_0_to_50": q_chart_summary,
+            "queue_chart_scaling": (
+                f"chart_value = {int(BAR_CHART_SCALE_MAX)} * raw / max(raw); "
+                "raw in veh/lane (time-averaged halting per lane)"
+            ),
+            "final_avg_reward":   {k: round(v, 4) for k, v in all_rewards.items()},
+        },
+        "winner": {
+            "waiting_time": min(wait_values, key=wait_values.get) if wait_values else "N/A",
+            "throughput":   max(tp_values, key=tp_values.get) if tp_values else "N/A",
+            "queue_length": min(queue_values, key=queue_values.get) if queue_values else "N/A",
+        },
+    }
+    summary_path = os.path.join(out_dir, "comparison_summary.json")
+    with open(summary_path, "w") as f:
+        json.dump(summary, f, indent=2)
+    print(f"  Saved: {summary_path}")
+
+    print(f"\n  {'='*55}")
+    print(f"  COMPARISON COMPLETE — plots saved to {out_dir}")
+    print(f"  {'='*55}")
+    if summary["winner"].get("waiting_time") and summary["winner"]["waiting_time"] != "N/A":
+        w = summary["winner"]["waiting_time"]
+        print(f"  Best waiting time  : {ALGOS[w]['label'] if w in ALGOS else w}")
+    if summary["winner"].get("throughput") and summary["winner"]["throughput"] != "N/A":
+        t = summary["winner"]["throughput"]
+        print(f"  Best throughput    : {ALGOS[t]['label'] if t in ALGOS else t}")
+    print()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="China Urban OSM comparison plots")
+    parser.add_argument("--results-dir", default=None,
+                        help="Base results dir (default: results/china_osm/ relative to this script)")
+    parser.add_argument("--out-dir", default=None,
+                        help="Output dir for plots (default: results/china_osm/plots/)")
+    args = parser.parse_args()
+
+    _this_dir = os.path.dirname(os.path.abspath(__file__))
+    results_dir = args.results_dir or os.path.join(_this_dir, "results", "china_osm")
+    out_dir = args.out_dir or os.path.join(results_dir, "plots")
+
+    main(results_dir, out_dir)

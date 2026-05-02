@@ -196,4 +196,8 @@ class AdaptFlowAgent:
         torch.save(self.model.state_dict(), path)
         
     def load_model(self, path):
-        self.model.load_state_dict(torch.load(path))
+        try:
+            sd = torch.load(path, map_location="cpu", weights_only=True)
+        except TypeError:
+            sd = torch.load(path, map_location="cpu")
+        self.model.load_state_dict(sd)
