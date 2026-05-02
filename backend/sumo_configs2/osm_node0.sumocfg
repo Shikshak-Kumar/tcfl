@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- node_0 — Metro/Hospital corridor (Dwarka Mor Metro Station area): peak demand t=0+.
+     Priority tier 1 (highest). Dense intersection, strict TLS, high pedestrian flow.
+     India urban: tight jam-threshold, elevated teleport patience for mixed traffic. -->
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="osm.net.xml.gz"/>
+        <route-files value="osm.passenger.trips.xml"/>
+    </input>
+
+    <time>
+        <begin value="0"/>
+        <end value="3600"/>
+        <step-length value="1"/>
+    </time>
+
+    <processing>
+        <ignore-route-errors value="true"/>
+        <tls.actuated.jam-threshold value="18"/>
+        <time-to-teleport value="45"/>
+        <ignore-junction-blocker value="3"/>
+        <collision.action value="teleport"/>
+    </processing>
+
+    <routing>
+        <device.rerouting.adaptation-steps value="10"/>
+        <device.rerouting.adaptation-interval value="6"/>
+    </routing>
+
+    <report>
+        <verbose value="true"/>
+        <duration-log.statistics value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <gui_only>
+        <gui-settings-file value="osm.view.xml"/>
+    </gui_only>
+
+</sumoConfiguration>

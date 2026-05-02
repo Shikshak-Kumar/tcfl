@@ -24,10 +24,10 @@ class AdaptFlowAgent:
         self.critic_optimizer = optim.RMSprop(self.model.critic.parameters(), lr=critic_lr)
         
         self.memory = PERBuffer(capacity, alpha=0.6)
-        
+
         # Temporal stacking: deque of states
         self.state_history = deque(maxlen=4)
-        self.min_buffer_size = 5000
+        self.min_buffer_size = 500   # 1 episode worth — don't waste rounds on warm-up
         self.train_step = 0
         
     def _get_sequence(self, state):
@@ -179,6 +179,18 @@ class AdaptFlowAgent:
 
     def set_weights(self, weights):
         self.model.load_state_dict(weights)
+
+    def get_encoder_weights(self) -> dict:
+        """Return only shared encoder (GAT+LSTM+fc) weights — used for inter-cluster sync."""
+        sd = self.model.state_dict()
+        return {k: v for k, v in sd.items()
+                if "network." in k}  # actor.network.* and critic.network.*
+
+    def set_encoder_weights(self, enc_weights: dict):
+        """Overwrite only encoder layers; preserve task-specific heads."""
+        sd = self.model.state_dict()
+        sd.update(enc_weights)
+        self.model.load_state_dict(sd)
 
     def save_model(self, path):
         torch.save(self.model.state_dict(), path)

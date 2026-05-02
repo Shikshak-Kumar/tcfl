@@ -1,0 +1,30 @@
+{
+  "map": "Dwarka Mor (Delhi) Urban OSM",
+  "metrics": {
+    "avg_waiting_time_s": {
+      "adaptflow": 1.9471904761904761,
+      "fed_dqn_tsc": 11.775,
+      "multi_agent_ac": 0.6686666666666666
+    },
+    "throughput_ratio": {
+      "adaptflow": 0.9996008164591988,
+      "fed_dqn_tsc": 0.994324813986128,
+      "multi_agent_ac": 0.8760051806576427
+    },
+    "avg_queue_length": {
+      "adaptflow": 0.06495238095238094,
+      "fed_dqn_tsc": 0.9478,
+      "multi_agent_ac": 0.15933333333333333
+    },
+    "final_avg_reward": {
+      "adaptflow": 71.6807,
+      "fed_dqn_tsc": -0.0118,
+      "multi_agent_ac": -0.1343
+    }
+  },
+  "winner": {
+    "waiting_time": "multi_agent_ac",
+    "throughput": "adaptflow",
+    "queue_length": "adaptflow"
+  }
+}

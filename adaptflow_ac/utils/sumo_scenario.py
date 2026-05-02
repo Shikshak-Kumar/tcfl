@@ -2,12 +2,17 @@
 SUMO map presets. Default is unchanged: sumo_configs2 OSM client pair.
 
 Use explicit `sumo_scenario` in WebSocket config, CLI `--sumo-scenario`, or env
-`SUMO_SCENARIO` (e.g. china, china_osm, china_rural_osm, india_rural_osm).
+`SUMO_SCENARIO` (e.g. china, china_osm, china_rural_osm, india_rural_osm, dwarka_mor).
 """
 from __future__ import annotations
 
 import os
 from typing import List, Optional
+
+# Absolute path to backend/ derived from this file's location so configs are
+# found regardless of working directory.
+_UTILS_DIR = os.path.dirname(os.path.abspath(__file__))
+_BACKEND_DIR = os.path.normpath(os.path.join(_UTILS_DIR, "..", "..", "backend"))
 
 DEFAULT_SUMO_CONFIGS: List[str] = [
     "sumo_configs2/osm_client1.sumocfg",
@@ -62,6 +67,18 @@ PIKHUWA_OSM_SUMO_CONFIGS: List[str] = [
     "pikhuwa/osm_node3.sumocfg",  # Residential colony  – begin=1200, jam=30
     "pikhuwa/osm_node4.sumocfg",  # Industrial/hwy frng – begin=1600, jam=40
     "pikhuwa/osm_node5.sumocfg",  # State hwy junction  – begin=2000, jam=22
+]
+
+DWARKA_MOR_SUMO_CONFIGS: List[str] = [
+    # Dwarka Mor (Delhi) India urban OSM map — real Delhi road network.
+    # Six nodes representing distinct urban zones, each with unique begin-time
+    # offsets and TLS parameters calibrated for India mixed urban traffic.
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node0.sumocfg"),  # Metro/Hospital    – begin=0,    jam=18
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node1.sumocfg"),  # School/Resident   – begin=300,  jam=22
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node2.sumocfg"),  # Market/Commercial – begin=600,  jam=28
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node3.sumocfg"),  # Residential/DDA   – begin=900,  jam=32
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node4.sumocfg"),  # Industrial/ORR    – begin=1200, jam=38
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node5.sumocfg"),  # Metro/Hwy feeder  – begin=1500, jam=25
 ]
 
 RURAL_OSM_SUMO_CONFIGS: List[str] = [
@@ -123,6 +140,17 @@ def normalize_scenario(name: Optional[str]) -> str:
         "pikhuwa_rural",
     ):
         return "pikhuwa_osm"
+    if n in (
+        "dwarka_mor",
+        "dwarkamor",
+        "dwarka",
+        "india_urban",
+        "india_urban_osm",
+        "delhi_urban",
+        "delhi",
+        "sumo_configs2",
+    ):
+        return "dwarka_mor"
     return "default"
 
 
@@ -147,6 +175,8 @@ def get_sumo_config_paths(scenario: Optional[str] = None) -> List[str]:
         return list(RURAL_OSM_SUMO_CONFIGS)
     if s == "pikhuwa_osm":
         return list(PIKHUWA_OSM_SUMO_CONFIGS)
+    if s == "dwarka_mor":
+        return list(DWARKA_MOR_SUMO_CONFIGS)
     return list(DEFAULT_SUMO_CONFIGS)
 
 
@@ -163,6 +193,8 @@ def scenario_results_suffix(resolved: str) -> str:
         return "_rural_osm"
     if resolved == "pikhuwa_osm":
         return "_india_rural_pikhuwa_osm"
+    if resolved == "dwarka_mor":
+        return "_dwarka_mor"
     return ""
 
 
@@ -185,7 +217,7 @@ def distinct_results_dir(
 
 
 def deployment_model_subdir(algo_stem: str, sumo_scenario: Optional[str] = None) -> str:
-    """saved_models/<name> or <name>_china / <name>_china_osm / <name>_china_rural_osm."""
+    """saved_models/<name> or <name>_china / <name>_china_osm / <name>_dwarka_mor."""
     stem = algo_stem.strip().lower().replace(" ", "_")
     r = effective_sumo_scenario(sumo_scenario)
     if r == "china":
@@ -200,6 +232,8 @@ def deployment_model_subdir(algo_stem: str, sumo_scenario: Optional[str] = None)
         return f"{stem}_rural_osm"
     if r == "pikhuwa_osm":
         return f"{stem}_india_rural_pikhuwa_osm"
+    if r == "dwarka_mor":
+        return f"{stem}_dwarka_mor"
     return stem
 
 
@@ -217,6 +251,8 @@ def scenario_label_for_log(sumo_scenario: Optional[str] = None) -> str:
         return "Pikhuwa Rural OSM"
     if r == "china":
         return "China (synthetic)"
+    if r == "dwarka_mor":
+        return "Dwarka Mor Delhi Urban OSM"
     return "default"
 
 
@@ -247,7 +283,8 @@ def effective_training_gui(
     if use_tomtom:
         return gui_cli
     if effective_sumo_scenario(sumo_scenario) in (
-        "china", "china_osm", "china_rural_osm", "india_rural_osm", "rural_osm", "pikhuwa_osm"
+        "china", "china_osm", "china_rural_osm", "india_rural_osm", "rural_osm", "pikhuwa_osm",
+        "dwarka_mor",
     ):
         return True
     return gui_cli

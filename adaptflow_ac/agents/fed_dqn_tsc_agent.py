@@ -11,17 +11,20 @@ class FedDQNTscAgent:
     DQN Agent for Scientific Reports (2023) paper.
     Supports selective weight updates for Federated Learning.
     """
-    def __init__(self, node_id, input_dim, action_dim, lr=0.0001, gamma=0.9, epsilon=0.1, capacity=1000):
+    def __init__(self, node_id, input_dim, action_dim, lr=0.001, gamma=0.95,
+                 epsilon=1.0, epsilon_min=0.05, epsilon_decay=0.995, capacity=10000):
         self.node_id = node_id
         self.input_dim = input_dim
         self.action_dim = action_dim
         self.gamma = gamma
-        self.epsilon = epsilon # 0.1 means 90% greedy
-        
+        self.epsilon = epsilon
+        self.epsilon_min = epsilon_min
+        self.epsilon_decay = epsilon_decay
+
         self.model = FedDQNTscModel(input_dim, action_dim)
         self.target_model = FedDQNTscModel(input_dim, action_dim)
         self.target_model.load_state_dict(self.model.state_dict())
-        
+
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
         self.memory = deque(maxlen=capacity)
 
@@ -58,11 +61,15 @@ class FedDQNTscAgent:
             target_q = rewards + (1 - dones) * self.gamma * next_q
             
         loss = F.mse_loss(current_q, target_q)
-        
+
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
-        
+
+        # Decay epsilon after each training step
+        if self.epsilon > self.epsilon_min:
+            self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
+
         return loss.item()
 
     def update_target_network(self):

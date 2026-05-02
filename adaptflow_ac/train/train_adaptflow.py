@@ -15,10 +15,28 @@ Usage:
 """
 
 import os
+import sys
 import json
 import torch
 import numpy as np
 import random
+
+# ── path bootstrap: ensure adaptflow_ac/ is on sys.path ──────────────────────
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_ROOT = os.path.dirname(_HERE)   # adaptflow_ac/
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
+# Force UTF-8 stdout/stderr so Unicode logger symbols work on Windows
+import io
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+# ─────────────────────────────────────────────────────────────────────────────
+
 from utils.model_exporter import ModelExporter, get_deployment_metadata
 from typing import List, Dict, Tuple, Optional
 
@@ -225,9 +243,9 @@ class AdaptFlowTrainer:
         node_states = [local_state]
         for nb in neighbors:
             if nb != node_idx:
-                node_states.append(
-                    local_state + np.random.normal(0, 0.1, local_state.shape)
-                )
+                # Use zero-state for unobserved neighbours — GAT learns to down-weight
+                # absent signals rather than fitting to meaningless noise
+                node_states.append(np.zeros_like(local_state))
 
         state_graph = np.stack(node_states)
         adj_node = np.ones((len(state_graph), len(state_graph)))
@@ -460,15 +478,22 @@ class AdaptFlowTrainer:
                 f"    {cluster.cluster_id}: {len(cluster.agent_ids)} nodes, avg_flow={avg_flow:.3f}, congestion={cluster_info[cluster.cluster_id]['congestion']:.2f}s"
             )
 
-        # Inter-cluster aggregation
+        # Inter-cluster aggregation — only sync shared encoder layers.
+        # Each agent keeps its own cluster-specific task heads (actor.head, critic.head)
+        # so cluster personalisation from intra-cluster step is preserved.
         self.server = FedFlowServer([c.cluster_id for c in clusters])
         for cluster in clusters:
             cong = cluster_info[cluster.cluster_id]["congestion"]
             self.server.update_cluster_metrics(cluster.cluster_id, cong)
 
-        global_weights = self.server.aggregate_inter_cluster(cluster_params)
+        # Build encoder-only weight dicts for aggregation
+        encoder_params = [
+            {k: v for k, v in cp.items() if "network." in k}
+            for cp in cluster_params
+        ]
+        global_encoder = self.server.aggregate_inter_cluster(encoder_params)
         for nid in self.agents:
-            self.agents[nid].set_weights(global_weights)
+            self.agents[nid].set_encoder_weights(global_encoder)
 
         # ── Step 4: Save & Final Terminal Table ─────────────────────
         round_results = {
@@ -735,8 +760,8 @@ if __name__ == "__main__":
         "--sumo-scenario",
         type=str,
         default=None,
-        choices=["default", "china", "china_osm", "china_rural_osm", "india_rural_osm", "rural_osm", "pikhuwa_osm"],
-        help="SUMO map: default | china (synthetic) | china_osm | china_rural_osm | india_rural_osm | rural_osm | pikhuwa_osm | pikhuwa_osm",
+        choices=["default", "china", "china_osm", "china_rural_osm", "india_rural_osm", "rural_osm", "pikhuwa_osm", "dwarka_mor"],
+        help="SUMO map: default | china (synthetic) | china_osm | china_rural_osm | india_rural_osm | rural_osm | pikhuwa_osm | dwarka_mor (Dwarka Mor Delhi Urban)",
     )
 
     args = parser.parse_args()
@@ -767,7 +792,10 @@ if __name__ == "__main__":
         target_pois_list = [p.strip() for p in args.target_pois.split(",")]
 
     if (
-        effective_sumo_scenario(args.sumo_scenario) in ("china", "china_osm", "china_rural_osm", "india_rural_osm", "rural_osm", "pikhuwa_osm")
+        effective_sumo_scenario(args.sumo_scenario) in (
+            "china", "china_osm", "china_rural_osm", "india_rural_osm",
+            "rural_osm", "pikhuwa_osm", "dwarka_mor",
+        )
         and not args.use_tomtom
         and not sumo_headless
     ):
