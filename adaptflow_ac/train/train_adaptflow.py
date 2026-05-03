@@ -50,6 +50,7 @@ from train.adaptive_clustering import (
     cosine_similarity_matrix,
 )
 from utils.logger import logger
+from utils.metrics import MetricsTracker
 from utils.sumo_scenario import (
     deployment_model_subdir,
     distinct_results_dir,
@@ -103,7 +104,7 @@ class AdaptFlowTrainer:
         # 2. Local Agents
         self.agents: Dict[str, AdaptFlowAgent] = {}
         for i in range(num_nodes):
-            self.agents[f"node_{i}"] = AdaptFlowAgent(node_id=i, state_dim=6, action_dim=4)
+            self.agents[f"node_{i}"] = AdaptFlowAgent(node_id=i, state_dim=4, action_dim=4)
 
         # 3. Adaptive Cluster Manager (THE NOVELTY)
         self.cluster_manager = AdaptiveClusterManager(
@@ -114,7 +115,10 @@ class AdaptFlowTrainer:
         # Cluster IDs will be dynamically created each round
         self.server = None
 
-        # 5. Environments
+        # 5. Metrics Tracker
+        self.metrics_tracker = MetricsTracker(list(self.agents.keys()))
+
+        # 6. Environments
         self.sumo_configs = get_sumo_config_paths(
             effective_sumo_scenario(sumo_scenario)
         )
@@ -339,6 +343,9 @@ class AdaptFlowTrainer:
                 if t % 4 == 0:
                     loss = agent.train(batch_size=64, beta_per=beta_per)
                 
+                # Track metrics
+                self.metrics_tracker.update(nid, info, local_reward)
+
                 state = next_state
                 total_reward += local_reward
                 if done:
@@ -568,6 +575,10 @@ class AdaptFlowTrainer:
             self.agents[nid].save_model(model_path)
 
         logger.table(table_headers, table_rows)
+        
+        # Print Detailed Research Metrics
+        print(f"\n  [Research Metrics] Round {round_idx} Summary:")
+        self.metrics_tracker.print_table()
 
         # Save round summary
         round_file = os.path.join(self.results_dir, f"round_{round_idx}_summary.json")

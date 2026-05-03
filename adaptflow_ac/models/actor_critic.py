@@ -11,10 +11,9 @@ class GATLSTMNetwork(nn.Module):
     """
     def __init__(self, input_dim, hidden_dim=64, heads=2, num_phases=4):
         super(GATLSTMNetwork, self).__init__()
-        self.phase_embedding = nn.Embedding(num_phases, 16)
+        # input_dim = 4: [waiting_time, queue_length, throughput, num_congested_lanes]
         
-        # New input dim for GAT = 2 + 16 = 18
-        self.gat = GATEncoder(18, hidden_dim, hidden_dim, heads=heads)
+        self.gat = GATEncoder(input_dim, hidden_dim, hidden_dim, heads=heads)
         self.lstm = TemporalEncoder(hidden_dim, hidden_dim)
         self.fc = nn.Linear(hidden_dim, hidden_dim)
         
@@ -25,19 +24,14 @@ class GATLSTMNetwork(nn.Module):
 
     def forward(self, x, adj):
         """
-        x: (batch_size, num_nodes, seq_len, input_dim)
+        x: (batch_size, num_nodes, seq_len, input_dim=4)
         adj: (batch_size, num_nodes, num_nodes)
         """
         batch_size, num_nodes, seq_len, input_dim = x.shape
         
-        qw = x[:, :, :, :2]
-        phase_idx = x[:, :, :, 2:].argmax(dim=-1) # (B, N, T)
-        
-        p_emb = self.phase_embedding(phase_idx) # (B, N, T, 16)
-        x_emb = torch.cat([qw, p_emb], dim=-1) # (B, N, T, 18)
-        
         # 1. Process each time step through GAT
-        x_reshaped = x_emb.transpose(1, 2).reshape(batch_size * seq_len, num_nodes, 18)
+        # x: (B, N, T, D) -> (B*T, N, D)
+        x_reshaped = x.transpose(1, 2).reshape(batch_size * seq_len, num_nodes, input_dim)
         adj_repeated = adj.unsqueeze(1).repeat(1, seq_len, 1, 1).reshape(batch_size * seq_len, num_nodes, num_nodes)
         
         g_out, alpha = self.gat(x_reshaped, adj_repeated) # (B*T, N, H), alpha: (B*T, N, N, H)

@@ -1,116 +1,116 @@
 import torch
+import torch.nn as nn
 import torch.optim as optim
-import torch.nn.functional as F
 import numpy as np
-from models.multi_agent_ac_model import MultiAgentACActor, MultiAgentACCritic
+from models.multi_agent_ac_model import MA2CNetwork
 
 class MultiAgentACAgent:
     """
-    MA2C Agent from Chu et al. (2019).
-    Includes LSTM hidden state management and neighbor fingerprints.
+    MA2C Agent (Chu et al. 2019).
+    Includes Actor-Critic loss with spatial advantage and neighbor fingerprinting.
     """
-    def __init__(self, agent_id, wave_dim, wait_dim, fp_dim, action_dim, 
-                 lr_actor=5e-4, lr_critic=2.5e-4, gamma=0.99, beta=0.01):
+    def __init__(self, agent_id, wave_dim=8, wait_dim=8, fp_dim=16, action_dim=4, lr=3e-4, gamma=0.99, beta=0.01):
         self.agent_id = agent_id
         self.action_dim = action_dim
         self.gamma = gamma
         self.beta = beta # Entropy weight
         
-        self.actor = MultiAgentACActor(wave_dim, wait_dim, fp_dim, action_dim)
-        self.critic = MultiAgentACCritic(wave_dim, wait_dim, fp_dim)
+        self.model = MA2CNetwork(wave_dim, wait_dim, fp_dim, action_dim)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
         
-        self.actor_opt = optim.RMSprop(self.actor.parameters(), lr=lr_actor)
-        self.critic_opt = optim.RMSprop(self.critic.parameters(), lr=lr_critic)
+        # Fingerprint: π_{t-1, neighbors}
+        self.fingerprint = np.ones(action_dim) / action_dim
+        self.hidden_state = None # (h, c)
         
-        # LSTM Hidden States: (h, c)
-        self.actor_hidden = None
-        self.critic_hidden = None
-        
-        # Fingerprints: Latest policy simplex of neighbors
-        self.fingerprint = np.ones(action_dim) / action_dim # Initial uniform
-        
+        # Buffers for batch training
+        self.trajectory = []
+
     def reset_hidden(self):
-        self.actor_hidden = None
-        self.critic_hidden = None
+        self.hidden_state = None
 
-    def get_action(self, wave, wait, neighbors_fp, evaluation=False):
+    def get_action(self, wave, wait, neighbor_fps, evaluation=False):
         """
-        wave: (M,)
-        wait: (M,)
-        neighbors_fp: list of policy simplexes from neighbors
+        wave, wait: np arrays
+        neighbor_fps: list of np arrays (fingerprints)
         """
+        # Convert to tensor and add batch/seq dims: (1, 1, D)
+        wave_t = torch.FloatTensor(wave).unsqueeze(0).unsqueeze(0)
+        wait_t = torch.FloatTensor(wait).unsqueeze(0).unsqueeze(0)
+        
         # Concatenate neighbor fingerprints
-        if neighbors_fp:
-            fp_input = np.concatenate(neighbors_fp)
-        else:
-            fp_input = np.zeros(0) # Should be handled by model input_dim
-            
-        wave_t = torch.FloatTensor(wave).unsqueeze(0)
-        wait_t = torch.FloatTensor(wait).unsqueeze(0)
-        fp_t = torch.FloatTensor(fp_input).unsqueeze(0)
+        fp_combined = np.concatenate(neighbor_fps) if neighbor_fps else np.zeros(1)
+        fp_t = torch.FloatTensor(fp_combined).unsqueeze(0).unsqueeze(0)
         
-        self.actor.eval()
+        self.model.eval()
         with torch.no_grad():
-            probs, self.actor_hidden = self.actor(wave_t, wait_t, fp_t, self.actor_hidden)
+            probs, value, next_hidden = self.model(wave_t, wait_t, fp_t, self.hidden_state)
             
-        self.fingerprint = probs.squeeze(0).cpu().numpy()
-        
+        probs = probs.squeeze(0).squeeze(0).numpy()
         if evaluation:
-            return torch.argmax(probs).item()
+            action = np.argmax(probs)
         else:
-            return torch.multinomial(probs, 1).item()
-
-    def update(self, batch):
-        """
-        batch: list of (wave, wait, fp, action, spatial_reward, next_wave, next_wait, next_fp, done)
-        """
-        self.actor.train()
-        self.critic.train()
-        
-        # Unpack batch
-        waves = torch.FloatTensor(np.array([b[0] for b in batch]))
-        waits = torch.FloatTensor(np.array([b[1] for b in batch]))
-        fps = torch.FloatTensor(np.array([b[2] for b in batch]))
-        actions = torch.LongTensor([b[3] for b in batch])
-        rewards = torch.FloatTensor([b[4] for b in batch])
-        next_waves = torch.FloatTensor(np.array([b[5] for b in batch]))
-        next_waits = torch.FloatTensor(np.array([b[6] for b in batch]))
-        next_fps = torch.FloatTensor(np.array([b[7] for b in batch]))
-        dones = torch.FloatTensor([b[8] for b in batch])
-
-        # Critic Loss
-        values, _ = self.critic(waves, waits, fps) # No hidden carry for batch update usually, or use full seq
-        values = values.squeeze(-1)
-        
-        with torch.no_grad():
-            next_values, _ = self.critic(next_waves, next_waits, next_fps)
-            next_values = next_values.squeeze(-1)
-            # R̃_t,i = R̂_t,i + γ * V(s')
-            target_values = rewards + (1 - dones) * self.gamma * next_values
+            action = np.random.choice(self.action_dim, p=probs)
             
-        critic_loss = F.mse_loss(values, target_values)
+        self.fingerprint = probs # Update my fingerprint for neighbors in next step
+        self.hidden_state = next_hidden
         
-        self.critic_opt.zero_grad()
-        critic_loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.critic.parameters(), 40)
-        self.critic_opt.step()
+        return action, probs, value.item()
+
+    def store_transition(self, wave, wait, fp, action, reward, value, prob):
+        self.trajectory.append((wave, wait, fp, action, reward, value, prob))
+
+    def train(self, next_value, done):
+        """
+        Update using trajectories.
+        next_value: V(s_{tB})
+        """
+        if not self.trajectory:
+            return 0
+            
+        # 1. Compute spatially-discounted N-step returns
+        returns = []
+        R = next_value if not done else 0
+        for transition in reversed(self.trajectory):
+            R = transition[4] + self.gamma * R # transition[4] is spatial reward r̃
+            returns.insert(0, R)
+            
+        # 2. Prepare tensors
+        waves = torch.FloatTensor(np.array([t[0] for t in self.trajectory])).unsqueeze(0)
+        waits = torch.FloatTensor(np.array([t[1] for t in self.trajectory])).unsqueeze(0)
+        fps = torch.FloatTensor(np.array([t[2] for t in self.trajectory])).unsqueeze(0)
+        actions = torch.LongTensor(np.array([t[3] for t in self.trajectory]))
+        returns = torch.FloatTensor(np.array(returns))
+        values = torch.FloatTensor(np.array([t[5] for t in self.trajectory]))
         
-        # Actor Loss
-        probs, _ = self.actor(waves, waits, fps)
-        log_probs = torch.log(probs.gather(1, actions.unsqueeze(-1)).squeeze(-1))
+        self.model.train()
+        probs, model_values, _ = self.model(waves, waits, fps) # No hidden reset during forward? 
+        # Actually for policy gradient on sequence, we should re-pass hidden but for simplicity we use the batch
         
-        # Ã_t,i = R̃_t,i - V(s)
-        advantages = (target_values - values).detach()
+        probs = probs.squeeze(0)
+        model_values = model_values.squeeze(0)
         
-        actor_loss = -(log_probs * advantages).mean()
+        # 3. Critic Loss: MSE(R̃ - V)
+        critic_loss = 0.5 * F.mse_loss(model_values, returns)
         
-        # Entropy Regularization
-        entropy = -(probs * torch.log(probs + 1e-10)).sum(dim=1).mean()
-        actor_loss -= self.beta * entropy
+        # 4. Actor Loss: log(π) * A + β * entropy
+        advantages = (returns - model_values).detach()
+        log_probs = torch.log(probs.gather(1, actions.unsqueeze(-1)).squeeze(-1) + 1e-10)
         
-        self.actor_opt.zero_grad()
-        actor_loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.actor.parameters(), 40)
-        self.actor_opt.step()
+        entropy = -(probs * torch.log(probs + 1e-10)).sum(dim=-1).mean()
+        actor_loss = -(log_probs * advantages).mean() - self.beta * entropy
         
-        return critic_loss.item(), actor_loss.item()
+        loss = actor_loss + critic_loss
+        
+        self.optimizer.zero_grad()
+        loss.backward()
+        nn.utils.clip_grad_norm_(self.model.parameters(), 10.0)
+        self.optimizer.step()
+        
+        self.trajectory = []
+        return loss.item()
+
+    def save_model(self, path):
+        torch.save(self.model.state_dict(), path)
+        
+    def load_model(self, path):
+        self.model.load_state_dict(torch.load(path, map_location="cpu"))

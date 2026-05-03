@@ -2,66 +2,58 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-def init_weights(m):
-    """Orthogonal initialization as specified in Chu et al. (2019)."""
-    if isinstance(m, nn.Linear) or isinstance(m, nn.LSTMCell):
-        nn.init.orthogonal_(m.weight)
-        if m.bias is not None:
-            nn.init.constant_(m.bias, 0)
-
-class MultiAgentACNetwork(nn.Module):
+class MA2CNetwork(nn.Module):
     """
-    Base Network for MA2C Actor and Critic.
-    Chu et al. (2019) specifies separate networks for Actor and Critic.
+    MA2C Network (Chu et al. 2019).
+    Combines wave, wait, and neighbor fingerprints into an LSTM core.
     """
-    def __init__(self, wave_dim, wait_dim, fp_dim, hidden_dim=64):
-        super(MultiAgentACNetwork, self).__init__()
-        
-        # Encoders
-        self.wave_encoder = nn.Linear(wave_dim, 128)
-        self.wait_encoder = nn.Linear(wait_dim, 32)
-        self.fp_encoder = nn.Linear(fp_dim, 64)
-        
-        # Concatenated input dim: 128 + 32 + 64 = 224
-        self.lstm = nn.LSTM(224, hidden_dim, batch_first=True)
-        
-        self.apply(init_weights)
-
-    def forward(self, wave, wait, fp, hidden=None):
-        # Encoders
-        x_wave = F.relu(self.wave_encoder(wave))
-        x_wait = F.relu(self.wait_encoder(wait))
-        x_fp = F.relu(self.fp_encoder(fp))
-        
-        # Concatenate
-        x = torch.cat([x_wave, x_wait, x_fp], dim=-1)
-        
-        # LSTM
-        # x: (batch, seq_len, input_dim)
-        if len(x.shape) == 2:
-            x = x.unsqueeze(1) # Add seq_len dim
-            
-        output, hidden = self.lstm(x, hidden)
-        return output.squeeze(1), hidden
-
-class MultiAgentACActor(MultiAgentACNetwork):
     def __init__(self, wave_dim, wait_dim, fp_dim, action_dim, hidden_dim=64):
-        super(MultiAgentACActor, self).__init__(wave_dim, wait_dim, fp_dim, hidden_dim)
-        self.head = nn.Linear(hidden_dim, action_dim)
-        self.apply(init_weights)
+        super(MA2CNetwork, self).__init__()
+        
+        # FC layers for feature processing
+        self.fc_wave = nn.Linear(wave_dim, hidden_dim // 4)
+        self.fc_wait = nn.Linear(wait_dim, hidden_dim // 4)
+        self.fc_fp = nn.Linear(fp_dim, hidden_dim // 2)
+        
+        # Combined LSTM
+        self.lstm = nn.LSTM(hidden_dim, hidden_dim, batch_first=True)
+        
+        # Actor Head
+        self.actor_head = nn.Linear(hidden_dim, action_dim)
+        
+        # Critic Head
+        self.critic_head = nn.Linear(hidden_dim, 1)
+        
+        self._init_weights()
 
-    def forward(self, wave, wait, fp, hidden=None):
-        feat, hidden = super().forward(wave, wait, fp, hidden)
-        logits = self.head(feat)
-        return F.softmax(logits, dim=-1), hidden
+    def _init_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.orthogonal_(m.weight)
+                nn.init.constant_(m.bias, 0)
 
-class MultiAgentACCritic(MultiAgentACNetwork):
-    def __init__(self, wave_dim, wait_dim, fp_dim, hidden_dim=64):
-        super(MultiAgentACCritic, self).__init__(wave_dim, wait_dim, fp_dim, hidden_dim)
-        self.head = nn.Linear(hidden_dim, 1)
-        self.apply(init_weights)
-
-    def forward(self, wave, wait, fp, hidden=None):
-        feat, hidden = super().forward(wave, wait, fp, hidden)
-        value = self.head(feat)
-        return value, hidden
+    def forward(self, wave, wait, fp, hidden_state=None):
+        """
+        wave: (batch, seq, wave_dim)
+        wait: (batch, seq, wait_dim)
+        fp: (batch, seq, fp_dim) - neighbor fingerprints
+        hidden_state: (h, c)
+        """
+        # Feature embeddings
+        h_wave = F.relu(self.fc_wave(wave))
+        h_wait = F.relu(self.fc_wait(wait))
+        h_fp = F.relu(self.fc_fp(fp))
+        
+        # Concatenate: (batch, seq, hidden_dim)
+        h_combined = torch.cat([h_wave, h_wait, h_fp], dim=-1)
+        
+        # LSTM processing
+        lstm_out, next_hidden = self.lstm(h_combined, hidden_state)
+        
+        # Heads
+        logits = self.actor_head(lstm_out)
+        probs = F.softmax(logits, dim=-1)
+        
+        value = self.critic_head(lstm_out).squeeze(-1)
+        
+        return probs, value, next_hidden

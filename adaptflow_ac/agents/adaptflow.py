@@ -10,7 +10,7 @@ class AdaptFlowAgent:
     """
     AdaptFlow Agent: Actor-Critic + PER + GAT integration.
     """
-    def __init__(self, node_id, state_dim, action_dim, actor_lr=5e-4, critic_lr=2.5e-4, gamma=0.99, beta=0.01, capacity=50000):
+    def __init__(self, node_id, state_dim=4, action_dim=4, actor_lr=5e-4, critic_lr=2.5e-4, gamma=0.99, beta=0.01, capacity=50000):
         self.node_id = node_id
         self.state_dim = state_dim
         self.action_dim = action_dim
@@ -127,7 +127,9 @@ class AdaptFlowAgent:
             values, _ = self.model.critic(states, adjs)
             values = values[:, 0]
             td_errors = targets - values
-            critic_loss = (is_weights * (td_errors ** 2)).mean()
+            
+            # Use Smooth L1 Loss (Huber) for stability + Importance Sampling
+            critic_loss = (is_weights * F.smooth_l1_loss(values, targets, reduction='none')).mean()
             
             self.critic_optimizer.zero_grad()
             critic_loss.backward()
