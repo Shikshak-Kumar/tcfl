@@ -1,0 +1,112 @@
+[
+  {
+    "round": 1,
+    "avg_reward": -0.021941694444444486,
+    "avg_wait": 0.16666666666666666,
+    "avg_queue": 0.03333333333333333,
+    "avg_queue_total": 0.16666666666666666,
+    "avg_queue_max": 0.16666666666666666,
+    "tp_ratio": 0.912291933418694,
+    "arrival_rate": 0.57,
+    "avg_loss": 1.2627488785477665
+  },
+  {
+    "round": 2,
+    "avg_reward": -0.023187094444444514,
+    "avg_wait": 0.041666666666666664,
+    "avg_queue": 0.041666666666666664,
+    "avg_queue_total": 0.16666666666666666,
+    "avg_queue_max": 0.16666666666666666,
+    "tp_ratio": 0.911651728553137,
+    "arrival_rate": 0.5696,
+    "avg_loss": 1.6837597328362366
+  },
+  {
+    "round": 3,
+    "avg_reward": -0.01937555000000009,
+    "avg_wait": 0.08333333333333333,
+    "avg_queue": 0.041666666666666664,
+    "avg_queue_total": 0.16666666666666666,
+    "avg_queue_max": 0.16666666666666666,
+    "tp_ratio": 0.912291933418694,
+    "arrival_rate": 0.57,
+    "avg_loss": 1.1681332823230575
+  },
+  {
+    "round": 4,
+    "avg_reward": -0.02561600396825405,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "avg_queue_total": 0.0,
+    "avg_queue_max": 0.0,
+    "tp_ratio": 0.911651728553137,
+    "arrival_rate": 0.5696,
+    "avg_loss": 2.6024932280601933
+  },
+  {
+    "round": 5,
+    "avg_reward": -0.015198670634920697,
+    "avg_wait": 0.041666666666666664,
+    "avg_queue": 0.020833333333333332,
+    "avg_queue_total": 0.16666666666666666,
+    "avg_queue_max": 0.16666666666666666,
+    "tp_ratio": 0.9090909090909091,
+    "arrival_rate": 0.568,
+    "avg_loss": 0.7302025250799489
+  },
+  {
+    "round": 6,
+    "avg_reward": -0.019821694444444538,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "avg_queue_total": 0.0,
+    "avg_queue_max": 0.0,
+    "tp_ratio": 0.91101152368758,
+    "arrival_rate": 0.5692,
+    "avg_loss": 1.5978154085266094
+  },
+  {
+    "round": 7,
+    "avg_reward": -0.019928519841269903,
+    "avg_wait": 0.16666666666666666,
+    "avg_queue": 0.041666666666666664,
+    "avg_queue_total": 0.16666666666666666,
+    "avg_queue_max": 0.16666666666666666,
+    "tp_ratio": 0.910371318822023,
+    "arrival_rate": 0.5688,
+    "avg_loss": 1.7382181904073029
+  },
+  {
+    "round": 8,
+    "avg_reward": -0.02554868253968267,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "avg_queue_total": 0.0,
+    "avg_queue_max": 0.0,
+    "tp_ratio": 0.912291933418694,
+    "arrival_rate": 0.57,
+    "avg_loss": 3.245941251112769
+  },
+  {
+    "round": 9,
+    "avg_reward": -0.017868615079365175,
+    "avg_wait": 0.023809523809523808,
+    "avg_queue": 0.023809523809523808,
+    "avg_queue_total": 0.16666666666666666,
+    "avg_queue_max": 0.16666666666666666,
+    "tp_ratio": 0.912291933418694,
+    "arrival_rate": 0.57,
+    "avg_loss": 0.9850911133208623
+  },
+  {
+    "round": 10,
+    "avg_reward": -0.014659845238095295,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "avg_queue_total": 0.0,
+    "avg_queue_max": 0.0,
+    "tp_ratio": 0.912291933418694,
+    "arrival_rate": 0.57,
+    "avg_loss": 0.9315526686391483
+  }
+]

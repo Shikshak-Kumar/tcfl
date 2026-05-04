@@ -71,15 +71,15 @@ PIKHUWA_OSM_SUMO_CONFIGS: List[str] = [
 ]
 
 DWARKA_MOR_SUMO_CONFIGS: List[str] = [
-    # Dwarka Mor (Delhi) India urban OSM map — real Delhi road network.
-    # Six nodes representing distinct urban zones, each with unique begin-time
-    # offsets and TLS parameters calibrated for India mixed urban traffic.
-    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node0.sumocfg"),  # Metro/Hospital    – begin=0,    jam=18
-    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node1.sumocfg"),  # School/Resident   – begin=300,  jam=22
-    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node2.sumocfg"),  # Market/Commercial – begin=600,  jam=28
-    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node3.sumocfg"),  # Residential/DDA   – begin=900,  jam=32
-    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node4.sumocfg"),  # Industrial/ORR    – begin=1200, jam=38
-    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node5.sumocfg"),  # Metro/Hwy feeder  – begin=1500, jam=25
+    # Dwarka Mor (Delhi) urban OSM — same demand as joint osm.sumocfg: all node cfgs use
+    # begin=0, end=3600, osm.passenger.trips.xml (fair comparison vs FedDQN/MA2C/DQTSCA).
+    # Heterogeneity across nodes is TLS / processing only (jam-threshold, teleport, etc.).
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node0.sumocfg"),  # Metro/Hospital    – jam=18
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node1.sumocfg"),  # School/Resident   – jam=22
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node2.sumocfg"),  # Market/Commercial – jam=28
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node3.sumocfg"),  # Residential/DDA   – jam=32
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node4.sumocfg"),  # Industrial/ORR    – jam=38
+    os.path.join(_BACKEND_DIR, "sumo_configs2", "osm_node5.sumocfg"),  # Metro/Hwy feeder  – jam=25
 ]
 
 RURAL_OSM_SUMO_CONFIGS: List[str] = [

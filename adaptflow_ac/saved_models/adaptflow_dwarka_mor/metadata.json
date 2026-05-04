@@ -1,0 +1,15 @@
+{
+  "algorithm": "adaptflow",
+  "version": "1.0.0",
+  "state_size": 12,
+  "action_size": 4,
+  "device": "cpu",
+  "preprocessing": {
+    "normalization": "none",
+    "clipping": "none"
+  },
+  "mode": "sumo",
+  "source_weights": "F:\\ttraffic\\tcfl\\adaptflow_ac\\results_research_sumo_configs2_20260503_192846\\adaptflow\\adaptflow_global_sumo.pt",
+  "sumo_scenario": "dwarka_mor",
+  "export_status": "weights_only"
+}

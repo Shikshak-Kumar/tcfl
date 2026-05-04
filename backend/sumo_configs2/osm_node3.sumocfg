@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- node_3 — Residential/DDA colony (Dwarka sectors residential backbone): afternoon offset.
-     Priority tier 3. Moderate residential traffic, evening return commute pattern.
+<!-- node_3 — Residential/DDA. Priority tier 3. Same trips + [0,3600] as osm.sumocfg (paper parity).
      India urban: relaxed jam-threshold for wider residential roads. -->
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="osm.net.xml.gz"/>
+        <net-file value="osm.net.xml"/>
         <route-files value="osm.passenger.trips.xml"/>
     </input>
 
+    <!-- Research parity: same demand window as osm.sumocfg / other algorithms (begin=0). -->
     <time>
-        <begin value="900"/>
+        <begin value="0"/>
         <end value="3600"/>
         <step-length value="1"/>
     </time>

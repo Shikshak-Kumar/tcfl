@@ -1,0 +1,39 @@
+{
+  "results_dir": "F:\\ttraffic\\tcfl\\adaptflow_ac\\results_research_sumo_configs2_20260503_192846",
+  "adaptflow": {
+    "round": 10,
+    "mean_total_reward": 61.65560941405919,
+    "mean_queue": 0.07106666666666668,
+    "mean_wait_s": 0.2530666666666667,
+    "mean_tp_ratio": 0.9106914212548015,
+    "mean_arrival_rate": 0.42688668220849385,
+    "mean_loss": -3.103645042826732
+  },
+  "fed_dqn_tsc": {
+    "round": 10,
+    "avg_reward": -29.94121031746036,
+    "avg_loss": 0.0010050427622523546,
+    "avg_queue": 0.0,
+    "avg_wait_s": 0.0,
+    "avg_tp_ratio": 0.912291933418694,
+    "avg_arrival_rate": 0.57
+  },
+  "multi_agent_ac": {
+    "episode": 10,
+    "avg_reward": -0.014659845238095295,
+    "avg_loss": 0.9315526686391483,
+    "avg_queue": 0.0,
+    "avg_wait_s": 0.0,
+    "tp_ratio": 0.912291933418694,
+    "arrival_rate": 0.57
+  },
+  "dqtsca": {
+    "episode": 10,
+    "total_reward": 0.0,
+    "avg_loss": 7.56461260934826,
+    "avg_queue": 0.0,
+    "avg_wait_s": 0.0,
+    "tp_ratio": 1.0,
+    "arrival_rate": 0.6110044486068836
+  }
+}

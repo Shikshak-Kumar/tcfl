@@ -1,0 +1,26 @@
+{
+  "round": 4,
+  "avg_reward": -65.76824404761909,
+  "avg_loss": 0.0007594519112709229,
+  "avg_wait": 0.0,
+  "avg_queue": 0.0,
+  "avg_queue_total": 0.0,
+  "avg_queue_max": 0.0,
+  "avg_tp_ratio": 0.9142125480153649,
+  "avg_arrival_rate": 0.5712,
+  "rewards_per_episode": [
+    -65.76824404761909
+  ],
+  "wait_per_episode": [
+    0.0
+  ],
+  "tp_per_episode": [
+    0.9142125480153649
+  ],
+  "arrival_rate_per_episode": [
+    0.5712
+  ],
+  "episodes_per_round": 1,
+  "steps_per_episode": 2500,
+  "mode": "SUMO-headless"
+}

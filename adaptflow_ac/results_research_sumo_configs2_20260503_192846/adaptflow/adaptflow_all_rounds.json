@@ -1,0 +1,3062 @@
+[
+  {
+    "round": 1,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 0,
+        "node_1": 0,
+        "node_2": 0,
+        "node_3": 1,
+        "node_4": 1,
+        "node_5": 1
+      },
+      "groups": {
+        "0": [
+          "node_0",
+          "node_1",
+          "node_2"
+        ],
+        "1": [
+          "node_3",
+          "node_4",
+          "node_5"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.69675,
+          0.04121428571428571,
+          0.502284731441584,
+          0.0,
+          0.2885,
+          1.0
+        ],
+        "node_1": [
+          0.5303571428571429,
+          0.020499999999999997,
+          0.5016934632882744,
+          0.0,
+          0.1435,
+          0.5
+        ],
+        "node_2": [
+          0.7973214285714285,
+          0.029857142857142853,
+          0.501288402876001,
+          0.0,
+          0.206,
+          0.0
+        ],
+        "node_3": [
+          0.27267857142857144,
+          0.014285714285714285,
+          0.501092578515666,
+          1.0,
+          0.1,
+          0.0
+        ],
+        "node_4": [
+          0.4824642857142857,
+          0.02492857142857143,
+          0.5007568577738916,
+          0.0,
+          0.162,
+          0.0
+        ],
+        "node_5": [
+          0.8657142857142858,
+          0.037357142857142846,
+          0.5013628963558295,
+          0.0,
+          0.252,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          1.0000000000000002,
+          0.9613573794109708,
+          0.6665551875648504,
+          0.3019453966149642,
+          0.6588230698678353,
+          0.666740511972355
+        ],
+        [
+          0.9613573794109708,
+          1.0,
+          0.8146199268305311,
+          0.3962831712480595,
+          0.8287139074278498,
+          0.8076434294903532
+        ],
+        [
+          0.6665551875648504,
+          0.8146199268305311,
+          1.0000000000000002,
+          0.4392397513387561,
+          0.9720392638760126,
+          0.9988686080848455
+        ],
+        [
+          0.3019453966149642,
+          0.3962831712480595,
+          0.4392397513387561,
+          0.9999999999999999,
+          0.4832992094802356,
+          0.43000050230353365
+        ],
+        [
+          0.6588230698678353,
+          0.8287139074278498,
+          0.9720392638760126,
+          0.4832992094802356,
+          0.9999999999999998,
+          0.9633490859095872
+        ],
+        [
+          0.666740511972355,
+          0.8076434294903532,
+          0.9988686080848455,
+          0.43000050230353365,
+          0.9633490859095872,
+          1.0000000000000002
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.5017555325352865,
+        "members": [
+          "node_0",
+          "node_1",
+          "node_2"
+        ],
+        "congestion": 0.6748095238095239
+      },
+      "cluster_1": {
+        "avg_flow": 0.5010707775484624,
+        "members": [
+          "node_3",
+          "node_4",
+          "node_5"
+        ],
+        "congestion": 0.5402857142857144
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_0",
+        "total_reward": -33.39649350649461,
+        "avg_waiting_time": 0.69675,
+        "loss": -4.3927101492881775,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.69675,
+          "average_queue_length": 0.04121428571428571,
+          "queue_total_halting": 0.2885,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9090909090909091,
+          "trip_completion_percent": 90.91,
+          "arrival_rate": 0.502284731441584,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.2885
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1420,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": -33.39649350649461
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_0",
+        "total_reward": 4.7129504298509755,
+        "avg_waiting_time": 0.5303571428571429,
+        "loss": -2.8426045775413513,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.5303571428571429,
+          "average_queue_length": 0.020499999999999997,
+          "queue_total_halting": 0.1435,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.912291933418694,
+          "trip_completion_percent": 91.23,
+          "arrival_rate": 0.5016934632882744,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1435
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1425,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 4.7129504298509755
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_0",
+        "total_reward": -50.90974757636852,
+        "avg_waiting_time": 0.7973214285714285,
+        "loss": -0.5155290365219116,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.7973214285714285,
+          "average_queue_length": 0.029857142857142853,
+          "queue_total_halting": 0.209,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.501288402876001,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.206
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": -50.90974757636852
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_1",
+        "total_reward": 57.3123157124553,
+        "avg_waiting_time": 0.27267857142857144,
+        "loss": -1.2332371771335602,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.27267857142857144,
+          "average_queue_length": 0.014285714285714285,
+          "queue_total_halting": 0.1,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.91101152368758,
+          "trip_completion_percent": 91.1,
+          "arrival_rate": 0.501092578515666,
+          "max_queue_length": 1.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1
+          },
+          "total_waiting_time": 13.0,
+          "throughput": 1423,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 57.3123157124553
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_1",
+        "total_reward": 13.287395280774616,
+        "avg_waiting_time": 0.4824642857142857,
+        "loss": -3.1562320590019226,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.4824642857142857,
+          "average_queue_length": 0.02492857142857143,
+          "queue_total_halting": 0.1745,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.5007568577738916,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.162
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 13.287395280774616
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_1",
+        "total_reward": -65.81950978598957,
+        "avg_waiting_time": 0.8657142857142858,
+        "loss": -1.1816425919532776,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.8657142857142858,
+          "average_queue_length": 0.037357142857142846,
+          "queue_total_halting": 0.2615,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.5013628963558295,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.252
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": -65.81950978598957
+        }
+      }
+    }
+  },
+  {
+    "round": 2,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 1,
+        "node_1": 1,
+        "node_2": 0,
+        "node_3": 0,
+        "node_4": 0,
+        "node_5": 1
+      },
+      "groups": {
+        "1": [
+          "node_0",
+          "node_1",
+          "node_5"
+        ],
+        "0": [
+          "node_2",
+          "node_3",
+          "node_4"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.39534285714285716,
+          0.025657142857142854,
+          0.4277776556355403,
+          1.0,
+          0.1796,
+          1.0
+        ],
+        "node_1": [
+          0.42017142857142864,
+          0.015028571428571428,
+          0.4269610592785597,
+          0.0,
+          0.1052,
+          0.5
+        ],
+        "node_2": [
+          1.449247619047619,
+          0.06439999999999999,
+          0.42637449868127314,
+          0.0,
+          0.3892,
+          0.0
+        ],
+        "node_3": [
+          1.3489142857142857,
+          0.05599999999999999,
+          0.4260416513207692,
+          0.0,
+          0.3364,
+          0.0
+        ],
+        "node_4": [
+          0.2872,
+          0.017771428571428566,
+          0.4257362304854576,
+          0.0,
+          0.1244,
+          0.0
+        ],
+        "node_5": [
+          0.1382857142857143,
+          0.0136,
+          0.42716879725142254,
+          0.0,
+          0.092,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          1.0,
+          0.7156805946878078,
+          0.34385968632340635,
+          0.3468667836392699,
+          0.391083056687505,
+          0.36005252550118794
+        ],
+        [
+          0.7156805946878078,
+          1.0,
+          0.677409902842836,
+          0.6849794596303062,
+          0.7585049385236512,
+          0.693391776202108
+        ],
+        [
+          0.34385968632340635,
+          0.677409902842836,
+          0.9999999999999999,
+          0.9996377018544716,
+          0.7841624666764743,
+          0.585587992659365
+        ],
+        [
+          0.3468667836392699,
+          0.6849794596303062,
+          0.9996377018544716,
+          0.9999999999999999,
+          0.7950232515620043,
+          0.599867616808476
+        ],
+        [
+          0.391083056687505,
+          0.7585049385236512,
+          0.7841624666764743,
+          0.7950232515620043,
+          1.0,
+          0.9622153070799814
+        ],
+        [
+          0.36005252550118794,
+          0.693391776202108,
+          0.585587992659365,
+          0.599867616808476,
+          0.9622153070799814,
+          1.0
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.42605079349583336,
+        "members": [
+          "node_2",
+          "node_3",
+          "node_4"
+        ],
+        "congestion": 1.0284539682539682
+      },
+      "cluster_1": {
+        "avg_flow": 0.42730250405517417,
+        "members": [
+          "node_0",
+          "node_1",
+          "node_5"
+        ],
+        "congestion": 0.3179333333333334
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_1",
+        "total_reward": 22.075966709347043,
+        "avg_waiting_time": 0.39534285714285716,
+        "loss": -1.7263813018798828,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.39534285714285716,
+          "average_queue_length": 0.025657142857142854,
+          "queue_total_halting": 0.1796,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.4277776556355403,
+          "max_queue_length": 1.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1796
+          },
+          "total_waiting_time": 1.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 22.075966709347043
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_1",
+        "total_reward": 18.615569782329743,
+        "avg_waiting_time": 0.42017142857142864,
+        "loss": -0.6078784465789795,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.42017142857142864,
+          "average_queue_length": 0.015028571428571428,
+          "queue_total_halting": 0.1052,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.4269610592785597,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1052
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 18.615569782329743
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_0",
+        "total_reward": -250.99633497957598,
+        "avg_waiting_time": 1.449247619047619,
+        "loss": -2.8961405158042908,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 1.449247619047619,
+          "average_queue_length": 0.06439999999999999,
+          "queue_total_halting": 0.4508,
+          "queue_max_halting": 3.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.42637449868127314,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.3892
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": -250.99633497957598
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_0",
+        "total_reward": -224.08181086519406,
+        "avg_waiting_time": 1.3489142857142857,
+        "loss": -4.4646241664886475,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 1.3489142857142857,
+          "average_queue_length": 0.05599999999999999,
+          "queue_total_halting": 0.392,
+          "queue_max_halting": 3.0,
+          "throughput_ratio": 0.9084507042253521,
+          "trip_completion_percent": 90.85,
+          "arrival_rate": 0.4260416513207692,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.3364
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1419,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": -224.08181086519406
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_0",
+        "total_reward": 50.993506493504945,
+        "avg_waiting_time": 0.2872,
+        "loss": 1.8651997447013855,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.2872,
+          "average_queue_length": 0.017771428571428566,
+          "queue_total_halting": 0.1244,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9090909090909091,
+          "trip_completion_percent": 90.91,
+          "arrival_rate": 0.4257362304854576,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1244
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1420,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 50.993506493504945
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_1",
+        "total_reward": 89.44414121090064,
+        "avg_waiting_time": 0.1382857142857143,
+        "loss": -0.6587868928909302,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.1382857142857143,
+          "average_queue_length": 0.0136,
+          "queue_total_halting": 0.0952,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.42716879725142254,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.092
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 89.44414121090064
+        }
+      }
+    }
+  },
+  {
+    "round": 3,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 1,
+        "node_1": 0,
+        "node_2": 0,
+        "node_3": 0,
+        "node_4": 0,
+        "node_5": 1
+      },
+      "groups": {
+        "1": [
+          "node_0",
+          "node_5"
+        ],
+        "0": [
+          "node_1",
+          "node_2",
+          "node_3",
+          "node_4"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.33648571428571433,
+          0.02411428571428571,
+          0.42752239391835867,
+          0.0,
+          0.1676,
+          1.0
+        ],
+        "node_1": [
+          0.11485714285714284,
+          0.007142857142857142,
+          0.4269289728826703,
+          0.0,
+          0.05,
+          0.5
+        ],
+        "node_2": [
+          0.41985714285714293,
+          0.015371428571428572,
+          0.426882895013823,
+          0.0,
+          0.1076,
+          0.0
+        ],
+        "node_3": [
+          0.02748571428571429,
+          0.005314285714285714,
+          0.4264960905370146,
+          0.0,
+          0.0372,
+          0.0
+        ],
+        "node_4": [
+          0.24557142857142858,
+          0.009485714285714285,
+          0.42644955057553596,
+          0.0,
+          0.0664,
+          0.0
+        ],
+        "node_5": [
+          0.36322857142857146,
+          0.016628571428571427,
+          0.4270666765220097,
+          0.0,
+          0.1164,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          1.0000000000000002,
+          0.9472376416818618,
+          0.4885550411827011,
+          0.40087609750312914,
+          0.48337389672537506,
+          0.4925042681089731
+        ],
+        [
+          0.9472376416818618,
+          1.0000000000000002,
+          0.5793049066788784,
+          0.6516749815418984,
+          0.6427176303996209,
+          0.5998210042157711
+        ],
+        [
+          0.4885550411827011,
+          0.5793049066788784,
+          0.9999999999999999,
+          0.7571874391694313,
+          0.9675937398813632,
+          0.9971151819909255
+        ],
+        [
+          0.40087609750312914,
+          0.6516749815418984,
+          0.7571874391694313,
+          1.0,
+          0.8970834880118023,
+          0.7997225143807901
+        ],
+        [
+          0.48337389672537506,
+          0.6427176303996209,
+          0.9675937398813632,
+          0.8970834880118023,
+          1.0000000000000002,
+          0.9813886835825988
+        ],
+        [
+          0.4925042681089731,
+          0.5998210042157711,
+          0.9971151819909255,
+          0.7997225143807901,
+          0.9813886835825988,
+          0.9999999999999997
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.4266893772522609,
+        "members": [
+          "node_1",
+          "node_2",
+          "node_3",
+          "node_4"
+        ],
+        "congestion": 0.20194285714285717
+      },
+      "cluster_1": {
+        "avg_flow": 0.4272945352201842,
+        "members": [
+          "node_0",
+          "node_5"
+        ],
+        "congestion": 0.34985714285714287
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_1",
+        "total_reward": 37.44477592829652,
+        "avg_waiting_time": 0.33648571428571433,
+        "loss": 0.297518253326416,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.33648571428571433,
+          "average_queue_length": 0.02411428571428571,
+          "queue_total_halting": 0.1688,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.42752239391835867,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1676
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 37.44477592829652
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_0",
+        "total_reward": 97.0947759282954,
+        "avg_waiting_time": 0.11485714285714284,
+        "loss": -4.706613928079605,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.11485714285714284,
+          "average_queue_length": 0.007142857142857142,
+          "queue_total_halting": 0.05,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.4269289728826703,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.05
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 97.0947759282954
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_0",
+        "total_reward": 18.698029998170732,
+        "avg_waiting_time": 0.41985714285714293,
+        "loss": -0.13334918022155762,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.41985714285714293,
+          "average_queue_length": 0.015371428571428572,
+          "queue_total_halting": 0.1076,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.91101152368758,
+          "trip_completion_percent": 91.1,
+          "arrival_rate": 0.426882895013823,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1076
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1423,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 18.698029998170732
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_0",
+        "total_reward": 119.12596670934535,
+        "avg_waiting_time": 0.02748571428571429,
+        "loss": -4.3687584400177,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.02748571428571429,
+          "average_queue_length": 0.005314285714285714,
+          "queue_total_halting": 0.0372,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.4264960905370146,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0372
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 119.12596670934535
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_0",
+        "total_reward": 63.47207792207641,
+        "avg_waiting_time": 0.24557142857142858,
+        "loss": -3.0103262066841125,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.24557142857142858,
+          "average_queue_length": 0.009485714285714285,
+          "queue_total_halting": 0.0664,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9090909090909091,
+          "trip_completion_percent": 90.91,
+          "arrival_rate": 0.42644955057553596,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0664
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1420,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 63.47207792207641
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_1",
+        "total_reward": 32.36168099506033,
+        "avg_waiting_time": 0.36322857142857146,
+        "loss": -4.687365859746933,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.36322857142857146,
+          "average_queue_length": 0.016628571428571427,
+          "queue_total_halting": 0.1164,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.4270666765220097,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1164
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 32.36168099506033
+        }
+      }
+    }
+  },
+  {
+    "round": 4,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 0,
+        "node_1": 1,
+        "node_2": 1,
+        "node_3": 1,
+        "node_4": 1,
+        "node_5": 0
+      },
+      "groups": {
+        "0": [
+          "node_0",
+          "node_5"
+        ],
+        "1": [
+          "node_1",
+          "node_2",
+          "node_3",
+          "node_4"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.34501904761904767,
+          0.02548571428571428,
+          0.4277166199894552,
+          0.0,
+          0.176,
+          1.0
+        ],
+        "node_1": [
+          0.10782857142857143,
+          0.005714285714285713,
+          0.42714867963926006,
+          0.0,
+          0.04,
+          0.5
+        ],
+        "node_2": [
+          0.21317142857142854,
+          0.0092,
+          0.4265535648378206,
+          0.0,
+          0.0644,
+          0.0
+        ],
+        "node_3": [
+          0.008657142857142856,
+          0.004514285714285714,
+          0.4264239490137046,
+          0.0,
+          0.0312,
+          0.0
+        ],
+        "node_4": [
+          0.010828571428571427,
+          0.004457142857142857,
+          0.4262872367063024,
+          0.0,
+          0.0304,
+          0.0
+        ],
+        "node_5": [
+          0.5495714285714286,
+          0.024685714285714283,
+          0.4267547905740331,
+          0.0,
+          0.1728,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          0.9999999999999997,
+          0.9430698981704074,
+          0.4814148313848084,
+          0.386690991840477,
+          0.38793305665405287,
+          0.4866850822915626
+        ],
+        [
+          0.9430698981704074,
+          1.0,
+          0.6467863314686387,
+          0.6456672939856513,
+          0.6463888398410235,
+          0.5190753338499803
+        ],
+        [
+          0.4814148313848084,
+          0.6467863314686387,
+          1.0000000000000002,
+          0.9026424577506598,
+          0.904662026739206,
+          0.899473338822118
+        ],
+        [
+          0.386690991840477,
+          0.6456672939856513,
+          0.9026424577506598,
+          0.9999999999999998,
+          0.999985353602819,
+          0.6265921781847438
+        ],
+        [
+          0.38793305665405287,
+          0.6463888398410235,
+          0.904662026739206,
+          0.999985353602819,
+          1.0,
+          0.6300502078186059
+        ],
+        [
+          0.4866850822915626,
+          0.5190753338499803,
+          0.899473338822118,
+          0.6265921781847438,
+          0.6300502078186059,
+          1.0
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.42723570528174415,
+        "members": [
+          "node_0",
+          "node_5"
+        ],
+        "congestion": 0.44729523809523813
+      },
+      "cluster_1": {
+        "avg_flow": 0.4266033575492719,
+        "members": [
+          "node_1",
+          "node_2",
+          "node_3",
+          "node_4"
+        ],
+        "congestion": 0.08512142857142856
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_0",
+        "total_reward": 34.69977623315648,
+        "avg_waiting_time": 0.34501904761904767,
+        "loss": -1.5219517946243286,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.34501904761904767,
+          "average_queue_length": 0.02548571428571428,
+          "queue_total_halting": 0.1784,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.4277166199894552,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.176
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 34.69977623315648
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_1",
+        "total_reward": 99.2090616425814,
+        "avg_waiting_time": 0.10782857142857143,
+        "loss": -0.9483153223991394,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.10782857142857143,
+          "average_queue_length": 0.005714285714285713,
+          "queue_total_halting": 0.04,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.42714867963926006,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.04
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 99.2090616425814
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_1",
+        "total_reward": 71.8227126394719,
+        "avg_waiting_time": 0.21317142857142854,
+        "loss": -5.869708925485611,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.21317142857142854,
+          "average_queue_length": 0.0092,
+          "queue_total_halting": 0.0644,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.4265535648378206,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0644
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 71.8227126394719
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_1",
+        "total_reward": 124.30191878543808,
+        "avg_waiting_time": 0.008657142857142856,
+        "loss": -5.399875462055206,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.008657142857142856,
+          "average_queue_length": 0.004514285714285714,
+          "queue_total_halting": 0.0316,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.4264239490137046,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0312
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 124.30191878543808
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_1",
+        "total_reward": 123.41493506493333,
+        "avg_waiting_time": 0.010828571428571427,
+        "loss": -2.4804348945617676,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.010828571428571427,
+          "average_queue_length": 0.004457142857142857,
+          "queue_total_halting": 0.0312,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.9090909090909091,
+          "trip_completion_percent": 90.91,
+          "arrival_rate": 0.4262872367063024,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0304
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1420,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 123.41493506493333
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_0",
+        "total_reward": -16.059112858972803,
+        "avg_waiting_time": 0.5495714285714286,
+        "loss": -4.056942164897919,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.5495714285714286,
+          "average_queue_length": 0.024685714285714283,
+          "queue_total_halting": 0.1728,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.91101152368758,
+          "trip_completion_percent": 91.1,
+          "arrival_rate": 0.4267547905740331,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1728
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1423,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": -16.059112858972803
+        }
+      }
+    }
+  },
+  {
+    "round": 5,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 0,
+        "node_1": 0,
+        "node_2": 1,
+        "node_3": 1,
+        "node_4": 1,
+        "node_5": 0
+      },
+      "groups": {
+        "0": [
+          "node_0",
+          "node_1",
+          "node_5"
+        ],
+        "1": [
+          "node_2",
+          "node_3",
+          "node_4"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.2256,
+          0.020685714285714283,
+          0.4274408755393109,
+          0.0,
+          0.1416,
+          1.0
+        ],
+        "node_1": [
+          0.2099428571428571,
+          0.007657142857142857,
+          0.4270565710136883,
+          0.0,
+          0.0536,
+          0.5
+        ],
+        "node_2": [
+          0.11217142857142856,
+          0.006285714285714286,
+          0.4271645936670471,
+          0.0,
+          0.044,
+          0.0
+        ],
+        "node_3": [
+          0.005,
+          0.002799999999999999,
+          0.4266692386517277,
+          0.0,
+          0.0196,
+          0.0
+        ],
+        "node_4": [
+          0.011,
+          0.004514285714285714,
+          0.4257993210393818,
+          0.0,
+          0.0316,
+          0.0
+        ],
+        "node_5": [
+          0.27691428571428567,
+          0.013542857142857141,
+          0.42722817873849417,
+          0.0,
+          0.0948,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          1.0,
+          0.9513651026580393,
+          0.4310252927825123,
+          0.38953703239975385,
+          0.39523589013653976,
+          0.4460812820651342
+        ],
+        [
+          0.9513651026580393,
+          1.0000000000000002,
+          0.6780309156047523,
+          0.623267092402629,
+          0.6285213749713134,
+          0.6852010943178319
+        ],
+        [
+          0.4310252927825123,
+          0.6780309156047523,
+          1.0,
+          0.9688461393291011,
+          0.9733271842822674,
+          0.947223534447274
+        ],
+        [
+          0.38953703239975385,
+          0.623267092402629,
+          0.9688461393291011,
+          1.0,
+          0.999496599870854,
+          0.8385670147536731
+        ],
+        [
+          0.39523589013653976,
+          0.6285213749713134,
+          0.9733271842822674,
+          0.999496599870854,
+          0.9999999999999999,
+          0.8496848375616991
+        ],
+        [
+          0.4460812820651342,
+          0.6852010943178319,
+          0.947223534447274,
+          0.8385670147536731,
+          0.8496848375616991,
+          0.9999999999999998
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.4272418750971645,
+        "members": [
+          "node_0",
+          "node_1",
+          "node_5"
+        ],
+        "congestion": 0.23748571428571427
+      },
+      "cluster_1": {
+        "avg_flow": 0.42654438445271886,
+        "members": [
+          "node_2",
+          "node_3",
+          "node_4"
+        ],
+        "congestion": 0.042723809523809525
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_0",
+        "total_reward": 65.84414121090077,
+        "avg_waiting_time": 0.2256,
+        "loss": -0.40351659059524536,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.2256,
+          "average_queue_length": 0.020685714285714283,
+          "queue_total_halting": 0.1448,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.4274408755393109,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1416
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 65.84414121090077
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_0",
+        "total_reward": 73.19477592829553,
+        "avg_waiting_time": 0.2099428571428571,
+        "loss": -0.959331214427948,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.2099428571428571,
+          "average_queue_length": 0.007657142857142857,
+          "queue_total_halting": 0.0536,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.4270565710136883,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0536
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 73.19477592829553
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_1",
+        "total_reward": 98.07009328699297,
+        "avg_waiting_time": 0.11217142857142856,
+        "loss": -2.6161526143550873,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.11217142857142856,
+          "average_queue_length": 0.006285714285714286,
+          "queue_total_halting": 0.044,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.912291933418694,
+          "trip_completion_percent": 91.23,
+          "arrival_rate": 0.4271645936670471,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.044
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1425,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 98.07009328699297
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_1",
+        "total_reward": 125.55517285531184,
+        "avg_waiting_time": 0.005,
+        "loss": -4.158307671546936,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.005,
+          "average_queue_length": 0.002799999999999999,
+          "queue_total_halting": 0.0196,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.91101152368758,
+          "trip_completion_percent": 91.1,
+          "arrival_rate": 0.4266692386517277,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0196
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1423,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 125.55517285531184
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_1",
+        "total_reward": 123.17858606182375,
+        "avg_waiting_time": 0.011,
+        "loss": -0.4428686499595642,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.011,
+          "average_queue_length": 0.004514285714285714,
+          "queue_total_halting": 0.0316,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9078104993597952,
+          "trip_completion_percent": 90.78,
+          "arrival_rate": 0.4257993210393818,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0316
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1418,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 123.17858606182375
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_0",
+        "total_reward": 54.89088714102728,
+        "avg_waiting_time": 0.27691428571428567,
+        "loss": -2.578604966402054,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.27691428571428567,
+          "average_queue_length": 0.013542857142857141,
+          "queue_total_halting": 0.0948,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.91101152368758,
+          "trip_completion_percent": 91.1,
+          "arrival_rate": 0.42722817873849417,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0948
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1423,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 54.89088714102728
+        }
+      }
+    }
+  },
+  {
+    "round": 6,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 0,
+        "node_1": 0,
+        "node_2": 1,
+        "node_3": 1,
+        "node_4": 1,
+        "node_5": 1
+      },
+      "groups": {
+        "0": [
+          "node_0",
+          "node_1"
+        ],
+        "1": [
+          "node_2",
+          "node_3",
+          "node_4",
+          "node_5"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.36545714285714287,
+          0.030171428571428568,
+          0.427276832255469,
+          0.0,
+          0.208,
+          1.0
+        ],
+        "node_1": [
+          0.3246857142857143,
+          0.013885714285714282,
+          0.42727084383922975,
+          0.0,
+          0.0972,
+          0.5
+        ],
+        "node_2": [
+          0.1074,
+          0.005599999999999998,
+          0.42669646885123114,
+          0.0,
+          0.0392,
+          0.0
+        ],
+        "node_3": [
+          0.16548571428571426,
+          0.006514285714285714,
+          0.42665893866613086,
+          0.0,
+          0.0456,
+          0.0
+        ],
+        "node_4": [
+          0.010657142857142856,
+          0.004571428571428571,
+          0.42629012690252055,
+          0.0,
+          0.032,
+          0.0
+        ],
+        "node_5": [
+          0.4439714285714285,
+          0.01742857142857143,
+          0.427022496671072,
+          0.0,
+          0.122,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          1.0,
+          0.9522245303724601,
+          0.4461632507732293,
+          0.47062520964467336,
+          0.3866143955699178,
+          0.5058214074090075
+        ],
+        [
+          0.9522245303724601,
+          0.9999999999999998,
+          0.6762203394064807,
+          0.7067535948995664,
+          0.5965130330332837,
+          0.728581496945207
+        ],
+        [
+          0.4461632507732293,
+          0.6762203394064807,
+          0.9999999999999999,
+          0.9924060929835249,
+          0.9756191979009987,
+          0.8459248273190922
+        ],
+        [
+          0.47062520964467336,
+          0.7067535948995664,
+          0.9924060929835249,
+          0.9999999999999999,
+          0.9412333091289999,
+          0.9044846403469886
+        ],
+        [
+          0.3866143955699178,
+          0.5965130330332837,
+          0.9756191979009987,
+          0.9412333091289999,
+          1.0,
+          0.710029816429048
+        ],
+        [
+          0.5058214074090075,
+          0.728581496945207,
+          0.8459248273190922,
+          0.9044846403469886,
+          0.710029816429048,
+          1.0
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.42727383804734936,
+        "members": [
+          "node_0",
+          "node_1"
+        ],
+        "congestion": 0.3450714285714286
+      },
+      "cluster_1": {
+        "avg_flow": 0.42666700777273864,
+        "members": [
+          "node_2",
+          "node_3",
+          "node_4",
+          "node_5"
+        ],
+        "congestion": 0.18187857142857142
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_0",
+        "total_reward": 28.508426925187266,
+        "avg_waiting_time": 0.36545714285714287,
+        "loss": -0.8251031339168549,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.36545714285714287,
+          "average_queue_length": 0.030171428571428568,
+          "queue_total_halting": 0.2112,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.427276832255469,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.208
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 28.508426925187266
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_0",
+        "total_reward": 42.951918785439624,
+        "avg_waiting_time": 0.3246857142857143,
+        "loss": -2.875924900174141,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.3246857142857143,
+          "average_queue_length": 0.013885714285714282,
+          "queue_total_halting": 0.0972,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.42727084383922975,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0972
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 42.951918785439624
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_1",
+        "total_reward": 99.07596670934541,
+        "avg_waiting_time": 0.1074,
+        "loss": -3.988606184720993,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.1074,
+          "average_queue_length": 0.005599999999999998,
+          "queue_total_halting": 0.0392,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.42669646885123114,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0392
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 99.07596670934541
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_1",
+        "total_reward": 84.4155697823292,
+        "avg_waiting_time": 0.16548571428571426,
+        "loss": -4.183611333370209,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.16548571428571426,
+          "average_queue_length": 0.006514285714285714,
+          "queue_total_halting": 0.0456,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.42665893866613086,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0456
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 84.4155697823292
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_1",
+        "total_reward": 123.3396177062357,
+        "avg_waiting_time": 0.010657142857142856,
+        "loss": -2.1316072940826416,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.010657142857142856,
+          "average_queue_length": 0.004571428571428571,
+          "queue_total_halting": 0.032,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9084507042253521,
+          "trip_completion_percent": 90.85,
+          "arrival_rate": 0.42629012690252055,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.032
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1419,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 123.3396177062357
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_1",
+        "total_reward": 12.24477592829646,
+        "avg_waiting_time": 0.4439714285714285,
+        "loss": -0.9283001124858856,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.4439714285714285,
+          "average_queue_length": 0.01742857142857143,
+          "queue_total_halting": 0.122,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.427022496671072,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.122
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 12.24477592829646
+        }
+      }
+    }
+  },
+  {
+    "round": 7,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 1,
+        "node_1": 1,
+        "node_2": 0,
+        "node_3": 0,
+        "node_4": 0,
+        "node_5": 0
+      },
+      "groups": {
+        "1": [
+          "node_0",
+          "node_1"
+        ],
+        "0": [
+          "node_2",
+          "node_3",
+          "node_4",
+          "node_5"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.2853428571428572,
+          0.022857142857142857,
+          0.4278054067922445,
+          0.0,
+          0.16,
+          1.0
+        ],
+        "node_1": [
+          0.23428571428571432,
+          0.012914285714285711,
+          0.4271053993664723,
+          0.0,
+          0.0904,
+          0.5
+        ],
+        "node_2": [
+          0.10962857142857142,
+          0.005942857142857141,
+          0.4272340670424662,
+          0.0,
+          0.0416,
+          0.0
+        ],
+        "node_3": [
+          0.1645142857142857,
+          0.006457142857142856,
+          0.42660790742351373,
+          0.0,
+          0.0452,
+          0.0
+        ],
+        "node_4": [
+          0.23534285714285721,
+          0.007028571428571427,
+          0.4262281033634221,
+          0.0,
+          0.0492,
+          0.0
+        ],
+        "node_5": [
+          0.1783142857142857,
+          0.008457142857142856,
+          0.4271901730592889,
+          0.0,
+          0.0592,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          1.0,
+          0.9556625165303685,
+          0.438759723920285,
+          0.45368458634747505,
+          0.46319041943709266,
+          0.4588398200330231
+        ],
+        [
+          0.9556625165303685,
+          1.0000000000000002,
+          0.6796194867029093,
+          0.6952658480259607,
+          0.7015352306508976,
+          0.6989854477715305
+        ],
+        [
+          0.438759723920285,
+          0.6796194867029093,
+          1.0,
+          0.9932314628412813,
+          0.9683728832783753,
+          0.9891861483700247
+        ],
+        [
+          0.45368458634747505,
+          0.6952658480259607,
+          0.9932314628412813,
+          1.0000000000000002,
+          0.9907987213379679,
+          0.9992116868520449
+        ],
+        [
+          0.46319041943709266,
+          0.7015352306508976,
+          0.9683728832783753,
+          0.9907987213379679,
+          0.9999999999999999,
+          0.9937796650835012
+        ],
+        [
+          0.4588398200330231,
+          0.6989854477715305,
+          0.9891861483700247,
+          0.9992116868520449,
+          0.9937796650835012,
+          0.9999999999999999
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.42681506272217273,
+        "members": [
+          "node_2",
+          "node_3",
+          "node_4",
+          "node_5"
+        ],
+        "congestion": 0.17195
+      },
+      "cluster_1": {
+        "avg_flow": 0.42745540307935836,
+        "members": [
+          "node_0",
+          "node_1"
+        ],
+        "congestion": 0.2598142857142858
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_1",
+        "total_reward": 50.365569782329466,
+        "avg_waiting_time": 0.2853428571428572,
+        "loss": -0.592544674873352,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.2853428571428572,
+          "average_queue_length": 0.022857142857142857,
+          "queue_total_halting": 0.16,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.4278054067922445,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.16
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 50.365569782329466
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_1",
+        "total_reward": 65.79477592829579,
+        "avg_waiting_time": 0.23428571428571432,
+        "loss": -4.460246041417122,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.23428571428571432,
+          "average_queue_length": 0.012914285714285711,
+          "queue_total_halting": 0.0904,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.4271053993664723,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0904
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 65.79477592829579
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_0",
+        "total_reward": 98.61231571245487,
+        "avg_waiting_time": 0.10962857142857142,
+        "loss": -2.1828384399414062,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.10962857142857142,
+          "average_queue_length": 0.005942857142857141,
+          "queue_total_halting": 0.0416,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.91101152368758,
+          "trip_completion_percent": 91.1,
+          "arrival_rate": 0.4272340670424662,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0416
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1423,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 98.61231571245487
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_0",
+        "total_reward": 84.58310956648836,
+        "avg_waiting_time": 0.1645142857142857,
+        "loss": -0.7988541424274445,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.1645142857142857,
+          "average_queue_length": 0.006457142857142856,
+          "queue_total_halting": 0.0452,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.42660790742351373,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0452
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 84.58310956648836
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_0",
+        "total_reward": 66.73310956648908,
+        "avg_waiting_time": 0.23534285714285721,
+        "loss": -2.1366188526153564,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.23534285714285721,
+          "average_queue_length": 0.007028571428571427,
+          "queue_total_halting": 0.0492,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.4262281033634221,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0492
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 66.73310956648908
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_0",
+        "total_reward": 80.72271263947167,
+        "avg_waiting_time": 0.1783142857142857,
+        "loss": -5.8214428424835205,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.1783142857142857,
+          "average_queue_length": 0.008457142857142856,
+          "queue_total_halting": 0.0592,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.4271901730592889,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0592
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 80.72271263947167
+        }
+      }
+    }
+  },
+  {
+    "round": 8,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 0,
+        "node_1": 1,
+        "node_2": 1,
+        "node_3": 1,
+        "node_4": 1,
+        "node_5": 0
+      },
+      "groups": {
+        "0": [
+          "node_0",
+          "node_5"
+        ],
+        "1": [
+          "node_1",
+          "node_2",
+          "node_3",
+          "node_4"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.3947142857142857,
+          0.027142857142857132,
+          0.4274479690487069,
+          0.0,
+          0.1888,
+          1.0
+        ],
+        "node_1": [
+          0.23305714285714285,
+          0.012914285714285713,
+          0.4270803149479151,
+          0.0,
+          0.09,
+          0.5
+        ],
+        "node_2": [
+          0.3148857142857143,
+          0.012114285714285711,
+          0.4268823769016781,
+          0.0,
+          0.0848,
+          0.0
+        ],
+        "node_3": [
+          0.32677142857142855,
+          0.01017142857142857,
+          0.4264024169323257,
+          0.0,
+          0.0712,
+          0.0
+        ],
+        "node_4": [
+          0.23757142857142857,
+          0.007885714285714286,
+          0.4260130519139591,
+          0.0,
+          0.0552,
+          0.0
+        ],
+        "node_5": [
+          0.35277142857142857,
+          0.013657142857142856,
+          0.42724627690522604,
+          0.0,
+          0.0956,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          1.0000000000000002,
+          0.9599210257159893,
+          0.5128177942840869,
+          0.5113250332303512,
+          0.4976905378934264,
+          0.5160068967711539
+        ],
+        [
+          0.9599210257159893,
+          0.9999999999999998,
+          0.6969936786982328,
+          0.6944254808389848,
+          0.7017143330904748,
+          0.6911129686415615
+        ],
+        [
+          0.5128177942840869,
+          0.6969936786982328,
+          1.0000000000000002,
+          0.9994706574073551,
+          0.9910501581482929,
+          0.9984696860410353
+        ],
+        [
+          0.5113250332303512,
+          0.6944254808389848,
+          0.9994706574073551,
+          1.0000000000000002,
+          0.989455708823273,
+          0.9985768508938042
+        ],
+        [
+          0.4976905378934264,
+          0.7017143330904748,
+          0.9910501581482929,
+          0.989455708823273,
+          1.0,
+          0.9821977439412639
+        ],
+        [
+          0.5160068967711539,
+          0.6911129686415615,
+          0.9984696860410353,
+          0.9985768508938042,
+          0.9821977439412639,
+          1.0
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.4273471229769665,
+        "members": [
+          "node_0",
+          "node_5"
+        ],
+        "congestion": 0.37374285714285715
+      },
+      "cluster_1": {
+        "avg_flow": 0.42659454017396947,
+        "members": [
+          "node_1",
+          "node_2",
+          "node_3",
+          "node_4"
+        ],
+        "congestion": 0.2780714285714286
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_0",
+        "total_reward": 22.130490214011335,
+        "avg_waiting_time": 0.3947142857142857,
+        "loss": -0.046298474073410034,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.3947142857142857,
+          "average_queue_length": 0.027142857142857132,
+          "queue_total_halting": 0.19,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.4274479690487069,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1888
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 22.130490214011335
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_1",
+        "total_reward": 65.83310956648874,
+        "avg_waiting_time": 0.23305714285714285,
+        "loss": -0.5657692402601242,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.23305714285714285,
+          "average_queue_length": 0.012914285714285713,
+          "queue_total_halting": 0.0904,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.9097311139564661,
+          "trip_completion_percent": 90.97,
+          "arrival_rate": 0.4270803149479151,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.09
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1421,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 65.83310956648874
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_1",
+        "total_reward": 45.75517285531274,
+        "avg_waiting_time": 0.3148857142857143,
+        "loss": -3.8998751640319824,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.3148857142857143,
+          "average_queue_length": 0.012114285714285711,
+          "queue_total_halting": 0.0848,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.91101152368758,
+          "trip_completion_percent": 91.1,
+          "arrival_rate": 0.4268823769016781,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0848
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1423,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 45.75517285531274
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_1",
+        "total_reward": 43.17985549661555,
+        "avg_waiting_time": 0.32677142857142855,
+        "loss": -3.253980413079262,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.32677142857142855,
+          "average_queue_length": 0.01017142857142857,
+          "queue_total_halting": 0.0712,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.4264024169323257,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0712
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 43.17985549661555
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_1",
+        "total_reward": 66.14088714102647,
+        "avg_waiting_time": 0.23757142857142857,
+        "loss": -0.9972571730613708,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.23757142857142857,
+          "average_queue_length": 0.007885714285714286,
+          "queue_total_halting": 0.0552,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.91101152368758,
+          "trip_completion_percent": 91.1,
+          "arrival_rate": 0.4260130519139591,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0552
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1423,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 66.14088714102647
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_0",
+        "total_reward": 35.98763307115373,
+        "avg_waiting_time": 0.35277142857142857,
+        "loss": -4.404421746730804,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.35277142857142857,
+          "average_queue_length": 0.013657142857142856,
+          "queue_total_halting": 0.0956,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.42724627690522604,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0956
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 35.98763307115373
+        }
+      }
+    }
+  },
+  {
+    "round": 9,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 1,
+        "node_1": 1,
+        "node_2": 0,
+        "node_3": 0,
+        "node_4": 0,
+        "node_5": 0
+      },
+      "groups": {
+        "1": [
+          "node_0",
+          "node_1"
+        ],
+        "0": [
+          "node_2",
+          "node_3",
+          "node_4",
+          "node_5"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.38759999999999994,
+          0.025085714285714284,
+          0.4275355834140386,
+          0.0,
+          0.1752,
+          1.0
+        ],
+        "node_1": [
+          0.4189714285714286,
+          0.014628571428571428,
+          0.4273315624732238,
+          0.0,
+          0.1024,
+          0.5
+        ],
+        "node_2": [
+          0.4188857142857143,
+          0.0144,
+          0.42680318628153807,
+          0.0,
+          0.1008,
+          0.0
+        ],
+        "node_3": [
+          0.16717142857142858,
+          0.006228571428571429,
+          0.4265735157090503,
+          0.0,
+          0.0436,
+          0.0
+        ],
+        "node_4": [
+          0.0020857142857142854,
+          0.0018285714285714285,
+          0.426149230373691,
+          0.0,
+          0.0128,
+          0.0
+        ],
+        "node_5": [
+          0.37328571428571433,
+          0.018857142857142857,
+          0.42716925271391026,
+          0.0,
+          0.132,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          0.9999999999999999,
+          0.9396318245644921,
+          0.5120950934486764,
+          0.47424732585325646,
+          0.37207038599465125,
+          0.5155360391524367
+        ],
+        [
+          0.9396318245644921,
+          0.9999999999999999,
+          0.7720235717098977,
+          0.7094628236539826,
+          0.5495528431219588,
+          0.769433535848737
+        ],
+        [
+          0.5120950934486764,
+          0.7720235717098977,
+          1.0,
+          0.9189155255336882,
+          0.7117062057936945,
+          0.9964602345081858
+        ],
+        [
+          0.47424732585325646,
+          0.7094628236539826,
+          0.9189155255336882,
+          0.9999999999999999,
+          0.9310255399302599,
+          0.9339033864928673
+        ],
+        [
+          0.37207038599465125,
+          0.5495528431219588,
+          0.7117062057936945,
+          0.9310255399302599,
+          1.0,
+          0.7427524221870527
+        ],
+        [
+          0.5155360391524367,
+          0.769433535848737,
+          0.9964602345081858,
+          0.9339033864928673,
+          0.7427524221870527,
+          1.0000000000000002
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.4266737962695474,
+        "members": [
+          "node_2",
+          "node_3",
+          "node_4",
+          "node_5"
+        ],
+        "congestion": 0.24035714285714285
+      },
+      "cluster_1": {
+        "avg_flow": 0.42743357294363116,
+        "members": [
+          "node_0",
+          "node_1"
+        ],
+        "congestion": 0.40328571428571425
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_1",
+        "total_reward": 24.244141210901645,
+        "avg_waiting_time": 0.38759999999999994,
+        "loss": -1.2182997167110443,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.38759999999999994,
+          "average_queue_length": 0.025085714285714284,
+          "queue_total_halting": 0.1756,
+          "queue_max_halting": 2.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.4275355834140386,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1752
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 24.244141210901645
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_1",
+        "total_reward": 19.015569782329834,
+        "avg_waiting_time": 0.4189714285714286,
+        "loss": -5.067456036806107,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.4189714285714286,
+          "average_queue_length": 0.014628571428571428,
+          "queue_total_halting": 0.1024,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.4273315624732238,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1024
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 19.015569782329834
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_0",
+        "total_reward": 19.273347356868356,
+        "avg_waiting_time": 0.4188857142857143,
+        "loss": -0.4266114830970764,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.4188857142857143,
+          "average_queue_length": 0.0144,
+          "queue_total_halting": 0.1008,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.42680318628153807,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1008
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 19.273347356868356
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_0",
+        "total_reward": 84.06556978232918,
+        "avg_waiting_time": 0.16717142857142858,
+        "loss": -2.4475743919610977,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.16717142857142858,
+          "average_queue_length": 0.006228571428571429,
+          "queue_total_halting": 0.0436,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.4265735157090503,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0436
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 84.06556978232918
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_0",
+        "total_reward": 126.43699835375716,
+        "avg_waiting_time": 0.0020857142857142854,
+        "loss": -0.9902420938014984,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.0020857142857142854,
+          "average_queue_length": 0.0018285714285714285,
+          "queue_total_halting": 0.0128,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.910371318822023,
+          "trip_completion_percent": 91.04,
+          "arrival_rate": 0.426149230373691,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0128
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1422,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 126.43699835375716
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_0",
+        "total_reward": 29.738267788549244,
+        "avg_waiting_time": 0.37328571428571433,
+        "loss": -1.5265063345432281,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.37328571428571433,
+          "average_queue_length": 0.018857142857142857,
+          "queue_total_halting": 0.132,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.912932138284251,
+          "trip_completion_percent": 91.29,
+          "arrival_rate": 0.42716925271391026,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.132
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1426,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 29.738267788549244
+        }
+      }
+    }
+  },
+  {
+    "round": 10,
+    "mode": "SUMO-headless",
+    "clustering": {
+      "assignments": {
+        "node_0": 0,
+        "node_1": 0,
+        "node_2": 0,
+        "node_3": 1,
+        "node_4": 1,
+        "node_5": 0
+      },
+      "groups": {
+        "0": [
+          "node_0",
+          "node_1",
+          "node_2",
+          "node_5"
+        ],
+        "1": [
+          "node_3",
+          "node_4"
+        ]
+      },
+      "fingerprints": {
+        "node_0": [
+          0.2978,
+          0.014628571428571428,
+          0.42772758062160476,
+          0.0,
+          0.1024,
+          1.0
+        ],
+        "node_1": [
+          0.31425714285714285,
+          0.01137142857142857,
+          0.42698594655306277,
+          0.0,
+          0.0796,
+          0.5
+        ],
+        "node_2": [
+          0.31551428571428575,
+          0.012228571428571427,
+          0.427020892470116,
+          0.0,
+          0.0856,
+          0.0
+        ],
+        "node_3": [
+          0.002314285714285714,
+          0.0017714285714285711,
+          0.4263737864028022,
+          0.0,
+          0.0124,
+          0.0
+        ],
+        "node_4": [
+          0.23600000000000004,
+          0.007314285714285712,
+          0.42616320895465726,
+          0.0,
+          0.0512,
+          0.0
+        ],
+        "node_5": [
+          0.3525142857142857,
+          0.013599999999999998,
+          0.42704867824872,
+          0.0,
+          0.0952,
+          0.0
+        ]
+      },
+      "similarity_matrix": [
+        [
+          1.0000000000000002,
+          0.9449462508063519,
+          0.46876700339538374,
+          0.38165756088223546,
+          0.4649202717884504,
+          0.46757171423167887
+        ],
+        [
+          0.9449462508063519,
+          1.0000000000000002,
+          0.7313362400130314,
+          0.5876685470548595,
+          0.7246988580995674,
+          0.7301121066633344
+        ],
+        [
+          0.46876700339538374,
+          0.7313362400130314,
+          0.9999999999999998,
+          0.8013648017563922,
+          0.9900921529521612,
+          0.9985411756519587
+        ],
+        [
+          0.38165756088223546,
+          0.5876685470548595,
+          0.8013648017563922,
+          0.9999999999999998,
+          0.8752532616856334,
+          0.767912318843533
+        ],
+        [
+          0.4649202717884504,
+          0.7246988580995674,
+          0.9900921529521612,
+          0.8752532616856334,
+          1.0,
+          0.9812120575524401
+        ],
+        [
+          0.46757171423167887,
+          0.7301121066633344,
+          0.9985411756519587,
+          0.767912318843533,
+          0.9812120575524401,
+          0.9999999999999998
+        ]
+      ],
+      "similarity_node_order": [
+        "node_0",
+        "node_1",
+        "node_2",
+        "node_3",
+        "node_4",
+        "node_5"
+      ]
+    },
+    "cluster_info": {
+      "cluster_0": {
+        "avg_flow": 0.42719577447337587,
+        "members": [
+          "node_0",
+          "node_1",
+          "node_2",
+          "node_5"
+        ],
+        "congestion": 0.32002142857142857
+      },
+      "cluster_1": {
+        "avg_flow": 0.42626849767872976,
+        "members": [
+          "node_3",
+          "node_4"
+        ],
+        "congestion": 0.11915714285714288
+      }
+    },
+    "nodes": {
+      "node_0": {
+        "node_id": "node_0",
+        "cluster_id": "cluster_0",
+        "total_reward": 49.48763307115327,
+        "avg_waiting_time": 0.2978,
+        "loss": -6.252183735370636,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.2978,
+          "average_queue_length": 0.014628571428571428,
+          "queue_total_halting": 0.1024,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.911651728553137,
+          "trip_completion_percent": 91.17,
+          "arrival_rate": 0.42772758062160476,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.1024
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1424,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 49.48763307115327
+        }
+      },
+      "node_1": {
+        "node_id": "node_1",
+        "cluster_id": "cluster_0",
+        "total_reward": 46.27723614413637,
+        "avg_waiting_time": 0.31425714285714285,
+        "loss": -3.9245259761810303,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.31425714285714285,
+          "average_queue_length": 0.01137142857142857,
+          "queue_total_halting": 0.0796,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.912291933418694,
+          "trip_completion_percent": 91.23,
+          "arrival_rate": 0.42698594655306277,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0796
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1425,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 46.27723614413637
+        }
+      },
+      "node_2": {
+        "node_id": "node_2",
+        "cluster_id": "cluster_0",
+        "total_reward": 45.748664715565845,
+        "avg_waiting_time": 0.31551428571428575,
+        "loss": -4.327426999807358,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.31551428571428575,
+          "average_queue_length": 0.012228571428571427,
+          "queue_total_halting": 0.0856,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.912291933418694,
+          "trip_completion_percent": 91.23,
+          "arrival_rate": 0.427020892470116,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0856
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1425,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 45.748664715565845
+        }
+      },
+      "node_3": {
+        "node_id": "node_3",
+        "cluster_id": "cluster_1",
+        "total_reward": 126.48374428388337,
+        "avg_waiting_time": 0.002314285714285714,
+        "loss": -2.726697400212288,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.002314285714285714,
+          "average_queue_length": 0.0017714285714285711,
+          "queue_total_halting": 0.0124,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.91101152368758,
+          "trip_completion_percent": 91.1,
+          "arrival_rate": 0.4263737864028022,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0124
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1423,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 126.48374428388337
+        }
+      },
+      "node_4": {
+        "node_id": "node_4",
+        "cluster_id": "cluster_1",
+        "total_reward": 66.31818913480807,
+        "avg_waiting_time": 0.23600000000000004,
+        "loss": 0.19307034462690353,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.23600000000000004,
+          "average_queue_length": 0.007314285714285712,
+          "queue_total_halting": 0.0512,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9084507042253521,
+          "trip_completion_percent": 90.85,
+          "arrival_rate": 0.42616320895465726,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0512
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1419,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 66.31818913480807
+        }
+      },
+      "node_5": {
+        "node_id": "node_5",
+        "cluster_id": "cluster_0",
+        "total_reward": 35.61818913480822,
+        "avg_waiting_time": 0.3525142857142857,
+        "loss": -1.5841064900159836,
+        "metrics": {
+          "avg_waiting_time_per_vehicle": 0.3525142857142857,
+          "average_queue_length": 0.013599999999999998,
+          "queue_total_halting": 0.0952,
+          "queue_max_halting": 1.0,
+          "throughput_ratio": 0.9084507042253521,
+          "trip_completion_percent": 90.85,
+          "arrival_rate": 0.42704867824872,
+          "max_queue_length": 0.0,
+          "lane_summary": {
+            "num_congested_lanes": 0.0952
+          },
+          "total_waiting_time": 0.0,
+          "throughput": 1419,
+          "total_departed": 1562,
+          "steps": 2500,
+          "total_reward": 35.61818913480822
+        }
+      }
+    }
+  }
+]

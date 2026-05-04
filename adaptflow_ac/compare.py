@@ -1,4 +1,5 @@
 import argparse
+import glob
 import numpy as np
 import torch
 import os
@@ -101,17 +102,35 @@ def main():
     parser.add_argument('--mode', type=str, default='mock', choices=['mock', 'sumo'])
     parser.add_argument('--sumocfg', type=str, default=None)
     parser.add_argument('--episodes', type=int, default=5)
+    parser.add_argument(
+        '--research-dir',
+        type=str,
+        default=None,
+        help='If set, load checkpoints from <dir>/adaptflow|fed_dqn_tsc|multi_agent_ac|dqtsca',
+    )
     args = parser.parse_args()
     cfg = args.sumocfg or 'backend/sumo_configs/intersection.sumocfg'
     results = {}
-    
-    models = {
-        'AdaptFlow-AC': ('adaptflow', 'results/af_model.pt'),
-        'FedDQNTsc': ('fed_dqn_tsc', 'results/fed_dqn/agent_0.pt'),
-        'MultiAgentAC': ('multi_agent_ac', 'results/ma2c/agent_0.pt'),
-        'DQTSCA': ('dqtsca', 'results/dqtsca/model.pt'),
-        'Random': ('random', None)
-    }
+
+    if args.research_dir:
+        rd = os.path.abspath(args.research_dir)
+        g = sorted(glob.glob(os.path.join(rd, 'adaptflow', 'adaptflow_global_*.pt')))
+        af_pt = g[-1] if g else None
+        models = {
+            'AdaptFlow-AC': ('adaptflow', af_pt),
+            'FedDQNTsc': ('fed_dqn_tsc', os.path.join(rd, 'fed_dqn_tsc', 'agent_0.pt')),
+            'MultiAgentAC': ('multi_agent_ac', os.path.join(rd, 'multi_agent_ac', 'agent_0.pt')),
+            'DQTSCA': ('dqtsca', os.path.join(rd, 'dqtsca', 'model.pt')),
+            'Random': ('random', None),
+        }
+    else:
+        models = {
+            'AdaptFlow-AC': ('adaptflow', 'results/af_model.pt'),
+            'FedDQNTsc': ('fed_dqn_tsc', 'results/fed_dqn/agent_0.pt'),
+            'MultiAgentAC': ('multi_agent_ac', 'results/ma2c/agent_0.pt'),
+            'DQTSCA': ('dqtsca', 'results/dqtsca/model.pt'),
+            'Random': ('random', None),
+        }
     
     import traci
     for name, (atype, mpath) in models.items():
@@ -119,10 +138,17 @@ def main():
         try: traci.start(["sumo", "-c", cfg])
         except: pass
         
-        if atype == 'fed_dqn_tsc': env = FedDQNTscEnv(cfg); env.tl_ids = traci.trafficlight.getIDList()
-        elif atype == 'multi_agent_ac': env = MultiAgentACEnv(cfg); env.tls_ids = traci.trafficlight.getIDList()
-        elif atype == 'dqtsca': env = DQTSCAEnv(cfg)
-        else: env = SumoEnv(cfg)
+        if atype == 'fed_dqn_tsc':
+            env = FedDQNTscEnv(cfg)
+            env.tl_ids = list(traci.trafficlight.getIDList())
+        elif atype == 'multi_agent_ac':
+            env = MultiAgentACEnv(cfg)
+            env.tls_ids = list(traci.trafficlight.getIDList())
+        elif atype == 'dqtsca':
+            env = DQTSCAEnv(cfg)
+            env.tl_ids = list(traci.trafficlight.getIDList())
+        else:
+            env = SumoEnv(cfg, gui=False, max_steps=500)
         
         results[name] = evaluate_agent(atype, env, args.episodes, mpath)
         traci.close()

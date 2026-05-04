@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- node_0 — Metro/Hospital corridor (Dwarka Mor Metro Station area): peak demand t=0+.
-     Priority tier 1 (highest). Dense intersection, strict TLS, high pedestrian flow.
+<!-- node_0 — Metro/Hospital (Dwarka Mor). Priority tier 1. Same trips + [0,3600] as osm.sumocfg (paper parity).
      India urban: tight jam-threshold, elevated teleport patience for mixed traffic. -->
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="osm.net.xml.gz"/>
+        <net-file value="osm.net.xml"/>
         <route-files value="osm.passenger.trips.xml"/>
     </input>
 
+    <!-- Same [0,3600] s window and trips as osm.sumocfg; node heterogeneity = TLS/processing only. -->
     <time>
         <begin value="0"/>
         <end value="3600"/>

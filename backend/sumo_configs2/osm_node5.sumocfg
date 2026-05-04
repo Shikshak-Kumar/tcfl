@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- node_5 — Metro/Highway feeder junction (Uttam Nagar–Dwarka Mor corridor): evening offset.
-     Priority tier 3. High-frequency bus corridor, metro feeder autos, evening peak.
-     India urban: medium jam-threshold, dynamic rerouting for metro-correlated demand spikes. -->
+<!-- node_5 — Metro/Highway feeder. Priority tier 3. Same trips + [0,3600] as osm.sumocfg (paper parity).
+     India urban: medium jam-threshold, rerouting for corridor traffic. -->
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="osm.net.xml.gz"/>
-        <route-files value="generated/client2.trips.xml"/>
+        <net-file value="osm.net.xml"/>
+        <route-files value="osm.passenger.trips.xml"/>
     </input>
 
+    <!-- Research parity: same demand window as osm.sumocfg / other algorithms (begin=0). -->
     <time>
-        <begin value="1500"/>
+        <begin value="0"/>
         <end value="3600"/>
         <step-length value="1"/>
     </time>

@@ -6,7 +6,7 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/polyconvertConfiguration.xsd">
 
     <input>
-        <net-file value="osm.net.xml.gz"/>
+        <net-file value="osm.net.xml"/>
         <osm-files value="osm_bbox.osm.xml.gz"/>
         <osm.keep-full-type value="true"/>
         <type-file value="${SUMO_HOME}/data/typemap/osmPolyconvert.typ.xml"/>

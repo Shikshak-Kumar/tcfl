@@ -83,6 +83,8 @@ class AdaptFlowTrainer:
         sumo_scenario: Optional[str] = None,
         sumo_headless: bool = False,
         steps: int = 500,
+        throughput_reward_scale: float = 0.0,
+        completion_bonus_scale: float = 0.0,
     ):
         if gui and sumo_headless:
             raise ValueError("Use either gui=True or sumo_headless=True, not both.")
@@ -95,6 +97,8 @@ class AdaptFlowTrainer:
         self.target_pois = target_pois
         self.sumo_scenario = sumo_scenario
         self.steps = steps
+        self.throughput_reward_scale = float(throughput_reward_scale)
+        self.completion_bonus_scale = float(completion_bonus_scale)
         os.makedirs(self.results_dir, exist_ok=True)
         self.all_round_results = []
 
@@ -155,7 +159,13 @@ class AdaptFlowTrainer:
             print("AdaptFlow-TSC: GUI Mode (SUMO Simulation)")
             for i in range(self.num_nodes):
                 config = self.sumo_configs[i % len(self.sumo_configs)]
-                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=True, max_steps=self.steps)
+                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(
+                    config,
+                    gui=True,
+                    max_steps=self.steps,
+                    throughput_reward_scale=self.throughput_reward_scale,
+                    completion_bonus_scale=self.completion_bonus_scale,
+                )
                 print(f"  node_{i} -> {config}")
             return
 
@@ -164,7 +174,13 @@ class AdaptFlowTrainer:
             print("AdaptFlow-TSC: Headless SUMO (real microsimulation, no GUI)")
             for i in range(self.num_nodes):
                 config = self.sumo_configs[i % len(self.sumo_configs)]
-                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(config, gui=False, max_steps=self.steps)
+                self.envs[f"node_{i}"] = SUMOTrafficEnvironment(
+                    config,
+                    gui=False,
+                    max_steps=self.steps,
+                    throughput_reward_scale=self.throughput_reward_scale,
+                    completion_bonus_scale=self.completion_bonus_scale,
+                )
                 print(f"  node_{i} -> {config}")
             return
 
@@ -258,6 +274,7 @@ class AdaptFlowTrainer:
     def run_round(self, round_idx: int):
         """Execute one round of AdaptFlow training."""
         logger.header(f"ADAPTFLOW ROUND {round_idx}")
+        self.metrics_tracker.reset_round()
 
         # ── Step 1: Local Training ───────────────────────────────────
         print(f"\n  [Step 1] Local Training...")
@@ -361,6 +378,25 @@ class AdaptFlowTrainer:
             if self.gui or self.sumo_headless:
                 env.close()
 
+        # Episode-mean queue / wait / arrival (matches per-step reward signal). End-of-episode
+        # get_metrics() is a single snapshot and often reads ~0 even when the round was congested.
+        for nid in node_metrics:
+            s = self.metrics_tracker.get_summary(nid)
+            m = node_metrics[nid]
+            m["avg_waiting_time_per_vehicle"] = float(s["waiting_time"])
+            m["average_queue_length"] = float(s["queue_length"])
+            hist = self.metrics_tracker.history[nid]
+            m["queue_total_halting"] = (
+                float(np.mean(hist["queue_total"])) if hist["queue_total"] else 0.0
+            )
+            m["queue_max_halting"] = (
+                float(np.max(hist["queue_max"])) if hist["queue_max"] else 0.0
+            )
+            m["arrival_rate"] = float(s["throughput"])
+            ls = dict(m.get("lane_summary") or {})
+            ls["num_congested_lanes"] = float(s["congested_lanes"])
+            m["lane_summary"] = ls
+
         # ── Step 2: Dynamic Re-Clustering ───────────────────────────
         if round_idx == 1:
             logger.section("Step 2: Initial Static Clustering")
@@ -396,7 +432,7 @@ class AdaptFlowTrainer:
             "Nodes",
             "Avg Reward",
             "Avg Wait (s)",
-            "Avg Queue",
+            "QΣ / Qmax",
         ]
         table_rows = []
         for cid, members in sorted(cluster_groups.items()):
@@ -409,8 +445,11 @@ class AdaptFlowTrainer:
                     for nid in members
                 ]
             )
-            avg_queue = np.mean(
-                [node_metrics[nid].get("average_queue_length", 0) for nid in members]
+            avg_q_total = np.mean(
+                [node_metrics[nid].get("queue_total_halting", 0) for nid in members]
+            )
+            avg_q_max = np.mean(
+                [node_metrics[nid].get("queue_max_halting", 0) for nid in members]
             )
             table_rows.append(
                 [
@@ -418,7 +457,7 @@ class AdaptFlowTrainer:
                     len(members),
                     f"{avg_rew:.1f}",
                     f"{avg_wait:.2f}s",
-                    f"{avg_queue:.2f}",
+                    f"{avg_q_total:.1f} / {avg_q_max:.1f}",
                 ]
             )
 
@@ -458,8 +497,12 @@ class AdaptFlowTrainer:
         cluster_info = {}
         for cluster in clusters:
             for nid in cluster.agent_ids:
-                throughput = node_metrics[nid].get("throughput_ratio", 0.0)
-                cluster.update_flow(nid, max(float(throughput), 0.01))
+                flow = float(
+                    node_metrics[nid].get(
+                        "arrival_rate", node_metrics[nid].get("throughput_ratio", 0.0)
+                    )
+                )
+                cluster.update_flow(nid, max(flow, 0.01))
 
             agent_params = [self.agents[nid].get_weights() for nid in cluster.agent_ids]
             c_weights = cluster.aggregate_intra_cluster(agent_params)
@@ -523,8 +566,9 @@ class AdaptFlowTrainer:
             "Cluster",
             "Reward",
             "Wait Time",
-            "Queue",
-            "TP Ratio",
+            "QΣ (veh)",
+            "Q max",
+            "TP ratio",
             "Loss",
         ]
         table_rows = []
@@ -532,9 +576,10 @@ class AdaptFlowTrainer:
         for nid in sorted(self.agents.keys()):
             m = node_metrics[nid]
             wt = m.get("avg_waiting_time_per_vehicle", 0.0)
-            tp = m.get("throughput_ratio", 0)
+            tp = float(m.get("throughput_ratio", 0))
             cid = assignments.get(nid, -1)
-            aq = m.get("average_queue_length", 0.0)
+            q_sig = float(m.get("queue_total_halting", 0.0))
+            q_peak = float(m.get("queue_max_halting", 0.0))
 
             table_rows.append(
                 [
@@ -542,7 +587,8 @@ class AdaptFlowTrainer:
                     f"cluster_{cid}",
                     f"{m.get('total_reward', 0):.1f}",
                     f"{wt:.2f}s",
-                    f"{aq:.1f}",
+                    f"{q_sig:.1f}",
+                    f"{q_peak:.1f}",
                     f"{tp:.2f}",
                     f"{node_losses.get(nid, 0.0):.4f}",
                 ]
@@ -575,10 +621,6 @@ class AdaptFlowTrainer:
             self.agents[nid].save_model(model_path)
 
         logger.table(table_headers, table_rows)
-        
-        # Print Detailed Research Metrics
-        print(f"\n  [Research Metrics] Round {round_idx} Summary:")
-        self.metrics_tracker.print_table()
 
         # Save round summary
         round_file = os.path.join(self.results_dir, f"round_{round_idx}_summary.json")
@@ -774,6 +816,20 @@ if __name__ == "__main__":
         choices=["default", "china", "china_osm", "china_rural_osm", "india_rural_osm", "rural_osm", "pikhuwa_osm", "dwarka_mor"],
         help="SUMO map: default | china (synthetic) | china_osm | china_rural_osm | india_rural_osm | rural_osm | pikhuwa_osm | dwarka_mor (Dwarka Mor Delhi Urban)",
     )
+    parser.add_argument(
+        "--tp-reward-scale",
+        type=float,
+        default=0.0,
+        help="Add (scale * newly_arrived_vehicles_this_step) to SUMO reward; 0 disables (default). "
+        "Small values (e.g. 0.03–0.08) align the critic with completion throughput.",
+    )
+    parser.add_argument(
+        "--completion-bonus-scale",
+        type=float,
+        default=0.0,
+        help="On the last step only, add scale × (arrived/departed) to reward. 0 disables. "
+        "Research runs use a positive value so the policy chases higher trip completion (TP ratio).",
+    )
 
     args = parser.parse_args()
     sumo_headless = effective_sumo_headless(args.sumo_headless)
@@ -825,5 +881,7 @@ if __name__ == "__main__":
         sumo_scenario=args.sumo_scenario,
         sumo_headless=sumo_headless,
         steps=args.steps,
+        throughput_reward_scale=args.tp_reward_scale,
+        completion_bonus_scale=args.completion_bonus_scale,
     )
     trainer.train(num_rounds=args.rounds)

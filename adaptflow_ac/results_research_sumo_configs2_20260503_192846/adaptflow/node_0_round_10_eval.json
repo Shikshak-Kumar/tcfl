@@ -1,0 +1,25 @@
+{
+  "node_id": "node_0",
+  "cluster_id": "cluster_0",
+  "total_reward": 49.48763307115327,
+  "avg_waiting_time": 0.2978,
+  "loss": -6.252183735370636,
+  "metrics": {
+    "avg_waiting_time_per_vehicle": 0.2978,
+    "average_queue_length": 0.014628571428571428,
+    "queue_total_halting": 0.1024,
+    "queue_max_halting": 1.0,
+    "throughput_ratio": 0.911651728553137,
+    "trip_completion_percent": 91.17,
+    "arrival_rate": 0.42772758062160476,
+    "max_queue_length": 0.0,
+    "lane_summary": {
+      "num_congested_lanes": 0.1024
+    },
+    "total_waiting_time": 0.0,
+    "throughput": 1424,
+    "total_departed": 1562,
+    "steps": 2500,
+    "total_reward": 49.48763307115327
+  }
+}

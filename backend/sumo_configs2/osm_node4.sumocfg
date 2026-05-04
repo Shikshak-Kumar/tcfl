@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- node_4 — Industrial/Outer Ring Road fringe (Dwarka Expressway feeder junctions).
-     Priority tier 3. Heavy vehicles, trucks, inter-city bus traffic. High jam tolerance.
-     India urban: elevated jam-threshold for wide expressway-grade roads. -->
+<!-- node_4 — Industrial/ORR fringe. Priority tier 3. Same trips + [0,3600] as osm.sumocfg (paper parity).
+     India urban: elevated jam-threshold for expressway-grade roads. -->
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="osm.net.xml.gz"/>
-        <route-files value="generated/client1.trips.xml"/>
+        <net-file value="osm.net.xml"/>
+        <route-files value="osm.passenger.trips.xml"/>
     </input>
 
+    <!-- Research parity: same demand window as osm.sumocfg / other algorithms (begin=0). -->
     <time>
-        <begin value="1200"/>
+        <begin value="0"/>
         <end value="3600"/>
         <step-length value="1"/>
     </time>

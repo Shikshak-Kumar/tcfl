@@ -20,7 +20,7 @@ from collections import defaultdict
 FINGERPRINT_KEYS = [
     "avg_waiting_time_per_vehicle",
     "average_queue_length",
-    "throughput_ratio",
+    "arrival_rate",  # preferred; falls back to throughput_ratio in extract_fingerprint
     "max_queue_length",
     "num_congested_lanes",
     "priority_score", # New POI-based dimension
@@ -32,7 +32,7 @@ def extract_fingerprint(metrics: Dict, priority_tier: int = 3) -> np.ndarray:
     Extract a 6-dimensional fingerprint from node performance and priority.
 
     Dimensions:
-      [avg_wait, avg_queue, throughput, max_queue, congested_lanes, priority_score]
+      [avg_wait, avg_queue, arrival_rate (else throughput_ratio), max_queue, congested_lanes, priority_score]
       
     Priority Score: Tier 1 (Hospitals) = 1.0, Tier 2 (Schools) = 0.5, Tier 3 = 0.0
     """
@@ -45,7 +45,9 @@ def extract_fingerprint(metrics: Dict, priority_tier: int = 3) -> np.ndarray:
     vals = [
         float(metrics.get("avg_waiting_time_per_vehicle", 0.0)),
         float(metrics.get("average_queue_length", 0.0)),
-        float(metrics.get("throughput_ratio", 0.0)),
+        float(
+            metrics.get("arrival_rate", metrics.get("throughput_ratio", 0.0))
+        ),
         float(metrics.get("max_queue_length", 0.0)),
         float(lane_summary.get("num_congested_lanes", 0.0)),
         priority_score,
@@ -300,7 +302,12 @@ class AdaptiveClusterManager:
         avg_reward = np.mean([m.get("total_reward", 0) for m in node_metrics.values()])
         avg_queue = np.mean([m.get("average_queue_length", 0) for m in node_metrics.values()])
         avg_wait = np.mean([m.get("avg_waiting_time_per_vehicle", 0) for m in node_metrics.values()])
-        avg_tp = np.mean([m.get("throughput_ratio", 0) for m in node_metrics.values()])
+        avg_tp = np.mean(
+            [
+                float(m.get("arrival_rate", m.get("throughput_ratio", 0)))
+                for m in node_metrics.values()
+            ]
+        )
         
         self.reward_history.append(float(avg_reward))
         self.queue_history.append(float(avg_queue))
