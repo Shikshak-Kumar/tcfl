@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-05-02T14:39:08.936132+05:30 by Eclipse SUMO sumo 1.26.0
+<!-- generated on 2026-05-05 22:46:57 by Eclipse SUMO sumo Version 1.24.0
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="F:\ttraffic\tcfl\backend\sumo_configs_china_osm\osm.net.xml.gz"/>
-        <route-files value="F:\ttraffic\tcfl\backend\sumo_configs_china_osm\osm.passenger.trips.xml"/>
-        <additional-files value="F:\ttraffic\tcfl\backend\sumo_configs_china_osm\osm.poly.xml.gz,F:\ttraffic\tcfl\backend\sumo_configs_china_osm\output.add.xml"/>
+        <net-file value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\osm.net.xml.gz"/>
+        <route-files value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\osm.passenger.trips.xml"/>
+        <additional-files value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\osm.poly.xml.gz,C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\output.add.xml"/>
     </input>
 
     <output>
-        <tripinfo-output value="F:\ttraffic\tcfl\backend\sumo_configs_china_osm\tripinfos_node4.xml"/>
-        <statistic-output value="F:\ttraffic\tcfl\backend\sumo_configs_china_osm\stats_node4.xml"/>
+        <tripinfo-output value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\tripinfos_node4.xml"/>
+        <statistic-output value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\stats_node4.xml"/>
     </output>
 
     <time>
@@ -40,13 +40,26 @@
     </report>
 
     <traci_server>
-        <remote-port value="59923"/>
+        <remote-port value="55004"/>
     </traci_server>
 
     <gui_only>
-        <gui-settings-file value="F:\ttraffic\tcfl\backend\sumo_configs_china_osm\osm.view.xml"/>
-        <quit-on-end value="true"/>
-        <start value="true"/>
+        <gui-settings-file value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\osm.view.xml"/>
     </gui_only>
 
 </sumoConfiguration>
+-->
+
+<statistics xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/statistic_file.xsd">
+    <performance clockBegin="263327.06" clockEnd="263474.37" clockDuration="147.31" traciDuration="145.39" realTimeFactor="3.39" vehicleUpdatesPerSecond="353.73" personUpdatesPerSecond="0.00" begin="1600.00" end="2100.00" duration="500.00"/>
+    <vehicles loaded="380" inserted="312" running="171" waiting="0"/>
+    <teleports total="62" jam="4" yield="57" wrongLane="0"/>
+    <safety collisions="1" emergencyStops="9" emergencyBraking="16"/>
+    <persons loaded="0" running="0" jammed="0"/>
+    <personTeleports total="0" abortWait="0" wrongDest="0"/>
+    <vehicleTripStatistics count="141" routeLength="2111.70" speed="14.89" duration="154.45" waitingTime="29.53" timeLoss="61.49" departDelay="0.46" departDelayWaiting="-1.00" totalTravelTime="21778.00" totalDepartDelay="65.00"/>
+    <pedestrianStatistics number="0" routeLength="0.00" duration="0.00" timeLoss="0.00"/>
+    <rideStatistics number="0"/>
+    <transportStatistics number="0"/>
+</statistics>
+

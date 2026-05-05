@@ -88,8 +88,8 @@ class DQTSCATrainer:
                     "true",
                 ]
             )
-            self.env.phase_map = {}
             tl_id = traci.trafficlight.getIDList()[0]
+            self.env.build_phase_map(tl_id)  # derive actions from real signal program
             self.current_action_idx = 0
             self.env.prev_delay = self.env.get_cumulative_delay(tl_id)
             tally = EpisodeThroughputTally()
@@ -135,7 +135,9 @@ class DQTSCATrainer:
                     "avg_queue_max": qmax,
                     "avg_wait": aw,
                     "tp_ratio": tally.ratio(),
-                    "arrival_rate": episode_arrival_rate(tally, self._episode_traci_steps),
+                    "arrival_rate": episode_arrival_rate(
+                        tally, self._episode_traci_steps
+                    ),
                     "epsilon": float(self.agent.epsilon),
                 }
             )
@@ -155,7 +157,9 @@ class DQTSCATrainer:
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--sumocfg", type=str, required=True)
-    p.add_argument("--rounds", type=int, default=10, help="Episodes (align with other methods)")
+    p.add_argument(
+        "--rounds", type=int, default=10, help="Episodes (align with other methods)"
+    )
     p.add_argument("--steps", type=int, default=500)
     p.add_argument("--total-train-steps", type=int, default=100000)
     p.add_argument("--results-dir", type=str, default=None)

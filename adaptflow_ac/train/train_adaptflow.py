@@ -252,11 +252,17 @@ class AdaptFlowTrainer:
     def _get_node_graph_state(
         self, node_id: str, local_state: np.ndarray
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """Construct graph representation: local + neighbor states."""
-        # Handle (1, D) states from single-node environments
-        if len(local_state.shape) == 2 and local_state.shape[0] == 1:
-            local_state = local_state[0]
-            
+        """Construct graph representation: local + neighbor states.
+
+        Each federated node is represented by a single 1-D feature vector.
+        When the SUMO environment has multiple intersections, their states are
+        mean-aggregated so that state_history always stores arrays of shape
+        (num_graph_nodes, feature_dim) — keeping _get_sequence's transpose valid.
+        """
+        # Aggregate multi-intersection state to a single node vector (D,)
+        if local_state.ndim == 2:
+            local_state = local_state.mean(axis=0)   # (num_intersections, D) -> (D,)
+
         node_idx = int(node_id.split("_")[1])
         neighbors = np.where(self.adj[node_idx] > 0)[0]
 
@@ -267,7 +273,7 @@ class AdaptFlowTrainer:
                 # absent signals rather than fitting to meaningless noise
                 node_states.append(np.zeros_like(local_state))
 
-        state_graph = np.stack(node_states)
+        state_graph = np.stack(node_states)          # (1+num_neighbors, D)
         adj_node = np.ones((len(state_graph), len(state_graph)))
         return state_graph, adj_node
 

@@ -1,0 +1,15 @@
+{
+  "algorithm": "adaptflow",
+  "version": "1.0.0",
+  "state_size": 12,
+  "action_size": 4,
+  "device": "cpu",
+  "preprocessing": {
+    "normalization": "none",
+    "clipping": "none"
+  },
+  "mode": "sumo",
+  "source_weights": "results_adaptflow_china_osm\\adaptflow_global_sumo.pt",
+  "sumo_scenario": "china_osm",
+  "export_status": "weights_only"
+}

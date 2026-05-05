@@ -1,0 +1,57 @@
+[
+  {
+    "round": 1,
+    "avg_reward": -0.18935416666666663,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "avg_queue_total": 0.0,
+    "avg_queue_max": 0.0,
+    "tp_ratio": 0.6089743589743589,
+    "arrival_rate": 0.38,
+    "avg_loss": 95.73550458366518
+  },
+  {
+    "round": 2,
+    "avg_reward": -0.21681249999999996,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "avg_queue_total": 0.0,
+    "avg_queue_max": 0.0,
+    "tp_ratio": 0.6025641025641025,
+    "arrival_rate": 0.376,
+    "avg_loss": 241.41879998680378
+  },
+  {
+    "round": 3,
+    "avg_reward": -0.3375,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "avg_queue_total": 0.0,
+    "avg_queue_max": 0.0,
+    "tp_ratio": 0.6185897435897436,
+    "arrival_rate": 0.386,
+    "avg_loss": 468.33892009491296
+  },
+  {
+    "round": 4,
+    "avg_reward": -0.2894166666666667,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "avg_queue_total": 0.0,
+    "avg_queue_max": 0.0,
+    "tp_ratio": 0.6089743589743589,
+    "arrival_rate": 0.38,
+    "avg_loss": 180.38001762727896
+  },
+  {
+    "round": 5,
+    "avg_reward": -0.206625,
+    "avg_wait": 0.0,
+    "avg_queue": 0.0,
+    "avg_queue_total": 0.0,
+    "avg_queue_max": 0.0,
+    "tp_ratio": 0.5993589743589743,
+    "arrival_rate": 0.374,
+    "avg_loss": 79.1964547842741
+  }
+]

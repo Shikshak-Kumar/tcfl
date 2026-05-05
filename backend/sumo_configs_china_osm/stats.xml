@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-03-28T23:44:33.834424+05:30 by Eclipse SUMO GUI 1.26.0
+<!-- generated on 2026-05-05 23:10:42 by Eclipse SUMO sumo Version 1.24.0
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="sumo_configs_china_osm/osm.net.xml.gz"/>
-        <route-files value="sumo_configs_china_osm/osm.passenger.trips.xml"/>
-        <additional-files value="sumo_configs_china_osm/osm.poly.xml.gz,sumo_configs_china_osm/output.add.xml"/>
+        <net-file value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\osm.net.xml.gz"/>
+        <route-files value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\osm.passenger.trips.xml"/>
+        <additional-files value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\osm.poly.xml.gz,C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\output.add.xml"/>
     </input>
 
     <output>
-        <tripinfo-output value="sumo_configs_china_osm/tripinfos.xml"/>
-        <statistic-output value="sumo_configs_china_osm/stats.xml"/>
+        <tripinfo-output value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\tripinfos.xml"/>
+        <statistic-output value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\stats.xml"/>
     </output>
 
     <time>
         <begin value="0"/>
         <end value="3600"/>
-        <step-length value="1.0"/>
+        <step-length value="1"/>
     </time>
 
     <processing>
         <ignore-junction-blocker value="5"/>
         <ignore-route-errors value="true"/>
-        <collision.action value="teleport"/>
         <time-to-teleport value="60"/>
         <tls.actuated.jam-threshold value="30"/>
     </processing>
@@ -35,29 +34,30 @@
 
     <report>
         <verbose value="true"/>
+        <no-warnings value="true"/>
         <duration-log.statistics value="true"/>
         <no-step-log value="true"/>
     </report>
 
     <traci_server>
-        <remote-port value="57934"/>
+        <remote-port value="65489"/>
     </traci_server>
 
     <gui_only>
-        <gui-settings-file value="sumo_configs_china_osm\osm.view.xml"/>
+        <gui-settings-file value="C:\Users\madhu\OneDrive\Desktop\qwerty\tcfl\backend\sumo_configs_china_osm\osm.view.xml"/>
     </gui_only>
 
 </sumoConfiguration>
 -->
 
 <statistics xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/statistic_file.xsd">
-    <performance clockBegin="539848.44" clockEnd="539868.39" clockDuration="19.95" traciDuration="3.98" realTimeFactor="10.03" vehicleUpdatesPerSecond="413.76" personUpdatesPerSecond="0.00" begin="0.00" end="200.00" duration="200.00"/>
-    <vehicles loaded="96" inserted="94" running="71" waiting="0"/>
-    <teleports total="2" jam="0" yield="2" wrongLane="0"/>
-    <safety collisions="0" emergencyStops="0" emergencyBraking="0"/>
+    <performance clockBegin="264751.52" clockEnd="264759.23" clockDuration="7.71" traciDuration="6.13" realTimeFactor="64.86" vehicleUpdatesPerSecond="5998.96" personUpdatesPerSecond="0.00" begin="0.00" end="500.00" duration="500.00"/>
+    <vehicles loaded="380" inserted="312" running="125" waiting="0"/>
+    <teleports total="31" jam="6" yield="23" wrongLane="1"/>
+    <safety collisions="1" emergencyStops="7" emergencyBraking="15"/>
     <persons loaded="0" running="0" jammed="0"/>
     <personTeleports total="0" abortWait="0" wrongDest="0"/>
-    <vehicleTripStatistics count="23" routeLength="1424.29" speed="14.74" duration="100.43" waitingTime="11.17" timeLoss="36.04" departDelay="0.59" departDelayWaiting="-1.00" totalTravelTime="2310.00" totalDepartDelay="13.69"/>
+    <vehicleTripStatistics count="187" routeLength="2231.36" speed="13.58" duration="168.45" waitingTime="27.97" timeLoss="68.82" departDelay="0.53" departDelayWaiting="-1.00" totalTravelTime="31501.00" totalDepartDelay="100.00"/>
     <pedestrianStatistics number="0" routeLength="0.00" duration="0.00" timeLoss="0.00"/>
     <rideStatistics number="0"/>
     <transportStatistics number="0"/>
