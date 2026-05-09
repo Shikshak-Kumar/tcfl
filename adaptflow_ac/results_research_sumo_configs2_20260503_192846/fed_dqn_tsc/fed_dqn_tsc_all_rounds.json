@@ -3,20 +3,20 @@
     "round": 1,
     "avg_reward": -48.70324404761907,
     "avg_loss": 0.00043820053996634234,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.912932138284251,
+    "avg_wait": 0.18281581161204882,
+    "avg_queue": 0.028604965845703482,
+    "avg_queue_total": 0.04866025563176742,
+    "avg_queue_max": 0.03062133942246842,
+    "avg_tp_ratio": 0.8913878413077584,
     "avg_arrival_rate": 0.5704,
     "rewards_per_episode": [
       -48.70324404761907
     ],
     "wait_per_episode": [
-      0.0
+      0.0748706462169659
     ],
     "tp_per_episode": [
-      0.912932138284251
+      0.8942929785131832
     ],
     "arrival_rate_per_episode": [
       0.5704
@@ -29,20 +29,20 @@
     "round": 2,
     "avg_reward": -33.00996031746035,
     "avg_loss": 0.0006425393098127164,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.91101152368758,
+    "avg_wait": 0.12752999889804834,
+    "avg_queue": 0.025522930920729103,
+    "avg_queue_total": 0.040877753449093904,
+    "avg_queue_max": 0.02594349490178853,
+    "avg_tp_ratio": 0.8975941940863564,
     "avg_arrival_rate": 0.5692,
     "rewards_per_episode": [
       -33.00996031746035
     ],
     "wait_per_episode": [
-      0.0
+      0.05209696743782408
     ],
     "tp_per_episode": [
-      0.91101152368758
+      0.8920057026717332
     ],
     "arrival_rate_per_episode": [
       0.5692
@@ -55,20 +55,20 @@
     "round": 3,
     "avg_reward": -56.35639880952386,
     "avg_loss": 0.00045604270885695196,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.911651728553137,
+    "avg_wait": 0.13879771464657129,
+    "avg_queue": 0.030868571010105816,
+    "avg_queue_total": 0.044925933966142445,
+    "avg_queue_max": 0.012523358035014077,
+    "avg_tp_ratio": 0.8983358873525874,
     "avg_arrival_rate": 0.5696,
     "rewards_per_episode": [
       -56.35639880952386
     ],
     "wait_per_episode": [
-      0.0
+      0.036321701107972684
     ],
     "tp_per_episode": [
-      0.911651728553137
+      0.897288534368326
     ],
     "arrival_rate_per_episode": [
       0.5696
@@ -81,20 +81,20 @@
     "round": 4,
     "avg_reward": -65.76824404761909,
     "avg_loss": 0.0007594519112709229,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.9142125480153649,
+    "avg_wait": 0.14672725091676295,
+    "avg_queue": 0.02417927418283264,
+    "avg_queue_total": 0.014017526085030992,
+    "avg_queue_max": 0.03855229902446661,
+    "avg_tp_ratio": 0.8985850340730585,
     "avg_arrival_rate": 0.5712,
     "rewards_per_episode": [
       -65.76824404761909
     ],
     "wait_per_episode": [
-      0.0
+      0.041065309221106364
     ],
     "tp_per_episode": [
-      0.9142125480153649
+      0.8949843168547305
     ],
     "arrival_rate_per_episode": [
       0.5712
@@ -107,20 +107,20 @@
     "round": 5,
     "avg_reward": -37.38880952380957,
     "avg_loss": 0.0007586264495412232,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.911651728553137,
+    "avg_wait": 0.22359257938907018,
+    "avg_queue": 0.010317585693150649,
+    "avg_queue_total": 0.01600375855994838,
+    "avg_queue_max": 0.012486953386772864,
+    "avg_tp_ratio": 0.8957608192963754,
     "avg_arrival_rate": 0.5696,
     "rewards_per_episode": [
       -37.38880952380957
     ],
     "wait_per_episode": [
-      0.0
+      0.04124238995682953
     ],
     "tp_per_episode": [
-      0.911651728553137
+      0.8963246641973355
     ],
     "arrival_rate_per_episode": [
       0.5696
@@ -133,20 +133,20 @@
     "round": 6,
     "avg_reward": -45.96021825396829,
     "avg_loss": 0.0009274439765978167,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.912291933418694,
+    "avg_wait": 0.37316922545780273,
+    "avg_queue": 0.01376363343179754,
+    "avg_queue_total": 0.020068616387253234,
+    "avg_queue_max": 0.045688753633335855,
+    "avg_tp_ratio": 0.8979951500547798,
     "avg_arrival_rate": 0.57,
     "rewards_per_episode": [
       -45.96021825396829
     ],
     "wait_per_episode": [
-      0.0
+      0.08643785108309159
     ],
     "tp_per_episode": [
-      0.912291933418694
+      0.8942135957794869
     ],
     "arrival_rate_per_episode": [
       0.57
@@ -159,20 +159,20 @@
     "round": 7,
     "avg_reward": -60.01553571428574,
     "avg_loss": 0.0012909054931833435,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.911651728553137,
+    "avg_wait": 0.1863805536831102,
+    "avg_queue": 0.021806765299588006,
+    "avg_queue_total": 0.03157195885472314,
+    "avg_queue_max": 0.016484742692148408,
+    "avg_tp_ratio": 0.8958463512299322,
     "avg_arrival_rate": 0.5696,
     "rewards_per_episode": [
       -60.01553571428574
     ],
     "wait_per_episode": [
-      0.0
+      0.02789819675758804
     ],
     "tp_per_episode": [
-      0.911651728553137
+      0.8936286067986261
     ],
     "arrival_rate_per_episode": [
       0.5696
@@ -185,20 +185,20 @@
     "round": 8,
     "avg_reward": -34.64023809523813,
     "avg_loss": 0.001243863111361359,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.912291933418694,
+    "avg_wait": 0.3156017050441836,
+    "avg_queue": 0.046992433290142174,
+    "avg_queue_total": 0.03816117123284786,
+    "avg_queue_max": 0.039336488104653074,
+    "avg_tp_ratio": 0.8967012021932591,
     "avg_arrival_rate": 0.57,
     "rewards_per_episode": [
       -34.64023809523813
     ],
     "wait_per_episode": [
-      0.0
+      0.06908025174926584
     ],
     "tp_per_episode": [
-      0.912291933418694
+      0.896915489782257
     ],
     "arrival_rate_per_episode": [
       0.57
@@ -211,20 +211,20 @@
     "round": 9,
     "avg_reward": -29.827400793650835,
     "avg_loss": 0.0007459201267336155,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.912291933418694,
+    "avg_wait": 0.339103508686304,
+    "avg_queue": 0.012433790525059378,
+    "avg_queue_total": 0.02108418855060156,
+    "avg_queue_max": 0.04077998751084358,
+    "avg_tp_ratio": 0.8963742221215932,
     "avg_arrival_rate": 0.57,
     "rewards_per_episode": [
       -29.827400793650835
     ],
     "wait_per_episode": [
-      0.0
+      0.03212474298945187
     ],
     "tp_per_episode": [
-      0.912291933418694
+      0.8984269886666217
     ],
     "arrival_rate_per_episode": [
       0.57
@@ -237,20 +237,20 @@
     "round": 10,
     "avg_reward": -29.94121031746036,
     "avg_loss": 0.0010050427622523546,
-    "avg_wait": 0.0,
-    "avg_queue": 0.0,
-    "avg_queue_total": 0.0,
-    "avg_queue_max": 0.0,
-    "avg_tp_ratio": 0.912291933418694,
+    "avg_wait": 0.3494527475993908,
+    "avg_queue": 0.043502236733645776,
+    "avg_queue_total": 0.012287568579526198,
+    "avg_queue_max": 0.017443732141468358,
+    "avg_tp_ratio": 0.8980262110727754,
     "avg_arrival_rate": 0.57,
     "rewards_per_episode": [
       -29.94121031746036
     ],
     "wait_per_episode": [
-      0.0
+      0.03764639235426228
     ],
     "tp_per_episode": [
-      0.912291933418694
+      0.8987342246862292
     ],
     "arrival_rate_per_episode": [
       0.57

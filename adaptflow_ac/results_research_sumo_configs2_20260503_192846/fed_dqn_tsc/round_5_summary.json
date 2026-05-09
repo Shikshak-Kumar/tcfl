@@ -2,20 +2,20 @@
   "round": 5,
   "avg_reward": -37.38880952380957,
   "avg_loss": 0.0007586264495412232,
-  "avg_wait": 0.0,
-  "avg_queue": 0.0,
-  "avg_queue_total": 0.0,
-  "avg_queue_max": 0.0,
-  "avg_tp_ratio": 0.911651728553137,
+  "avg_wait": 0.4738538232342404,
+  "avg_queue": 0.04581874854360192,
+  "avg_queue_total": 0.030486657161190762,
+  "avg_queue_max": 0.042440086855304336,
+  "avg_tp_ratio": 0.8923165034499381,
   "avg_arrival_rate": 0.5696,
   "rewards_per_episode": [
     -37.38880952380957
   ],
   "wait_per_episode": [
-    0.0
+    0.011021910670835145
   ],
   "tp_per_episode": [
-    0.911651728553137
+    0.8949769976328004
   ],
   "arrival_rate_per_episode": [
     0.5696
