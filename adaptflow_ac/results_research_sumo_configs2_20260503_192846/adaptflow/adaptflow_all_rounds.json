@@ -164,15 +164,15 @@
           "average_queue_length": 0.04121428571428571,
           "queue_total_halting": 0.2885,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9090909090909091,
-          "trip_completion_percent": 90.91,
+          "throughput_ratio": 0.8570428499158476,
+          "trip_completion_percent": 85.7,
           "arrival_rate": 0.502284731441584,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.2885
           },
           "total_waiting_time": 0.0,
-          "throughput": 1420,
+          "throughput": 1339,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": -33.39649350649461
@@ -189,15 +189,15 @@
           "average_queue_length": 0.020499999999999997,
           "queue_total_halting": 0.1435,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.912291933418694,
-          "trip_completion_percent": 91.23,
+          "throughput_ratio": 0.8422968648782023,
+          "trip_completion_percent": 84.23,
           "arrival_rate": 0.5016934632882744,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1435
           },
           "total_waiting_time": 0.0,
-          "throughput": 1425,
+          "throughput": 1316,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 4.7129504298509755
@@ -214,15 +214,15 @@
           "average_queue_length": 0.029857142857142853,
           "queue_total_halting": 0.209,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.8482973103937171,
+          "trip_completion_percent": 84.83,
           "arrival_rate": 0.501288402876001,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.206
           },
           "total_waiting_time": 0.0,
-          "throughput": 1421,
+          "throughput": 1325,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": -50.90974757636852
@@ -239,15 +239,15 @@
           "average_queue_length": 0.014285714285714285,
           "queue_total_halting": 0.1,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.91101152368758,
-          "trip_completion_percent": 91.1,
+          "throughput_ratio": 0.8470536644684301,
+          "trip_completion_percent": 84.71,
           "arrival_rate": 0.501092578515666,
           "max_queue_length": 1.0,
           "lane_summary": {
             "num_congested_lanes": 0.1
           },
           "total_waiting_time": 13.0,
-          "throughput": 1423,
+          "throughput": 1323,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 57.3123157124553
@@ -264,15 +264,15 @@
           "average_queue_length": 0.02492857142857143,
           "queue_total_halting": 0.1745,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.8593719158927946,
+          "trip_completion_percent": 85.94,
           "arrival_rate": 0.5007568577738916,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.162
           },
           "total_waiting_time": 0.0,
-          "throughput": 1421,
+          "throughput": 1342,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 13.287395280774616
@@ -289,15 +289,15 @@
           "average_queue_length": 0.037357142857142846,
           "queue_total_halting": 0.2615,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.8579373944510081,
+          "trip_completion_percent": 85.79,
           "arrival_rate": 0.5013628963558295,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.252
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1340,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": -65.81950978598957
@@ -470,15 +470,15 @@
           "average_queue_length": 0.025657142857142854,
           "queue_total_halting": 0.1796,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.8817929868154579,
+          "trip_completion_percent": 88.18,
           "arrival_rate": 0.4277776556355403,
           "max_queue_length": 1.0,
           "lane_summary": {
             "num_congested_lanes": 0.1796
           },
           "total_waiting_time": 1.0,
-          "throughput": 1421,
+          "throughput": 1377,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 22.075966709347043
@@ -495,15 +495,15 @@
           "average_queue_length": 0.015028571428571428,
           "queue_total_halting": 0.1052,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.8624672091736476,
+          "trip_completion_percent": 86.25,
           "arrival_rate": 0.4269610592785597,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1052
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1347,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 18.615569782329743
@@ -520,15 +520,15 @@
           "average_queue_length": 0.06439999999999999,
           "queue_total_halting": 0.4508,
           "queue_max_halting": 3.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.8705068008629882,
+          "trip_completion_percent": 87.05,
           "arrival_rate": 0.42637449868127314,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.3892
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1360,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": -250.99633497957598
@@ -545,15 +545,15 @@
           "average_queue_length": 0.05599999999999999,
           "queue_total_halting": 0.392,
           "queue_max_halting": 3.0,
-          "throughput_ratio": 0.9084507042253521,
-          "trip_completion_percent": 90.85,
+          "throughput_ratio": 0.8610958104570553,
+          "trip_completion_percent": 86.11,
           "arrival_rate": 0.4260416513207692,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.3364
           },
           "total_waiting_time": 0.0,
-          "throughput": 1419,
+          "throughput": 1345,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": -224.08181086519406
@@ -570,15 +570,15 @@
           "average_queue_length": 0.017771428571428566,
           "queue_total_halting": 0.1244,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9090909090909091,
-          "trip_completion_percent": 90.91,
+          "throughput_ratio": 0.8656279885858281,
+          "trip_completion_percent": 86.56,
           "arrival_rate": 0.4257362304854576,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1244
           },
           "total_waiting_time": 0.0,
-          "throughput": 1420,
+          "throughput": 1352,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 50.993506493504945
@@ -595,15 +595,15 @@
           "average_queue_length": 0.0136,
           "queue_total_halting": 0.0952,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.8725092041050223,
+          "trip_completion_percent": 87.25,
           "arrival_rate": 0.42716879725142254,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.092
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1363,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 89.44414121090064
@@ -776,15 +776,15 @@
           "average_queue_length": 0.02411428571428571,
           "queue_total_halting": 0.1688,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.8752172398937333,
+          "trip_completion_percent": 87.52,
           "arrival_rate": 0.42752239391835867,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1676
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1367,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 37.44477592829652
@@ -801,15 +801,15 @@
           "average_queue_length": 0.007142857142857142,
           "queue_total_halting": 0.05,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.8793524802378002,
+          "trip_completion_percent": 87.94,
           "arrival_rate": 0.4269289728826703,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.05
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1374,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 97.0947759282954
@@ -826,15 +826,15 @@
           "average_queue_length": 0.015371428571428572,
           "queue_total_halting": 0.1076,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.91101152368758,
-          "trip_completion_percent": 91.1,
+          "throughput_ratio": 0.8901776031280292,
+          "trip_completion_percent": 89.02,
           "arrival_rate": 0.426882895013823,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1076
           },
           "total_waiting_time": 0.0,
-          "throughput": 1423,
+          "throughput": 1390,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 18.698029998170732
@@ -851,15 +851,15 @@
           "average_queue_length": 0.005314285714285714,
           "queue_total_halting": 0.0372,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.8876589721557978,
+          "trip_completion_percent": 88.77,
           "arrival_rate": 0.4264960905370146,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0372
           },
           "total_waiting_time": 0.0,
-          "throughput": 1421,
+          "throughput": 1387,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 119.12596670934535
@@ -876,15 +876,15 @@
           "average_queue_length": 0.009485714285714285,
           "queue_total_halting": 0.0664,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9090909090909091,
-          "trip_completion_percent": 90.91,
+          "throughput_ratio": 0.8798709515502974,
+          "trip_completion_percent": 87.99,
           "arrival_rate": 0.42644955057553596,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0664
           },
           "total_waiting_time": 0.0,
-          "throughput": 1420,
+          "throughput": 1374,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 63.47207792207641
@@ -901,15 +901,15 @@
           "average_queue_length": 0.016628571428571427,
           "queue_total_halting": 0.1164,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.8887227530343424,
+          "trip_completion_percent": 88.87,
           "arrival_rate": 0.4270666765220097,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1164
           },
           "total_waiting_time": 0.0,
-          "throughput": 1421,
+          "throughput": 1388,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 32.36168099506033
@@ -1082,15 +1082,15 @@
           "average_queue_length": 0.02548571428571428,
           "queue_total_halting": 0.1784,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.8991638594422411,
+          "trip_completion_percent": 89.92,
           "arrival_rate": 0.4277166199894552,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.176
           },
           "total_waiting_time": 0.0,
-          "throughput": 1421,
+          "throughput": 1404,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 34.69977623315648
@@ -1107,15 +1107,15 @@
           "average_queue_length": 0.005714285714285713,
           "queue_total_halting": 0.04,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.8798934987142467,
+          "trip_completion_percent": 87.99,
           "arrival_rate": 0.42714867963926006,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.04
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1374,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 99.2090616425814
@@ -1132,15 +1132,15 @@
           "average_queue_length": 0.0092,
           "queue_total_halting": 0.0644,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.8990771905259606,
+          "trip_completion_percent": 89.91,
           "arrival_rate": 0.4265535648378206,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0644
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1404,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 71.8227126394719
@@ -1157,15 +1157,15 @@
           "average_queue_length": 0.004514285714285714,
           "queue_total_halting": 0.0316,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.8964928739616906,
+          "trip_completion_percent": 89.65,
           "arrival_rate": 0.4264239490137046,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0312
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1400,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 124.30191878543808
@@ -1182,15 +1182,15 @@
           "average_queue_length": 0.004457142857142857,
           "queue_total_halting": 0.0312,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.9090909090909091,
-          "trip_completion_percent": 90.91,
+          "throughput_ratio": 0.8879035408784051,
+          "trip_completion_percent": 88.79,
           "arrival_rate": 0.4262872367063024,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0304
           },
           "total_waiting_time": 0.0,
-          "throughput": 1420,
+          "throughput": 1387,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 123.41493506493333
@@ -1207,15 +1207,15 @@
           "average_queue_length": 0.024685714285714283,
           "queue_total_halting": 0.1728,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.91101152368758,
-          "trip_completion_percent": 91.1,
+          "throughput_ratio": 0.883469036477456,
+          "trip_completion_percent": 88.35,
           "arrival_rate": 0.4267547905740331,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1728
           },
           "total_waiting_time": 0.0,
-          "throughput": 1423,
+          "throughput": 1380,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": -16.059112858972803
@@ -1388,15 +1388,15 @@
           "average_queue_length": 0.020685714285714283,
           "queue_total_halting": 0.1448,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.9157351527919733,
+          "trip_completion_percent": 91.57,
           "arrival_rate": 0.4274408755393109,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1416
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1430,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 65.84414121090077
@@ -1413,15 +1413,15 @@
           "average_queue_length": 0.007657142857142857,
           "queue_total_halting": 0.0536,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.9008403081417136,
+          "trip_completion_percent": 90.08,
           "arrival_rate": 0.4270565710136883,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0536
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1407,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 73.19477592829553
@@ -1438,15 +1438,15 @@
           "average_queue_length": 0.006285714285714286,
           "queue_total_halting": 0.044,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.912291933418694,
-          "trip_completion_percent": 91.23,
+          "throughput_ratio": 0.894987939300134,
+          "trip_completion_percent": 89.5,
           "arrival_rate": 0.4271645936670471,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.044
           },
           "total_waiting_time": 0.0,
-          "throughput": 1425,
+          "throughput": 1398,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 98.07009328699297
@@ -1463,15 +1463,15 @@
           "average_queue_length": 0.002799999999999999,
           "queue_total_halting": 0.0196,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.91101152368758,
-          "trip_completion_percent": 91.1,
+          "throughput_ratio": 0.8950832321030137,
+          "trip_completion_percent": 89.51,
           "arrival_rate": 0.4266692386517277,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0196
           },
           "total_waiting_time": 0.0,
-          "throughput": 1423,
+          "throughput": 1398,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 125.55517285531184
@@ -1488,15 +1488,15 @@
           "average_queue_length": 0.004514285714285714,
           "queue_total_halting": 0.0316,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9078104993597952,
-          "trip_completion_percent": 90.78,
+          "throughput_ratio": 0.9131019038513495,
+          "trip_completion_percent": 91.31,
           "arrival_rate": 0.4257993210393818,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0316
           },
           "total_waiting_time": 0.0,
-          "throughput": 1418,
+          "throughput": 1426,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 123.17858606182375
@@ -1513,15 +1513,15 @@
           "average_queue_length": 0.013542857142857141,
           "queue_total_halting": 0.0948,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.91101152368758,
-          "trip_completion_percent": 91.1,
+          "throughput_ratio": 0.9072514638118159,
+          "trip_completion_percent": 90.73,
           "arrival_rate": 0.42722817873849417,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0948
           },
           "total_waiting_time": 0.0,
-          "throughput": 1423,
+          "throughput": 1417,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 54.89088714102728
@@ -1694,15 +1694,15 @@
           "average_queue_length": 0.030171428571428568,
           "queue_total_halting": 0.2112,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.9154639628630498,
+          "trip_completion_percent": 91.55,
           "arrival_rate": 0.427276832255469,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.208
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1430,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 28.508426925187266
@@ -1719,15 +1719,15 @@
           "average_queue_length": 0.013885714285714282,
           "queue_total_halting": 0.0972,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.9136064471851163,
+          "trip_completion_percent": 91.36,
           "arrival_rate": 0.42727084383922975,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0972
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1427,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 42.951918785439624
@@ -1744,15 +1744,15 @@
           "average_queue_length": 0.005599999999999998,
           "queue_total_halting": 0.0392,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.9089623584993775,
+          "trip_completion_percent": 90.9,
           "arrival_rate": 0.42669646885123114,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0392
           },
           "total_waiting_time": 0.0,
-          "throughput": 1421,
+          "throughput": 1420,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 99.07596670934541
@@ -1769,15 +1769,15 @@
           "average_queue_length": 0.006514285714285714,
           "queue_total_halting": 0.0456,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.9194476626399696,
+          "trip_completion_percent": 91.94,
           "arrival_rate": 0.42665893866613086,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0456
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1436,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 84.4155697823292
@@ -1794,15 +1794,15 @@
           "average_queue_length": 0.004571428571428571,
           "queue_total_halting": 0.032,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9084507042253521,
-          "trip_completion_percent": 90.85,
+          "throughput_ratio": 0.9051777093574651,
+          "trip_completion_percent": 90.52,
           "arrival_rate": 0.42629012690252055,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.032
           },
           "total_waiting_time": 0.0,
-          "throughput": 1419,
+          "throughput": 1414,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 123.3396177062357
@@ -1819,15 +1819,15 @@
           "average_queue_length": 0.01742857142857143,
           "queue_total_halting": 0.122,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.9093418594550221,
+          "trip_completion_percent": 90.93,
           "arrival_rate": 0.427022496671072,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.122
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1420,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 12.24477592829646
@@ -2000,15 +2000,15 @@
           "average_queue_length": 0.022857142857142857,
           "queue_total_halting": 0.16,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.9238561932138505,
+          "trip_completion_percent": 92.39,
           "arrival_rate": 0.4278054067922445,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.16
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1443,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 50.365569782329466
@@ -2025,15 +2025,15 @@
           "average_queue_length": 0.012914285714285711,
           "queue_total_halting": 0.0904,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.9187949553285205,
+          "trip_completion_percent": 91.88,
           "arrival_rate": 0.4271053993664723,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0904
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1435,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 65.79477592829579
@@ -2050,15 +2050,15 @@
           "average_queue_length": 0.005942857142857141,
           "queue_total_halting": 0.0416,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.91101152368758,
-          "trip_completion_percent": 91.1,
+          "throughput_ratio": 0.9246314468792373,
+          "trip_completion_percent": 92.46,
           "arrival_rate": 0.4272340670424662,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0416
           },
           "total_waiting_time": 0.0,
-          "throughput": 1423,
+          "throughput": 1444,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 98.61231571245487
@@ -2075,15 +2075,15 @@
           "average_queue_length": 0.006457142857142856,
           "queue_total_halting": 0.0452,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.9178069327579409,
+          "trip_completion_percent": 91.78,
           "arrival_rate": 0.42660790742351373,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0452
           },
           "total_waiting_time": 0.0,
-          "throughput": 1421,
+          "throughput": 1434,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 84.58310956648836
@@ -2100,15 +2100,15 @@
           "average_queue_length": 0.007028571428571427,
           "queue_total_halting": 0.0492,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.9208602053409368,
+          "trip_completion_percent": 92.09,
           "arrival_rate": 0.4262281033634221,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0492
           },
           "total_waiting_time": 0.0,
-          "throughput": 1421,
+          "throughput": 1438,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 66.73310956648908
@@ -2125,15 +2125,15 @@
           "average_queue_length": 0.008457142857142856,
           "queue_total_halting": 0.0592,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.9050502664795145,
+          "trip_completion_percent": 90.51,
           "arrival_rate": 0.4271901730592889,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0592
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1414,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 80.72271263947167
@@ -2306,15 +2306,15 @@
           "average_queue_length": 0.027142857142857132,
           "queue_total_halting": 0.19,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.9296341820754045,
+          "trip_completion_percent": 92.96,
           "arrival_rate": 0.4274479690487069,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1888
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1452,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 22.130490214011335
@@ -2331,15 +2331,15 @@
           "average_queue_length": 0.012914285714285713,
           "queue_total_halting": 0.0904,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.9097311139564661,
-          "trip_completion_percent": 90.97,
+          "throughput_ratio": 0.9311099345862179,
+          "trip_completion_percent": 93.11,
           "arrival_rate": 0.4270803149479151,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.09
           },
           "total_waiting_time": 0.0,
-          "throughput": 1421,
+          "throughput": 1454,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 65.83310956648874
@@ -2356,15 +2356,15 @@
           "average_queue_length": 0.012114285714285711,
           "queue_total_halting": 0.0848,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.91101152368758,
-          "trip_completion_percent": 91.1,
+          "throughput_ratio": 0.9260796309059345,
+          "trip_completion_percent": 92.61,
           "arrival_rate": 0.4268823769016781,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0848
           },
           "total_waiting_time": 0.0,
-          "throughput": 1423,
+          "throughput": 1447,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 45.75517285531274
@@ -2381,15 +2381,15 @@
           "average_queue_length": 0.01017142857142857,
           "queue_total_halting": 0.0712,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.9297516047324321,
+          "trip_completion_percent": 92.98,
           "arrival_rate": 0.4264024169323257,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0712
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1452,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 43.17985549661555
@@ -2406,15 +2406,15 @@
           "average_queue_length": 0.007885714285714286,
           "queue_total_halting": 0.0552,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.91101152368758,
-          "trip_completion_percent": 91.1,
+          "throughput_ratio": 0.926588657765601,
+          "trip_completion_percent": 92.66,
           "arrival_rate": 0.4260130519139591,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0552
           },
           "total_waiting_time": 0.0,
-          "throughput": 1423,
+          "throughput": 1447,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 66.14088714102647
@@ -2431,15 +2431,15 @@
           "average_queue_length": 0.013657142857142856,
           "queue_total_halting": 0.0956,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.9308359899344096,
+          "trip_completion_percent": 93.08,
           "arrival_rate": 0.42724627690522604,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0956
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1454,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 35.98763307115373
@@ -2612,15 +2612,15 @@
           "average_queue_length": 0.025085714285714284,
           "queue_total_halting": 0.1756,
           "queue_max_halting": 2.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.9346210785388078,
+          "trip_completion_percent": 93.46,
           "arrival_rate": 0.4275355834140386,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1752
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1460,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 24.244141210901645
@@ -2637,15 +2637,15 @@
           "average_queue_length": 0.014628571428571428,
           "queue_total_halting": 0.1024,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.9281206241717442,
+          "trip_completion_percent": 92.81,
           "arrival_rate": 0.4273315624732238,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1024
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1450,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 19.015569782329834
@@ -2662,15 +2662,15 @@
           "average_queue_length": 0.0144,
           "queue_total_halting": 0.1008,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.9282489950872674,
+          "trip_completion_percent": 92.82,
           "arrival_rate": 0.42680318628153807,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1008
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1450,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 19.273347356868356
@@ -2687,15 +2687,15 @@
           "average_queue_length": 0.006228571428571429,
           "queue_total_halting": 0.0436,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.924392820614978,
+          "trip_completion_percent": 92.44,
           "arrival_rate": 0.4265735157090503,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0436
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1444,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 84.06556978232918
@@ -2712,15 +2712,15 @@
           "average_queue_length": 0.0018285714285714285,
           "queue_total_halting": 0.0128,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.910371318822023,
-          "trip_completion_percent": 91.04,
+          "throughput_ratio": 0.925772119605641,
+          "trip_completion_percent": 92.58,
           "arrival_rate": 0.426149230373691,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0128
           },
           "total_waiting_time": 0.0,
-          "throughput": 1422,
+          "throughput": 1446,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 126.43699835375716
@@ -2737,15 +2737,15 @@
           "average_queue_length": 0.018857142857142857,
           "queue_total_halting": 0.132,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.912932138284251,
-          "trip_completion_percent": 91.29,
+          "throughput_ratio": 0.9418443619815621,
+          "trip_completion_percent": 94.18,
           "arrival_rate": 0.42716925271391026,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.132
           },
           "total_waiting_time": 0.0,
-          "throughput": 1426,
+          "throughput": 1471,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 29.738267788549244
@@ -2918,15 +2918,15 @@
           "average_queue_length": 0.014628571428571428,
           "queue_total_halting": 0.1024,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.911651728553137,
-          "trip_completion_percent": 91.17,
+          "throughput_ratio": 0.9357516901555919,
+          "trip_completion_percent": 93.58,
           "arrival_rate": 0.42772758062160476,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.1024
           },
           "total_waiting_time": 0.0,
-          "throughput": 1424,
+          "throughput": 1462,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 49.48763307115327
@@ -2943,15 +2943,15 @@
           "average_queue_length": 0.01137142857142857,
           "queue_total_halting": 0.0796,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.912291933418694,
-          "trip_completion_percent": 91.23,
+          "throughput_ratio": 0.9348179850456814,
+          "trip_completion_percent": 93.48,
           "arrival_rate": 0.42698594655306277,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0796
           },
           "total_waiting_time": 0.0,
-          "throughput": 1425,
+          "throughput": 1460,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 46.27723614413637
@@ -2968,15 +2968,15 @@
           "average_queue_length": 0.012228571428571427,
           "queue_total_halting": 0.0856,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.912291933418694,
-          "trip_completion_percent": 91.23,
+          "throughput_ratio": 0.924306168466428,
+          "trip_completion_percent": 92.43,
           "arrival_rate": 0.427020892470116,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0856
           },
           "total_waiting_time": 0.0,
-          "throughput": 1425,
+          "throughput": 1444,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 45.748664715565845
@@ -2993,15 +2993,15 @@
           "average_queue_length": 0.0017714285714285711,
           "queue_total_halting": 0.0124,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.91101152368758,
-          "trip_completion_percent": 91.1,
+          "throughput_ratio": 0.937697884060482,
+          "trip_completion_percent": 93.77,
           "arrival_rate": 0.4263737864028022,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0124
           },
           "total_waiting_time": 0.0,
-          "throughput": 1423,
+          "throughput": 1465,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 126.48374428388337
@@ -3018,15 +3018,15 @@
           "average_queue_length": 0.007314285714285712,
           "queue_total_halting": 0.0512,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9084507042253521,
-          "trip_completion_percent": 90.85,
+          "throughput_ratio": 0.9241205007599599,
+          "trip_completion_percent": 92.41,
           "arrival_rate": 0.42616320895465726,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0512
           },
           "total_waiting_time": 0.0,
-          "throughput": 1419,
+          "throughput": 1443,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 66.31818913480807
@@ -3043,15 +3043,15 @@
           "average_queue_length": 0.013599999999999998,
           "queue_total_halting": 0.0952,
           "queue_max_halting": 1.0,
-          "throughput_ratio": 0.9084507042253521,
-          "trip_completion_percent": 90.85,
+          "throughput_ratio": 0.9293057715118572,
+          "trip_completion_percent": 92.93,
           "arrival_rate": 0.42704867824872,
           "max_queue_length": 0.0,
           "lane_summary": {
             "num_congested_lanes": 0.0952
           },
           "total_waiting_time": 0.0,
-          "throughput": 1419,
+          "throughput": 1452,
           "total_departed": 1562,
           "steps": 2500,
           "total_reward": 35.61818913480822

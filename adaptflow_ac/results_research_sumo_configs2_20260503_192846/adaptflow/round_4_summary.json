@@ -163,15 +163,15 @@
         "average_queue_length": 0.02548571428571428,
         "queue_total_halting": 0.1784,
         "queue_max_halting": 2.0,
-        "throughput_ratio": 0.9097311139564661,
-        "trip_completion_percent": 90.97,
+        "throughput_ratio": 0.8991638594422411,
+        "trip_completion_percent": 89.92,
         "arrival_rate": 0.4277166199894552,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.176
         },
         "total_waiting_time": 0.0,
-        "throughput": 1421,
+        "throughput": 1404,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": 34.69977623315648
@@ -188,15 +188,15 @@
         "average_queue_length": 0.005714285714285713,
         "queue_total_halting": 0.04,
         "queue_max_halting": 1.0,
-        "throughput_ratio": 0.911651728553137,
-        "trip_completion_percent": 91.17,
+        "throughput_ratio": 0.8798934987142467,
+        "trip_completion_percent": 87.99,
         "arrival_rate": 0.42714867963926006,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.04
         },
         "total_waiting_time": 0.0,
-        "throughput": 1424,
+        "throughput": 1374,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": 99.2090616425814
@@ -213,15 +213,15 @@
         "average_queue_length": 0.0092,
         "queue_total_halting": 0.0644,
         "queue_max_halting": 1.0,
-        "throughput_ratio": 0.910371318822023,
-        "trip_completion_percent": 91.04,
+        "throughput_ratio": 0.8990771905259606,
+        "trip_completion_percent": 89.91,
         "arrival_rate": 0.4265535648378206,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.0644
         },
         "total_waiting_time": 0.0,
-        "throughput": 1422,
+        "throughput": 1404,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": 71.8227126394719
@@ -238,15 +238,15 @@
         "average_queue_length": 0.004514285714285714,
         "queue_total_halting": 0.0316,
         "queue_max_halting": 2.0,
-        "throughput_ratio": 0.911651728553137,
-        "trip_completion_percent": 91.17,
+        "throughput_ratio": 0.8964928739616906,
+        "trip_completion_percent": 89.65,
         "arrival_rate": 0.4264239490137046,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.0312
         },
         "total_waiting_time": 0.0,
-        "throughput": 1424,
+        "throughput": 1400,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": 124.30191878543808
@@ -263,15 +263,15 @@
         "average_queue_length": 0.004457142857142857,
         "queue_total_halting": 0.0312,
         "queue_max_halting": 2.0,
-        "throughput_ratio": 0.9090909090909091,
-        "trip_completion_percent": 90.91,
+        "throughput_ratio": 0.8879035408784051,
+        "trip_completion_percent": 88.79,
         "arrival_rate": 0.4262872367063024,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.0304
         },
         "total_waiting_time": 0.0,
-        "throughput": 1420,
+        "throughput": 1387,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": 123.41493506493333
@@ -288,15 +288,15 @@
         "average_queue_length": 0.024685714285714283,
         "queue_total_halting": 0.1728,
         "queue_max_halting": 1.0,
-        "throughput_ratio": 0.91101152368758,
-        "trip_completion_percent": 91.1,
+        "throughput_ratio": 0.883469036477456,
+        "trip_completion_percent": 88.35,
         "arrival_rate": 0.4267547905740331,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.1728
         },
         "total_waiting_time": 0.0,
-        "throughput": 1423,
+        "throughput": 1380,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": -16.059112858972803

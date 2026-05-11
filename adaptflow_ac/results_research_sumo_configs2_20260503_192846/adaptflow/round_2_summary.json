@@ -163,15 +163,15 @@
         "average_queue_length": 0.025657142857142854,
         "queue_total_halting": 0.1796,
         "queue_max_halting": 1.0,
-        "throughput_ratio": 0.9097311139564661,
-        "trip_completion_percent": 90.97,
+        "throughput_ratio": 0.8817929868154579,
+        "trip_completion_percent": 88.18,
         "arrival_rate": 0.4277776556355403,
         "max_queue_length": 1.0,
         "lane_summary": {
           "num_congested_lanes": 0.1796
         },
         "total_waiting_time": 1.0,
-        "throughput": 1421,
+        "throughput": 1377,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": 22.075966709347043
@@ -188,15 +188,15 @@
         "average_queue_length": 0.015028571428571428,
         "queue_total_halting": 0.1052,
         "queue_max_halting": 1.0,
-        "throughput_ratio": 0.910371318822023,
-        "trip_completion_percent": 91.04,
+        "throughput_ratio": 0.8624672091736476,
+        "trip_completion_percent": 86.25,
         "arrival_rate": 0.4269610592785597,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.1052
         },
         "total_waiting_time": 0.0,
-        "throughput": 1422,
+        "throughput": 1347,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": 18.615569782329743
@@ -213,15 +213,15 @@
         "average_queue_length": 0.06439999999999999,
         "queue_total_halting": 0.4508,
         "queue_max_halting": 3.0,
-        "throughput_ratio": 0.910371318822023,
-        "trip_completion_percent": 91.04,
+        "throughput_ratio": 0.8705068008629882,
+        "trip_completion_percent": 87.05,
         "arrival_rate": 0.42637449868127314,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.3892
         },
         "total_waiting_time": 0.0,
-        "throughput": 1422,
+        "throughput": 1360,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": -250.99633497957598
@@ -238,15 +238,15 @@
         "average_queue_length": 0.05599999999999999,
         "queue_total_halting": 0.392,
         "queue_max_halting": 3.0,
-        "throughput_ratio": 0.9084507042253521,
-        "trip_completion_percent": 90.85,
+        "throughput_ratio": 0.8610958104570553,
+        "trip_completion_percent": 86.11,
         "arrival_rate": 0.4260416513207692,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.3364
         },
         "total_waiting_time": 0.0,
-        "throughput": 1419,
+        "throughput": 1345,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": -224.08181086519406
@@ -263,15 +263,15 @@
         "average_queue_length": 0.017771428571428566,
         "queue_total_halting": 0.1244,
         "queue_max_halting": 1.0,
-        "throughput_ratio": 0.9090909090909091,
-        "trip_completion_percent": 90.91,
+        "throughput_ratio": 0.8656279885858281,
+        "trip_completion_percent": 86.56,
         "arrival_rate": 0.4257362304854576,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.1244
         },
         "total_waiting_time": 0.0,
-        "throughput": 1420,
+        "throughput": 1352,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": 50.993506493504945
@@ -288,15 +288,15 @@
         "average_queue_length": 0.0136,
         "queue_total_halting": 0.0952,
         "queue_max_halting": 2.0,
-        "throughput_ratio": 0.910371318822023,
-        "trip_completion_percent": 91.04,
+        "throughput_ratio": 0.8725092041050223,
+        "trip_completion_percent": 87.25,
         "arrival_rate": 0.42716879725142254,
         "max_queue_length": 0.0,
         "lane_summary": {
           "num_congested_lanes": 0.092
         },
         "total_waiting_time": 0.0,
-        "throughput": 1422,
+        "throughput": 1363,
         "total_departed": 1562,
         "steps": 2500,
         "total_reward": 89.44414121090064

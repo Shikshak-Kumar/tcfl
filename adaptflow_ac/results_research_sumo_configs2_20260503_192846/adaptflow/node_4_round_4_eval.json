@@ -9,15 +9,15 @@
     "average_queue_length": 0.004457142857142857,
     "queue_total_halting": 0.0312,
     "queue_max_halting": 2.0,
-    "throughput_ratio": 0.9090909090909091,
-    "trip_completion_percent": 90.91,
+    "throughput_ratio": 0.8879035408784051,
+    "trip_completion_percent": 88.79,
     "arrival_rate": 0.4262872367063024,
     "max_queue_length": 0.0,
     "lane_summary": {
       "num_congested_lanes": 0.0304
     },
     "total_waiting_time": 0.0,
-    "throughput": 1420,
+    "throughput": 1387,
     "total_departed": 1562,
     "steps": 2500,
     "total_reward": 123.41493506493333
